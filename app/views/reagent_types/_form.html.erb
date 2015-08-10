@@ -1,0 +1,14 @@
+<%= form_for @reagent_type do |f| %>
+  <fieldset>
+    <legend></legend>
+    <ul>
+      <li>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </li>
+      <li>
+        <%= f.submit %>
+      </li>
+    </ul>
+  </fieldset>
+<% end %>
