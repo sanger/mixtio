@@ -1,0 +1,8 @@
+<article id="<%= dom_id(reagent) %>" data-id="<%= reagent.id %>">
+  <div>
+    <%= reagent.name %>
+  </div>
+  <div>
+    <%= link_to "Edit", edit_reagent_path(reagent) %>
+  </div>
+</article>
