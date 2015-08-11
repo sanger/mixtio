@@ -1,0 +1,18 @@
+<%= form_for(@reagent) do |f| %>
+  <fieldset>
+    <legend></legend>
+    <ul>
+      <li>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </li>
+      <li>
+        <%= f.label :expiry_date %>
+        <%= f.date_field :expiry_date %>
+      </li>
+      <li>
+        <%= f.submit %>
+      </li>
+    </ul>
+  </fieldset>
+<% end %>

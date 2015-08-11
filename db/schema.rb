@@ -11,12 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804101710) do
+ActiveRecord::Schema.define(version: 20150811110701) do
 
   create_table "reagent_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "reagents", force: :cascade do |t|
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "name"
+    t.date     "expiry_date"
+    t.date     "arrival_date"
+    t.boolean  "depleted"
+    t.string   "lot_number"
+    t.string   "supplier"
   end
 
 end
