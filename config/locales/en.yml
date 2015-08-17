@@ -21,4 +21,7 @@
 
 en:
   hello: "Hello world"
-  future_date: "can't be in the past"
+  errors:
+    existence: "must exist"
+    future_date: "can't be in the past"
+

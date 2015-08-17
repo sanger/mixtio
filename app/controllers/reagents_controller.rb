@@ -34,7 +34,7 @@ class ReagentsController < ApplicationController
   protected
 
   def reagent_params
-    params.require(:reagent).permit(:name, :expiry_date)
+    params.require(:reagent).permit(:name, :expiry_date, :lot_number, :arrival_date, :supplier, :reagent_type_id)
   end
 
   def current_resource
