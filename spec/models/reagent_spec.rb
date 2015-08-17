@@ -11,7 +11,9 @@ RSpec.describe Reagent, type: :model do
   end
 
   it "should not be valid with an expiry date in the past" do
-    expect(build(:reagent, expiry_date: 1.day.ago)).to_not be_valid
+    reagent = build(:reagent, expiry_date: 1.day.ago)
+    expect(reagent).to_not be_valid
+    expect(reagent.errors.messages[:expiry_date]).to include("can't be in the past")
   end
 
 end
