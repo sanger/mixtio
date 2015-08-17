@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe "Reagents", type: feature do
 
+  let! (:reagent_types) { create_list(:reagent_type, 4) }
+
   it "Displays a list of reagents to the user" do
     reagent = create(:reagent)
     reagent_2 = create(:reagent)
@@ -20,6 +22,10 @@ RSpec.describe "Reagents", type: feature do
     expect{
       fill_in "Name", with: reagent.name
       fill_in "Expiry date", with: reagent.expiry_date
+      fill_in "Lot number", with: reagent.lot_number
+      fill_in "Arrival date", with: reagent.arrival_date
+      fill_in "Supplier", with: reagent.supplier
+      select reagent_types.first.name, from: 'Reagent type'
       click_button "Create Reagent"
     }.to change(Reagent, :count).by(1)
     expect(page).to have_content("Reagent successfully created")
@@ -33,6 +39,10 @@ RSpec.describe "Reagents", type: feature do
     expect{
       fill_in "Name", with: reagent.name
       fill_in "Expiry date", with: reagent.expiry_date
+      fill_in "Lot number", with: reagent.lot_number
+      fill_in "Arrival date", with: reagent.arrival_date
+      fill_in "Supplier", with: reagent.supplier
+      select reagent_types.first.name, from: 'Reagent type'
       click_button "Create Reagent"
     }.to_not change(Reagent, :count)
 
