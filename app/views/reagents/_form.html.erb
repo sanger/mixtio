@@ -1,0 +1,34 @@
+<%= form_for(@reagent) do |f| %>
+  <fieldset>
+    <legend></legend>
+    <ul>
+      <li>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </li>
+      <li>
+        <%= f.label :expiry_date %>
+        <%= f.date_field :expiry_date %>
+      </li>
+      <li>
+        <%= f.label :lot_number %>
+        <%= f.text_field :lot_number %>
+      </li>
+      <li>
+        <%= f.label :arrival_date %>
+        <%= f.date_field :arrival_date %>
+      </li>
+      <li>
+        <%= f.label :supplier %>
+        <%= f.text_field :supplier %>
+      </li>
+      <li>
+        <%= f.label :reagent_type_id %>
+        <%= f.select :reagent_type_id, options_from_collection_for_select(ReagentType.all, :id, :name, @reagent.reagent_type_id) %>
+      </li>
+      <li>
+        <%= f.submit %>
+      </li>
+    </ul>
+  </fieldset>
+<% end %>

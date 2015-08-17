@@ -11,12 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804101710) do
+ActiveRecord::Schema.define(version: 20150811104826) do
 
   create_table "reagent_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "reagents", force: :cascade do |t|
+    t.integer  "reagent_type_id"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "name"
+    t.string   "barcode"
+    t.date     "expiry_date"
+    t.date     "arrival_date"
+    t.boolean  "depleted",        default: false
+    t.string   "lot_number"
+    t.string   "supplier"
+  end
+
+  add_index "reagents", ["reagent_type_id"], name: "index_reagents_on_reagent_type_id"
 
 end
