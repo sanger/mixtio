@@ -13,12 +13,14 @@ class Consumable < ActiveRecord::Base
 
   after_create :generate_barcode
 
-  def add_child(child)
-    add_ancestor(child, self)
+  def add_children(children)
+    Array(children).each { |child| add_ancestor(child, self) }
+    self
   end
 
-  def add_parent(parent)
-    add_ancestor(self, parent)
+  def add_parents(parents)
+    Array(parents).each { |parent| add_ancestor(self, parent) }
+    self
   end
 
   private
