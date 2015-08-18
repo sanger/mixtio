@@ -30,4 +30,22 @@ RSpec.describe Consumable, type: :model do
     expect(consumable.barcode).to eq("mx-my-consumable-#{consumable.id}")
   end
 
+  it "should be able to have many children" do
+    consumable = create(:consumable)
+    children = create_list(:consumable, 3)
+
+    children.each {|child| consumable.add_child child}
+    expect(children.all? {|child| consumable.children.include?(child)}).to be_truthy
+    expect(children.all? {|child| child.parents.include?(consumable)}).to be_truthy
+  end
+
+  it "should be able to have many parents" do
+    consumable = create(:consumable)
+    parents = create_list(:consumable, 3)
+
+    parents.each {|parent| consumable.add_parent parent}
+    expect(parents.all? {|parent| consumable.parents.include?(parent)}).to be_truthy
+    expect(parents.all? {|parent| parent.children.include?(consumable)}).to be_truthy
+  end
+
 end
