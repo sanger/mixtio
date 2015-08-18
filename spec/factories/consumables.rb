@@ -1,11 +1,11 @@
 FactoryGirl.define do
-  factory :reagent do
-    sequence(:name) {|n| "Reagent #{n}" }
+  factory :consumable do
+    sequence(:name) {|n| "consumable #{n}" }
     expiry_date { 1.month.from_now }
     lot_number 1
     arrival_date { Date.today }
     supplier 'Stark Inc.'
-    reagent_type
+    consumable_type
   end
 
 end
