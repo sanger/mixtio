@@ -1,4 +1,4 @@
-class ReagentType < ActiveRecord::Base
+class ConsumableType < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: {case_sensitive: false}
 end
