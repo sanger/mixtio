@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811104826) do
+ActiveRecord::Schema.define(version: 20150818094422) do
+
+  create_table "ancestors", force: :cascade do |t|
+    t.integer  "family_id"
+    t.string   "family_type"
+    t.integer  "consumable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "ancestors", ["family_id", "family_type", "consumable_id"], name: "index_ancestors_on_family_id_and_family_type_and_consumable_id"
 
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
