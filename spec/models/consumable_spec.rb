@@ -66,17 +66,19 @@ RSpec.describe Consumable, type: :model do
 
   it "#save_or_mix" do
     parents = create_list(:consumable, 2)
-    consumable = build(:consumable)
 
-    consumables = consumable.save_or_mix(parents.map(&:id))
+    consumable = build(:consumable, parent_ids: parents.map(&:id))
+    consumables = consumable.save_or_mix
     expect(consumables.count).to eq(1)
     expect(consumables.first.parents).to eq(parents)
 
-    consumables = consumable.save_or_mix('')
+    consumable = build(:consumable)
+    consumables = consumable.save_or_mix
     expect(consumables.count).to eq(1)
     expect(consumables.first.parents).to be_empty
 
-    consumables = consumable.save_or_mix(parents.map(&:id), 3)
+    consumable = build(:consumable, parent_ids: parents.map(&:id))
+    consumables = consumable.save_or_mix(3)
     expect(consumables.count).to eq(3)
     expect(consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
   end
