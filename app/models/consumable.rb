@@ -23,6 +23,12 @@ class Consumable < ActiveRecord::Base
     self
   end
 
+  def save_or_mix(limit = 1)
+    (1..limit).collect do |n|
+      Consumable.create(self.attributes).add_parents(Consumable.where(id: self.parent_ids))
+    end
+  end
+
   private
 
   def generate_barcode
