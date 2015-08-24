@@ -52,4 +52,13 @@ RSpec.describe ConsumableForm, type: :model do
     expect(parents.all? {|parent| parent.children == consumable_form.consumables }).to be_truthy
   end
 
+  it "should be able to update a consumable with valid attributes" do
+    consumable = create(:consumable)
+    consumable_form = ConsumableForm.new(consumable)
+
+    consumable_form.submit(ActionController::Parameters.new(consumable: consumable.attributes.merge('supplier' => 'Illumina')))
+
+    expect(consumable.reload.supplier).to eq('Illumina')
+  end
+
 end
