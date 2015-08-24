@@ -1,8 +1,8 @@
-class CreateReagents < ActiveRecord::Migration
+class CreateConsumables < ActiveRecord::Migration
   def change
-    create_table :reagents do |t|
+    create_table :consumables do |t|
 
-      t.belongs_to :reagent_type, index: true, foreign_key: true
+      t.belongs_to :consumable_type, index: true, foreign_key: true
 
       t.timestamps null: false
       t.string :name

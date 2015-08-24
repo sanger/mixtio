@@ -1,0 +1,8 @@
+<article id="<%= dom_id(consumable) %>" data-id="<%= consumable.id %>">
+  <div>
+    <%= consumable.name %>
+  </div>
+  <div>
+    <%= link_to "Edit", edit_consumable_path(consumable) %>
+  </div>
+</article>
