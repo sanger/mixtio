@@ -11,27 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811104826) do
+ActiveRecord::Schema.define(version: 20150818094422) do
 
-  create_table "reagent_types", force: :cascade do |t|
+  create_table "ancestors", force: :cascade do |t|
+    t.integer  "family_id"
+    t.string   "family_type"
+    t.integer  "consumable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "ancestors", ["family_id", "family_type", "consumable_id"], name: "index_ancestors_on_family_id_and_family_type_and_consumable_id"
+
+  create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "reagents", force: :cascade do |t|
-    t.integer  "reagent_type_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+  create_table "consumables", force: :cascade do |t|
+    t.integer  "consumable_type_id"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.string   "name"
     t.string   "barcode"
     t.date     "expiry_date"
     t.date     "arrival_date"
-    t.boolean  "depleted",        default: false
+    t.boolean  "depleted",           default: false
     t.string   "lot_number"
     t.string   "supplier"
   end
 
-  add_index "reagents", ["reagent_type_id"], name: "index_reagents_on_reagent_type_id"
+  add_index "consumables", ["consumable_type_id"], name: "index_consumables_on_consumable_type_id"
 
 end
