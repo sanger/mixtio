@@ -19,7 +19,7 @@ class ConsumableParents
 
   addNewParent: (element, e) =>
     e.preventDefault()
-    @parent.append("<li>" + $(element.closest('li')).html() + "</li>")
+    @parent.append($(element.closest('li')).wrap("<li></li>").html())
 
 jQuery ->
   for parent in $("[data-behavior~=parents]")
