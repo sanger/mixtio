@@ -13,12 +13,11 @@ class ConsumableParents
     )
     @parent.on('click', "[data-behavior~=remove_parent]", (e) ->
       self.removeParent($(this), e)
+      self.setParentIds()
     )
 
   setParentIds: () =>
-    @parent_ids.val($.map($("select", @parent), (s) ->
-      $(s).val()
-    ).join(","))
+    @parent_ids.val($.map($("select", @parent), (s) -> $(s).val() ).join(","))
 
   addNewParent: (element, e) =>
     e.preventDefault()
@@ -27,7 +26,6 @@ class ConsumableParents
   removeParent: (element, e) =>
     e.preventDefault()
     $(element.closest('li')).remove()
-    @setParentIds()
 
 
 jQuery ->
