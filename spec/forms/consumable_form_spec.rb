@@ -22,14 +22,14 @@ RSpec.describe ConsumableForm, type: :model do
   end
 
   it "should create a single child from a single parent" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => [parents.first.id])))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s)))
     expect(parents.first.children.include?(consumable_form.consumables.first)).to be_truthy
     expect(parents.first.children.count).to eq(1)
     expect(consumable_form.consumables.first.parents).to include(parents.first)
   end
 
   it "should create many children from a single parent" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => [parents.first.id], 'limit' => 3)))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s, 'limit' => 3)))
 
     expect(consumable_form.consumables.count).to eq(3)
     expect(parents.first.children.count).to eq(3)
@@ -37,7 +37,7 @@ RSpec.describe ConsumableForm, type: :model do
   end
 
   it "should create a single child from multiple parents" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id))))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id).join(','))))
 
     expect(consumable_form.consumables.count).to eq(1)
     expect(consumable_form.consumables.first.parents).to eq(parents)
@@ -45,7 +45,7 @@ RSpec.describe ConsumableForm, type: :model do
   end
 
   it "should create many children from multiple parents" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id), 'limit' => 3)))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id).join(','), 'limit' => 3)))
 
     expect(consumable_form.consumables.count).to eq(3)
     expect(consumable_form.consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
