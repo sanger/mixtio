@@ -62,4 +62,42 @@ RSpec.describe "Consumables", type: feature do
     expect(page).to have_content("Consumable successfully updated")
   end
 
+  describe "selecting parents", js: true do
+
+    let!(:consumables) { create_list(:consumable, 3) }
+
+    it "Allows a user to select multiple parents" do
+      consumable = build(:consumable)
+
+      visit new_consumable_path
+
+      expect {
+        find(:data_behavior, "parents").all("select").last.find("option", text: consumables.first.name).select_option
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+
+        find(:data_behavior, "parents").all("select").last.find("option", text: consumables[1].name).select_option
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+
+        find(:data_behavior, "parents").all("select").last.find("option", text: consumables.last.name).select_option
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+
+        fill_in "Name", with: consumable.name
+        fill_in "Expiry date", with: consumable.expiry_date
+        fill_in "Lot number", with: consumable.lot_number
+        fill_in "Arrival date", with: consumable.arrival_date
+        fill_in "Supplier", with: consumable.supplier
+        select consumable_types.first.name, from: 'Consumable type'
+        click_button "Create Consumable"
+      }.to change(Consumable, :count).by(1)
+
+      expect(Consumable.find_by(name: consumable.name).parents.count).to eq(3)
+
+    end
+
+    it "Allows a user to remove parents" do
+
+    end
+
+  end
+
 end

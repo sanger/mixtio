@@ -18,6 +18,7 @@ class ConsumableForm
 
   def submit(params)
     consumable.attributes = params[:consumable].slice(*ATTRIBUTES).permit!
+    consumable.parent_ids = get_parent_ids(params)
     if valid?
       if consumable.new_record?
         @consumables = consumable.save_or_mix(params[:consumable][:limit] || 1)
@@ -46,5 +47,10 @@ class ConsumableForm
         errors.add key, value
       end
     end
+  end
+
+  def get_parent_ids(params)
+    return nil if params[:consumable].slice(:parent_ids).nil?
+    return params[:consumable][:parent_ids].split(",")
   end
 end
