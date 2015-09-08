@@ -6,6 +6,19 @@ FactoryGirl.define do
     arrival_date { Date.today }
     supplier 'Stark Inc.'
     consumable_type
+
+    factory :consumable_with_parents do
+
+      transient do
+        parents { FactoryGirl.create_list(:consumable, 3)}
+      end
+
+      after(:create) do |consumable, evaluator|
+        consumable.add_parents(evaluator.parents)
+      end
+    end
   end
+
+
 
 end
