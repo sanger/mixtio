@@ -11,15 +11,24 @@ class ConsumableParents
     @parent.on('click', "[data-behavior~=add_parent]", (e) ->
       self.addNewParent($(this), e)
     )
+    @parent.on('click', "[data-behavior~=remove_parent]", (e) ->
+      self.removeParent($(this), e)
+    )
 
-  setParentIds: (e) =>
+  setParentIds: () =>
     @parent_ids.val($.map($("select", @parent), (s) ->
       $(s).val()
     ).join(","))
 
   addNewParent: (element, e) =>
     e.preventDefault()
-    @parent.append($(element.closest('li')).wrap("<li></li>").html())
+    @parent.append("<li>" + $(element.closest('li')).html() + "</li>")
+
+  removeParent: (element, e) =>
+    e.preventDefault()
+    $(element.closest('li')).remove()
+    @setParentIds()
+
 
 jQuery ->
   for parent in $("[data-behavior~=parents]")

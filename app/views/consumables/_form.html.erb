@@ -32,6 +32,7 @@
           <%= label_tag(:parent) %>
           <%= select_tag :parent, options_from_collection_for_select(Consumable.all, :id, :name), {include_blank: true} %>
           <%= link_to '+', "#", data: { behavior: "add_parent"}, title: "Add Parent" %>
+          <%= link_to '-', "#", data: { behavior: "remove_parent"}, title: "Remove Parent" %>
         </li>
       </div>
       <li>
