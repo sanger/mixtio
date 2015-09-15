@@ -30,7 +30,7 @@ RSpec.describe "Consumables", type: feature do
     expect(page).to have_content("Consumable successfully created")
   end
 
-  it "Allows a user to create multiple new consumable" do
+  it "Allows a user to create multiple new consumables" do
     consumable = build(:consumable)
 
     visit consumables_path
