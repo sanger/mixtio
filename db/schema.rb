@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20150818094422) do
     t.boolean  "depleted",           default: false
     t.string   "lot_number"
     t.string   "supplier"
+    t.integer  "batch_number"
   end
 
   add_index "consumables", ["consumable_type_id"], name: "index_consumables_on_consumable_type_id"

@@ -30,6 +30,11 @@ RSpec.describe Consumable, type: :model do
     expect(consumable.barcode).to eq("mx-my-consumable-#{consumable.id}")
   end
 
+  it "should generate a batch number after creation" do
+    consumable = create(:consumable)
+    expect(consumable.batch_number).to be(1)
+  end
+
   it "should be able to have one child" do
     consumable = create(:consumable)
     child      = create(:consumable)
@@ -81,6 +86,19 @@ RSpec.describe Consumable, type: :model do
     consumables = consumable.save_or_mix(3)
     expect(consumables.count).to eq(3)
     expect(consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
+  end
+
+  it "should have the same batch number for consumables created at the same time" do
+    consumable = build(:consumable)
+    consumables = consumable.save_or_mix(3)
+
+    expect(consumables.all? { |c| c[:batch_number] == 1 }).to be_truthy()
+
+    consumable2 = build(:consumable)
+    consumables2 = consumable2.save_or_mix(5)
+
+    expect(consumables2.all? { |c| c[:batch_number] == 2 }).to be_truthy()
+
   end
 
 end

@@ -11,6 +11,7 @@ class Consumable < ActiveRecord::Base
   validates :lot_number, presence: true
   validates :consumable_type, existence: true
 
+  before_create :set_batch_number
   after_create :generate_barcode
 
   def add_children(children)
@@ -24,15 +25,28 @@ class Consumable < ActiveRecord::Base
   end
 
   def save_or_mix(limit = 1)
-    (1..limit).collect do |n|
-      Consumable.create(self.attributes).add_parents(Consumable.where(id: self.parent_ids))
-    end
+    create_batch(limit).map! { |c| c.add_parents(Consumable.where(id: self.parent_ids)) }
+  end
+
+  def create_batch(limit)
+    set_batch_number
+    attributes = (1..limit).map { self.attributes }
+    Consumable.create(attributes)
+  end
+
+  def self.get_next_batch_number
+    consumable = Consumable.order(batch_number: :desc).limit(1).first
+    consumable.nil? ? 1 : consumable[:batch_number] + 1
   end
 
   private
 
   def generate_barcode
     update_column(:barcode, "mx-#{self.name.gsub(' ','-').downcase}-#{self.id}")
+  end
+
+  def set_batch_number
+    self.batch_number ||= Consumable.get_next_batch_number
   end
 
   def add_ancestor(child, parent)
