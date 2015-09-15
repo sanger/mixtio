@@ -26,6 +26,10 @@
         <%= f.label :consumable_type_id %>
         <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id) %>
       </li>
+      <li>
+        <%= label_tag(:number) %>
+        <%= text_field_tag(:number, nil, name: 'limit') %>
+      </li>
       <div data-behavior="parents">
         <%= f.hidden_field :parent_ids, value: "", data: { id: "parent_ids" }%>
         <li>

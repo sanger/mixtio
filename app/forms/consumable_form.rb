@@ -21,7 +21,8 @@ class ConsumableForm
     consumable.parent_ids = get_parent_ids(params[:consumable].slice(:parent_ids))
     if valid?
       if consumable.new_record?
-        @consumables = consumable.save_or_mix(params[:consumable][:limit] || 1)
+        limit = (params[:limit].empty?) ? 1 : params[:limit].to_i
+        @consumables = consumable.save_or_mix(limit)
         true
       else
         consumable.save
