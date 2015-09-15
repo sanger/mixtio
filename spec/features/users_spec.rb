@@ -1,4 +1,4 @@
-#(l4) As an admin I want to be able to create new users in the system and edit them in order to allow users to be tracked in the system.
+# As an admin I want to be able to create new users in the system and edit them in order to allow users to be tracked in the system.
 require "rails_helper"
 
 RSpec.describe "Users", type: :feature do
