@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   resources :consumable_types, :consumables
 
+  resources :users
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
