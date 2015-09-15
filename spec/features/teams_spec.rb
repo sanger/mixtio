@@ -3,8 +3,6 @@ require "rails_helper"
 
 RSpec.describe "Teams", type: :feature do
 
-  let!(:teams) { create_list(:team, 2)}
-
   it "Allows a user to create a new team" do
     team = build(:team)
     visit teams_path
