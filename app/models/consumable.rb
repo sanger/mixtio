@@ -35,8 +35,7 @@ class Consumable < ActiveRecord::Base
   end
 
   def self.get_next_batch_number
-    consumable = Consumable.order(batch_number: :desc).limit(1).first
-    consumable.nil? ? 1 : consumable[:batch_number] + 1
+    count == 0 ? 1 : maximum(:batch_number) + 1
   end
 
   private
