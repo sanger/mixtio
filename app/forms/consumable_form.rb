@@ -2,8 +2,10 @@ class ConsumableForm
   include ActiveModel::Model
 
   validate :check_consumable
+  validate :check_limit
 
   attr_reader :consumable
+  attr_accessor :limit
 
   ATTRIBUTES = [:name, :expiry_date, :lot_number, :arrival_date, :supplier, :consumable_type_id, :parent_ids]
   delegate *ATTRIBUTES, :id, to: :consumable
@@ -17,11 +19,11 @@ class ConsumableForm
   end
 
   def submit(params)
+    @limit = set_limit(params)
     consumable.attributes = params[:consumable].slice(*ATTRIBUTES).permit!
     consumable.parent_ids = get_parent_ids(params[:consumable].slice(:parent_ids))
     if valid?
       if consumable.new_record?
-        limit = (params[:limit].empty?) ? 1 : params[:limit].to_i
         @consumables = consumable.save_or_mix(limit)
         true
       else
@@ -42,11 +44,22 @@ class ConsumableForm
 
   private
 
+  def set_limit(params)
+    limit = params[:consumable].slice(:limit)
+    limit[:limit].present? ? limit[:limit].to_i : 1
+  end
+
   def check_consumable
     unless consumable.valid?
       consumable.errors.each do |key, value|
         errors.add key, value
       end
+    end
+  end
+
+  def check_limit
+    if limit < 1
+      errors.add :limit, 'should be greater than 0'
     end
   end
 

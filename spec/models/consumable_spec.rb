@@ -30,9 +30,11 @@ RSpec.describe Consumable, type: :model do
     expect(consumable.barcode).to eq("mx-my-consumable-#{consumable.id}")
   end
 
-  it "should generate a batch number after creation" do
-    consumable = create(:consumable)
-    expect(consumable.batch_number).to be(1)
+  it "should generate a batch number after initialize" do
+    expect(build(:consumable).batch_number).to be(1)
+    create(:consumable)
+    expect(build(:consumable).batch_number).to be(2)
+    expect(create(:consumable, batch_number: 9).batch_number).to be(9)
   end
 
   it "should be able to have one child" do
