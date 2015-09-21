@@ -11,6 +11,7 @@ class Consumable < ActiveRecord::Base
   validates :lot_number, presence: true
   validates :consumable_type, existence: true
 
+  after_initialize :set_batch_number
   after_create :generate_barcode
 
   def add_children(children)
@@ -29,10 +30,18 @@ class Consumable < ActiveRecord::Base
     end
   end
 
+  def self.get_next_batch_number
+    count == 0 ? 1 : maximum(:batch_number) + 1
+  end
+
   private
 
   def generate_barcode
     update_column(:barcode, "mx-#{self.name.gsub(' ','-').downcase}-#{self.id}")
+  end
+
+  def set_batch_number
+    self.batch_number ||= Consumable.get_next_batch_number
   end
 
   def add_ancestor(child, parent)
