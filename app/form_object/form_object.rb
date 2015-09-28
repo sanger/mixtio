@@ -1,14 +1,18 @@
-module BasicForm
+module FormObject
 
   extend ActiveSupport::Concern
   include ActiveModel::Model
 
-
   included do
 
     validate :check_for_errors
-    
+
     _model = self.to_s.gsub("Form","")
+
+    # class_attribute :model_name
+    # self.model_name = ActiveModel::Name.new(_model.constantize)
+    
+    
 
     define_singleton_method :model_name do
        ActiveModel::Name.new(_model.constantize)
