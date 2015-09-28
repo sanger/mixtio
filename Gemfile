@@ -69,3 +69,8 @@ group :test do
 
 end
 
+group :deployment do
+  gem 'therubyracer'
+  gem 'mysql2'
+end
+
