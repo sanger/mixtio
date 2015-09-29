@@ -7,15 +7,10 @@ module FormObject
 
     validate :check_for_errors
 
-    _model = self.to_s.gsub("Form","")
-
-    # class_attribute :model_name
-    # self.model_name = ActiveModel::Name.new(_model.constantize)
-    
-    
+     _model = self.to_s.gsub("Form","")
 
     define_singleton_method :model_name do
-       ActiveModel::Name.new(_model.constantize)
+       @@model_name ||= ActiveModel::Name.new(_model.to_s.gsub("Form","").constantize)
     end
 
     attr_reader :model
