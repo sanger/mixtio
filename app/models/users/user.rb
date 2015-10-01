@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
   include HasActive
+  include Permissions
 
   belongs_to :team
 
