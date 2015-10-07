@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914121348) do
+ActiveRecord::Schema.define(version: 20151007094742) do
 
   create_table "ancestors", force: :cascade do |t|
     t.integer  "family_id"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20150914121348) do
     t.string   "lot_number"
     t.string   "supplier"
     t.integer  "batch_number"
+    t.integer  "number_of_children", default: 1
   end
 
   add_index "consumables", ["consumable_type_id"], name: "index_consumables_on_consumable_type_id"

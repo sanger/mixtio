@@ -25,6 +25,11 @@ RSpec.describe Consumable, type: :model do
     expect(build(:consumable, consumable_type_id: nil)).to_not be_valid
   end
 
+  it "should not be valid without a valid number of children" do
+    expect(build(:consumable, number_of_children: 0)).to_not be_valid
+    expect(build(:consumable, number_of_children: 'asdf')).to_not be_valid
+  end
+
   it "should generate a barcode after creation" do
     consumable = create(:consumable, name: 'My consumable')
     expect(consumable.barcode).to eq("mx-my-consumable-#{consumable.id}")
@@ -84,23 +89,42 @@ RSpec.describe Consumable, type: :model do
     expect(consumables.count).to eq(1)
     expect(consumables.first.parents).to be_empty
 
-    consumable = build(:consumable, parent_ids: parents.map(&:id))
-    consumables = consumable.save_or_mix(3)
+    consumable = build(:consumable, parent_ids: parents.map(&:id), number_of_children: 3)
+    consumables = consumable.save_or_mix
     expect(consumables.count).to eq(3)
     expect(consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
   end
 
   it "should have the same batch number for consumables created at the same time" do
-    consumable = build(:consumable)
-    consumables = consumable.save_or_mix(3)
+    consumable = build(:consumable_with_children)
+    consumables = consumable.save_or_mix
 
     expect(consumables.all? { |c| c[:batch_number] == 1 }).to be_truthy()
 
-    consumable2 = build(:consumable)
-    consumables2 = consumable2.save_or_mix(5)
+    consumable2 = build(:consumable_with_children)
+    consumables2 = consumable2.save_or_mix
 
     expect(consumables2.all? { |c| c[:batch_number] == 2 }).to be_truthy()
 
+  end
+
+  it "should not assign number_of_children attribute when children are created" do
+    consumable_with_children = build(:consumable_with_children)
+
+    consumables = consumable_with_children.save_or_mix
+
+    expect(consumables.all? { |c| c[:number_of_children] == 1 }).to be_truthy
+  end
+
+  it "should assign parent ids correctly" do
+    consumables = create_list(:consumable, 3)
+    ids = Consumable.pluck(:id)
+
+    consumable = build(:consumable, parent_ids: ids)
+    expect(consumable.parent_ids).to eq(ids)
+
+    consumable2 = build(:consumable, parent_ids: ids.join(','))
+    expect(consumable2.parent_ids).to eq(ids)
   end
 
 end
