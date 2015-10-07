@@ -8,7 +8,7 @@
       </li>
       <li>
         <%= f.label :expiry_date %>
-        <%= f.date_field :expiry_date %>
+        <%= f.text_field :expiry_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :lot_number %>
@@ -16,7 +16,7 @@
       </li>
       <li>
         <%= f.label :arrival_date %>
-        <%= f.date_field :arrival_date %>
+        <%= f.text_field :arrival_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :supplier %>

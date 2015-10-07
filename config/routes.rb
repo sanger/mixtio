@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   resources :teams
 
+  root 'consumables#index'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
