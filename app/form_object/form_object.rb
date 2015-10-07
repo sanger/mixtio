@@ -5,12 +5,17 @@ module FormObject
 
   included do
 
+    class_attribute :form_variables
+    self.form_variables = []
+
+    attr_reader :params, :controller, :action
+
     validate :check_for_errors
 
      _model = self.to_s.gsub("Form","")
 
     define_singleton_method :model_name do
-       @@model_name ||= ActiveModel::Name.new(_model.to_s.gsub("Form","").constantize)
+       ActiveModel::Name.new(_model.constantize)
     end
 
     attr_reader :model
@@ -32,6 +37,13 @@ module FormObject
       end
 
     end
+
+    def set_form_variables(*variables)
+      #self.class.form_variables = variables
+      variables.each do |variable|
+        attr_accessor variable
+      end
+    end
   end
 
   def initialize(object = self.model_name.klass.new)
@@ -39,6 +51,8 @@ module FormObject
   end
 
   def submit(params)
+    assign_attributes(params: params, controller: params[:controller], action: params[:action])
+    assign_form_variables
     model.attributes = params[self.model_name.i18n_key].slice(*model_attributes).permit!
     if valid?
       model.save
@@ -58,6 +72,23 @@ private
       model.errors.each do |key, value|
         errors.add key, value
       end
+    end
+  end
+
+  def assign_attributes(attributes)
+    attributes.each do |k,v|
+      assign_attribute k, v
+    end
+  end
+
+  def assign_attribute(attribute, value)
+    instance_variable_set "@#{attribute}", value
+  end
+
+  def assign_form_variables
+    p self.form_variables
+    self.form_variables.each do |variable|
+      instance_variable_set "@#{variable}", params[self.model_name.i18n_key][variable]
     end
   end
 
