@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe FormObject, type: :model do |variable|
   
-  with_model :MyModel do
+  with_model :ModelA do
     table do |t|
       t.string :name
       t.timestamps null: false
@@ -13,7 +13,7 @@ RSpec.describe FormObject, type: :model do |variable|
     end
   end
 
-  with_model :AnotherModel do
+  with_model :ModelB do
     table do |t|
       t.string :name
       t.timestamps null: false
@@ -23,45 +23,63 @@ RSpec.describe FormObject, type: :model do |variable|
     end
   end
 
-  class MyModelForm
+  class ModelAForm
+    include FormObject
+
+    set_attributes :name
+    set_form_variables :attr_a, :attr_b
+  end
+
+  class ModelBForm
     include FormObject
 
     set_attributes :name
   end
 
-  class AnotherModelForm
-    include FormObject
+  it "should assign the params attributes" do
+    params = ActionController::Parameters.new(controller: 'my_controller', action: 'create', model_a: {})
+    model_a_form = ModelAForm.new
+    model_a_form.submit(params)
+    expect(model_a_form.controller).to eq('my_controller')
+    expect(model_a_form.action).to eq('create')
+    expect(model_a_form.params).to eq(params)
+  end
 
-    set_attributes :name
+  it "should assign the form instance variables" do
+    params = ActionController::Parameters.new(model_a: {attr_a: "attr_a", attr_b: "attr_b"})
+    model_a_form = ModelAForm.new
+    model_a_form.submit(params)
+    expect(model_a_form.attr_a).to eq('attr_a')
+    expect(model_a_form.attr_b).to eq('attr_b')
   end
 
   it "allows creation of a new record with valid attributes" do
     expect{ 
-      MyModelForm.new.submit(ActionController::Parameters.new(my_model: { name: "A name" }))
-    }.to change(MyModel, :count).by(1)
+      ModelAForm.new.submit(ActionController::Parameters.new(model_a: { name: "A name" }))
+    }.to change(ModelA, :count).by(1)
 
     expect{ 
-      AnotherModelForm.new.submit(ActionController::Parameters.new(another_model: { name: "A name"}))
-    }.to change(AnotherModel, :count).by(1)
+      ModelBForm.new.submit(ActionController::Parameters.new(model_b: { name: "A name"}))
+    }.to change(ModelB, :count).by(1)
   end
 
   it "prevents creation of record with invalid attributes" do
-    my_model_form = MyModelForm.new
+    model_a_form = ModelAForm.new
     expect{ 
-      my_model_form.submit(ActionController::Parameters.new(my_model: { name: nil}))
-    }.to_not change(MyModel, :count)
-    expect(my_model_form).to_not be_valid
-    expect(my_model_form.errors.count).to eq(1)
+      model_a_form.submit(ActionController::Parameters.new(model_a: { name: nil}))
+    }.to_not change(ModelA, :count)
+    expect(model_a_form).to_not be_valid
+    expect(model_a_form.errors.count).to eq(1)
   end
 
   it "allows updating of existing record with valid attributes" do
-    my_model = MyModel.create(name: "A name")
-    my_model_form = MyModelForm.new(my_model)
-    expect(my_model_form.id).to eq(my_model.id)
-    expect(my_model_form).to be_persisted
+    model_a = ModelA.create(name: "A name")
+    model_a_form = ModelAForm.new(model_a)
+    expect(model_a_form.id).to eq(model_a.id)
+    expect(model_a_form).to be_persisted
     expect{ 
-      my_model_form.submit(ActionController::Parameters.new(my_model: { name: "Another name"}))
-    }.to change{my_model.reload.name}.to("Another name")
+      model_a_form.submit(ActionController::Parameters.new(model_a: { name: "Another name"}))
+    }.to change{model_a.reload.name}.to("Another name")
   end
 
 end
