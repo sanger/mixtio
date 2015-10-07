@@ -30,7 +30,7 @@ RSpec.describe ConsumableForm, type: :model do
   end
 
   it "should create many children from a single parent" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s, 'limit' => 3)))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s, 'number_of_children' => 3)))
 
     expect(consumable_form.consumables.count).to eq(3)
     expect(parents.first.children.count).to eq(3)
@@ -46,7 +46,7 @@ RSpec.describe ConsumableForm, type: :model do
   end
 
   it "should create many children from multiple parents" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id).join(','), 'limit' => 3)))
+    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.map(&:id).join(','), 'number_of_children' => 3)))
 
     expect(consumable_form.consumables.count).to eq(3)
     expect(consumable_form.consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
@@ -60,16 +60,6 @@ RSpec.describe ConsumableForm, type: :model do
     consumable_form.submit(ActionController::Parameters.new(consumable: consumable.attributes.merge('supplier' => 'Illumina')))
 
     expect(consumable.reload.supplier).to eq('Illumina')
-  end
-
-  it "should produce an error if limit is invalid" do
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s, 'limit' => 0)))
-
-    expect(consumable_form.errors.full_messages).to include('Limit should be greater than 0')
-
-    consumable_form.submit(ActionController::Parameters.new(consumable: valid_attributes.merge('parent_ids' => parents.first.id.to_s, 'limit' => 'asdf')))
-
-    expect(consumable_form.errors.full_messages).to include('Limit should be greater than 0')
   end
 
 end

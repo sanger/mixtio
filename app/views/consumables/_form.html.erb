@@ -27,8 +27,8 @@
         <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id) %>
       </li>
       <li>
-        <%= f.label :limit %>
-        <%= f.text_field :limit %>
+        <%= f.label :number_of_children %>
+        <%= f.text_field :number_of_children %>
       </li>
       <div data-behavior="parents">
         <%= f.hidden_field :parent_ids, value: "", data: { id: "parent_ids" }%>
