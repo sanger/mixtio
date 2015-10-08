@@ -1,0 +1,3 @@
+class Scientist < User
+
+end

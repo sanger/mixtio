@@ -48,4 +48,21 @@ RSpec.describe User, type: :model do
     expect(user.errors.full_messages).to include("Swipe card or Barcode must be completed")
   end
 
+  describe "User Types" do
+    it "should be able to create an Administrator" do
+      user = create(:user, type: "Administrator")
+      expect(Administrator.all.count).to eq(1)
+    end
+
+    it "should be able to create a Scientist" do
+      user = create(:user, type: "Scientist")
+      expect(Scientist.all.count).to eq(1)
+    end
+
+    it "shuould be able to create a Guest" do
+      user = create(:user, type: "Guest")
+      expect(Guest.all.count).to eq(1)
+    end
+  end
+
 end
