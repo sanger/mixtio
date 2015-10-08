@@ -12,4 +12,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :swipe_card_id, :barcode, allow_blank: true, allow_nil: true
 
   validates_with EitherOrValidator, fields: [:swipe_card_id, :barcode]
+
+  def self.types
+    %w(Scientist Administrator)
+  end
 end

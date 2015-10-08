@@ -1,4 +1,4 @@
-<%= form_for @user do |f| %>
+<%= form_for @user.becomes(User) do |f| %>
   <fieldset>
     <ul>
       <li>
@@ -12,6 +12,10 @@
        <li>
         <%= f.label :barcode %>
         <%= f.password_field :barcode %>
+      </li>
+      <li>
+        <%= f.label :type %>
+        <%= f.select :type, options_for_select(User.types, @user.type) %>
       </li>
       <li>
         <%= f.label :team_id, "Team" %>

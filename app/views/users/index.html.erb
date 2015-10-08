@@ -5,5 +5,5 @@
   <div>
       <%= link_to "Add new user", new_user_path %>
   </div>
-  <%= render users %>
+  <%= render partial: 'user', collection: @users %>
 </section>
