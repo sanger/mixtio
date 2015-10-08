@@ -5,8 +5,8 @@ class UserForm
 
   attr_reader :user
 
-  ATTRIBUTES = [:login, :swipe_card_id, :barcode, :team_id, :status]
-  delegate *ATTRIBUTES, :id, to: :user
+  ATTRIBUTES = [:login, :swipe_card_id, :barcode, :team_id, :status, :type]
+  delegate *ATTRIBUTES, :id, :becomes, to: :user
 
   def self.model_name
     ActiveModel::Name.new(User, nil, nil)

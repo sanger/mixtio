@@ -41,4 +41,19 @@ RSpec.describe "Users", type: :feature do
     expect(page).to have_content("error prohibited this record from being saved")
   end
 
+  it "Allows a user to create a new administrator" do
+    user = build(:user)
+    visit users_path
+    click_link "Add new user"
+    expect {
+      fill_in "Login", with: user.login
+      fill_in "Swipe card", with: user.swipe_card_id
+      fill_in "Barcode", with: user.barcode
+      select "Administrator", from: "Type"
+      select teams.first.name, from: "Team"
+      click_button "Create User"
+    }.to change(Administrator, :count).by(1)
+    expect(page).to have_content("User successfully created")
+  end
+
 end
