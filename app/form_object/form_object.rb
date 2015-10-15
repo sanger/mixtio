@@ -3,16 +3,76 @@ module FormObject
   extend ActiveSupport::Concern
   include ActiveModel::Model
 
+  # Provides a middleman between views and models.
+  # A form object will allow you to assign permitted attributes.
+  # It will also allow you to carry out other functions such as authorisation and adding audit records.
+  # Convention states that the name must be in the format of the model followed by Form e.g. MyModelForm relates to MyModel.
+  # It will set the ActiveModel name to the underlying model name for use in views.
+  #
+  # The set_attributes method accepts a list of attributes which will be assigned on submit and are permitted.
+  # These must be attributes of the model.
+  # The form object can be initialized with an existing object
+  # The submit method accepts parameters of type ActionController::Parameters of format { my_model: { attr_a: "a", attr_b: "b"}}
+  # The submit method will assign any form variables, assign the model attributes will validate the model and carry out any other
+  # specific validations that are added. It will then save the model if it is valid.
+  # The after_validate method allows you to change which actions are carried out post validation.
+  # The after_submit callback allows you to specify actions which can be carried out after a successful submit.
+  # Each form object will automatically assign controller and action variables if the paramters come from a controller and will
+  # also assign the paramters to an instance variable.
+  # Each object will also have an attribute called model which relates to the underlying model this is also aliased to the name of the model.
+  # e.g. if model is called MyModel there will an attribute called my_model.
+
+  # Usage:
+  #  class MyModel
+  #   validates_presence_of :attr_a
+  #  end
+  #
+  #  class MyModelForm
+  #   include FormObject
+  #   
+  #   set_attributes :attr_a, :attr_b
+  #   set_form_attributes :user_code
+  #   validate :check_user
+  #   
+  #   after_validate do
+  #    my_model.save
+  #    Audit.create(user_code, my_model)
+  #   end
+  #   
+  #   def check_user
+  #    UserValidator.new.validate(self)
+  #   end
+  #  end
+  #
+  #  my_model_form = MyModelForm.new
+  #  my_model_form.submit(ActionController::Parameters.new({user_code: 1234, my_model: attr_a: "a", attr_b: "b"}))
+  #   => true
+  #  my_model_form.my_model # => <# MyModel: id: 1, attr_a: "a", attr_b: "b" >
+  #  my_model_form.user_code # => 1234
+  #
+  #  my_model_form = MyModelForm.new
+  #  my_model_form.submit(ActionController::Parameters.new({user_code: 1234, my_model: attr_a: nil, attr_b: "b"}))
+  #   => false
+  #  my_model_form.my_model # => <# MyModel: id: nil, attr_a: nil, attr_b: "b" >
+  #  my_model_form.errors.full_messages # => ["attr a can't be blank."]
+  # 
+  #  my_model_form = MyModelForm.new
+  #  my_model_form.submit(ActionController::Parameters.new({user_code: nil, my_model: attr_a: "a", attr_b: "b"}))
+  #   => false
+  #  my_model_form.my_model # => <# MyModel: id: nil, attr_a: "a", attr_b: "b" >
+  #  my_model_form.errors.full_messages # => ["user does not exist."]
+  #
+
   included do
 
-    class_attribute :form_variables
-    self.form_variables = []
+    _model = self.to_s.gsub("Form","")
 
-    attr_reader :params, :controller, :action
+    class_attribute :form_variables
+    self.form_variables = FormObject::FormVariables.new(_model.underscore.to_sym, :params, :controller, :action)
+
+    attr_reader *self.form_variables.controller
 
     validate :check_for_errors
-
-     _model = self.to_s.gsub("Form","")
 
     define_singleton_method :model_name do
        ActiveModel::Name.new(_model.constantize)
@@ -20,14 +80,17 @@ module FormObject
 
     attr_reader :model
 
-    alias_attribute _model.underscore.to_sym, :model
+    alias_attribute self.form_variables.model_key, :model
 
     delegate :id, to: :model
+
+    define_model_callbacks :submit, only: :after
 
   end
 
   module ClassMethods
 
+    # Set the whitelist of attributes that will be assigned to the model.
     def set_attributes(*attributes)
 
       delegate *attributes, to: :model
@@ -38,31 +101,49 @@ module FormObject
 
     end
 
+    # Set the list of form variables which will be assigned on submit.
     def set_form_variables(*variables)
-      #self.class.form_variables = variables
-      variables.each do |variable|
-        attr_accessor variable
+      self.form_variables.add(*variables)
+      attr_accessor *self.form_variables.model
+    end
+
+    # modify the actions which will be carried out after a successful validation.
+    def after_validate(&block)
+      define_method :save_if_valid do 
+        run_transaction do
+          instance_eval &block
+        end
       end
     end
   end
 
+  # If no argument is passed a new model is created otherwise the passed object is assigned
   def initialize(object = self.model_name.klass.new)
     @model = object
   end
 
+  # form variables are assigned, attributes are assigned to the model object validate and save the object
+  # and run any callbacks.
   def submit(params)
-    assign_attributes(params: params, controller: params[:controller], action: params[:action])
-    assign_form_variables
-    model.attributes = params[self.model_name.i18n_key].slice(*model_attributes).permit!
-    if valid?
-      model.save
-    else
-      false
+    run_callbacks :submit do
+      self.form_variables.assign_all(self, params)
+      model.attributes = params[self.model_name.i18n_key].slice(*model_attributes).permit!
+      save_if_valid
     end
   end
 
+  # Has the model previously been persisted?
   def persisted?
     model.id?
+  end
+
+  # Validate the model. If it is valid run an ActiveRecord transaction with any passed block.
+  # The standard validation is to validate the ActiveRecord model plus any specified validation.
+  # If the model is valid and any transaction runs successfully the return true otherwise return false.
+  def save_if_valid
+    run_transaction do
+      model.save
+    end
   end
 
 private
@@ -75,20 +156,18 @@ private
     end
   end
 
-  def assign_attributes(attributes)
-    attributes.each do |k,v|
-      assign_attribute k, v
-    end
-  end
-
-  def assign_attribute(attribute, value)
-    instance_variable_set "@#{attribute}", value
-  end
-
-  def assign_form_variables
-    p self.form_variables
-    self.form_variables.each do |variable|
-      instance_variable_set "@#{variable}", params[self.model_name.i18n_key][variable]
+  def run_transaction(&block)
+    if valid?
+      begin
+        ActiveRecord::Base.transaction do
+          yield
+        end
+        true
+      rescue
+        false
+      end
+    else
+      false
     end
   end
 
