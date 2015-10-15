@@ -65,4 +65,12 @@ RSpec.describe User, type: :model do
     end
   end
 
+  it "should not update swipe_card_id and barcode if they are blank" do
+    user = create(:user)
+    swipe_card_id = user.swipe_card_id
+    user.update_attributes(swipe_card_id: nil, barcode: nil)
+    expect(user.reload.swipe_card_id).to be_present
+    expect(user.barcode).to be_present
+  end
+
 end
