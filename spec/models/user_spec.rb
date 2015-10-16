@@ -73,4 +73,14 @@ RSpec.describe User, type: :model do
     expect(user.barcode).to be_present
   end
 
+  it "find by code should find a user by its swipe_card_id or barcode" do
+    users = create_list(:user, 5)
+    expect(User.find_by_code(users.first.swipe_card_id)).to eq(users.first)
+    expect(User.find_by_code(users.last.barcode)).to eq(users.last)
+    expect(User.find_by_code(nil)).to be_guest
+    expect(User.find_by_code("1111")).to be_guest
+
+
+  end
+
 end

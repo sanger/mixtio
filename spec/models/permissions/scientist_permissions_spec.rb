@@ -19,8 +19,9 @@ RSpec.describe Permissions::ScientistPermissions, type: :model do
   end
 
   it "should allow a scientist to create or modify a consumable" do
-    expect(permissions.allow?(:consumable, :create)).to be_truthy
-    expect(permissions.allow?(:consumable, :update)).to be_truthy
+    expect(permissions.allow?(:consumables, :create)).to be_truthy
+    expect(permissions.allow?('consumables', 'create')).to be_truthy
+    expect(permissions.allow?(:consumables, :update)).to be_truthy
   end
 
 end

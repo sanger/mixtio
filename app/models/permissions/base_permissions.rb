@@ -6,14 +6,12 @@ module Permissions
     end
 
     def allow?(controller, action)
-      return @all_actions if !@all_actions.nil?
-      return false if !@permissions.has_key?(controller)
-      @permissions[controller].include?(action) ? true : false
+      return @all_actions if @all_actions
+      @permissions.has_key?(controller.to_s) && @permissions[controller.to_s].include?(action.to_s)
     end
 
     def allow(controller, actions)
-      @permissions[controller] ||= []
-      @permissions[controller] = @permissions[controller].union(Array(actions))
+      @permissions[controller.to_s] = Array(actions).collect(&:to_s)
     end
 
     def allow_all

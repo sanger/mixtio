@@ -1,6 +1,6 @@
 class TeamForm
 
- include FormObject
+ include AuthenticationForm
 
   set_attributes :name, :number
   
