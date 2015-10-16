@@ -2,6 +2,9 @@
   <fieldset>
     <ul>
       <li>
+       <%= render "current_user", object: f %>
+      </li>
+      <li>
         <%= f.label :name %>
         <%= f.text_field :name %>
       </li>

@@ -24,4 +24,6 @@ en:
   errors:
     existence: "must exist"
     future_date: "can't be in the past"
+    active: "is not active"
+    authorised: "is not authorised"
 
