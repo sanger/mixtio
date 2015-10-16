@@ -10,7 +10,9 @@ class Consumable < ActiveRecord::Base
   validates :expiry_date, presence: true, expiry_date: true
   validates :lot_number, presence: true
   validates :consumable_type, existence: true
+  validates_numericality_of :number_of_children, greater_than: 0
 
+  after_initialize :set_batch_number
   after_create :generate_barcode
 
   def add_children(children)
@@ -23,16 +25,32 @@ class Consumable < ActiveRecord::Base
     self
   end
 
-  def save_or_mix(limit = 1)
-    (1..limit).collect do |n|
-      Consumable.create(self.attributes).add_parents(Consumable.where(id: self.parent_ids))
+  def mix
+    (1..self.number_of_children).collect do |n|
+      Consumable.create(self.attributes.except('number_of_children')).add_parents(Consumable.where(id: self.parent_ids))
     end
+  end
+
+  def save_or_mix
+    new_record? ? mix : save
+  end
+
+  def parent_ids=(parent_ids)
+    super(parent_ids.instance_of?(String) ? parent_ids.split(',') : parent_ids)
+  end
+
+  def self.get_next_batch_number
+    count == 0 ? 1 : maximum(:batch_number) + 1
   end
 
   private
 
   def generate_barcode
     update_column(:barcode, "mx-#{self.name.gsub(' ','-').downcase}-#{self.id}")
+  end
+
+  def set_batch_number
+    self.batch_number ||= Consumable.get_next_batch_number
   end
 
   def add_ancestor(child, parent)

@@ -17,6 +17,10 @@ FactoryGirl.define do
         consumable.add_parents(evaluator.parents)
       end
     end
+
+    factory :consumable_with_children do
+      number_of_children 3
+    end
   end
 
 

@@ -1,0 +1,18 @@
+<%= form_for @team do |f| %>
+  <fieldset>
+    <ul>
+      <li>
+       <%= render "current_user", object: f %>
+      </li>
+      <li>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+      </li>
+      <li>
+        <%= f.label :number %>
+        <%= f.text_field :number %>
+      </li>
+    </ul>
+    <%= f.submit %>
+  </fieldset>
+<% end %>

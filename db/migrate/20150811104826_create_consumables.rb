@@ -12,6 +12,7 @@ class CreateConsumables < ActiveRecord::Migration
       t.boolean :depleted, default: false
       t.string :lot_number
       t.string :supplier
+      t.integer :batch_number
     end
   end
 end

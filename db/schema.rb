@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818094422) do
+ActiveRecord::Schema.define(version: 20151007094742) do
 
   create_table "ancestors", force: :cascade do |t|
     t.integer  "family_id"
@@ -40,8 +40,31 @@ ActiveRecord::Schema.define(version: 20150818094422) do
     t.boolean  "depleted",           default: false
     t.string   "lot_number"
     t.string   "supplier"
+    t.integer  "batch_number"
+    t.integer  "number_of_children", default: 1
   end
 
   add_index "consumables", ["consumable_type_id"], name: "index_consumables_on_consumable_type_id"
+
+  create_table "teams", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "login"
+    t.string   "swipe_card_id"
+    t.string   "barcode"
+    t.string   "type"
+    t.integer  "status",         default: 0
+    t.datetime "deactivated_at"
+    t.integer  "team_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "users", ["team_id"], name: "index_users_on_team_id"
 
 end

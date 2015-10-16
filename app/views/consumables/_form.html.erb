@@ -3,12 +3,15 @@
     <legend></legend>
     <ul>
       <li>
+       <%= render "current_user", object: f %>
+      </li>
+      <li>
         <%= f.label :name %>
         <%= f.text_field :name %>
       </li>
       <li>
         <%= f.label :expiry_date %>
-        <%= f.date_field :expiry_date %>
+        <%= f.text_field :expiry_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :lot_number %>
@@ -16,7 +19,7 @@
       </li>
       <li>
         <%= f.label :arrival_date %>
-        <%= f.date_field :arrival_date %>
+        <%= f.text_field :arrival_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :supplier %>
@@ -25,6 +28,10 @@
       <li>
         <%= f.label :consumable_type_id %>
         <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id) %>
+      </li>
+      <li>
+        <%= f.label :number_of_children %>
+        <%= f.text_field :number_of_children %>
       </li>
       <div data-behavior="parents">
         <%= f.hidden_field :parent_ids, value: "", data: { id: "parent_ids" }%>
