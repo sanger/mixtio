@@ -3,7 +3,7 @@ module Permissions
 
     def initialize(user)
       super()
-      allow :consumable, [:create, :update]
+      allow :consumables, [:create, :update]
     end
 
   end
