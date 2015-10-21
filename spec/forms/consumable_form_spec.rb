@@ -7,7 +7,7 @@ RSpec.describe ConsumableForm, type: :model do
   let(:params)                      { ActionController::Parameters.new(controller_params) }
   let(:consumable_form)             { ConsumableForm.new }
   let!(:consumable_type)            { create(:consumable_type) }
-  let(:consumable_params)           { attributes_for(:consumable).merge('consumable_type_id' => consumable_type.id, 'current_user' => scientist.swipe_card_id) }
+  let(:consumable_params)           { attributes_for(:consumable).merge('consumable_type_id' => consumable_type.id) }
   let! (:parents)                   { create_list(:consumable, 5) }
   let! (:scientist)                 { create(:scientist)}
 
