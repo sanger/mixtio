@@ -9,6 +9,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
     click_link "Add new consumable type"
     expect{
       fill_in "Name", with: consumable_type.name
+      fill_in "Days to keep", with: consumable_type.days_to_keep
       click_button "Create Consumable type"
     }.to change(ConsumableType, :count).by(1)
     expect(page).to have_content("Consumable type successfully created")
@@ -34,8 +35,10 @@ RSpec.describe "ConsumableTypes", type: :feature do
     expect{
       find(:data_id, consumable_type.id).click_link "Edit"
       fill_in "Name", with: new_consumable_type.name
+      fill_in "Days to keep", with: 9
       click_button "Update Consumable type"
     }.to change{ consumable_type.reload.name }.to(new_consumable_type.name)
+    expect(consumable_type.days_to_keep).to eq(9)
     expect(page).to have_content("Consumable type successfully updated")
   end
 
