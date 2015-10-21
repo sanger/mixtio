@@ -14,6 +14,13 @@ Rails.application.routes.draw do
 
   root 'consumables#index'
 
+  namespace :api, defaults: { format: :json } do
+
+    namespace :v1 do
+      resources :consumables, param: :barcode, only: [:show]
+    end
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
