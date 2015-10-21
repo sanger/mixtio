@@ -1,8 +1,8 @@
 class ConsumableParents
 
   constructor: (parent) ->
-    @parent     = $(parent)
-    @parent_ids = @parent.children("[data-id~=parent_ids]")
+    @parent        = $(parent)
+    @parent_ids    = @parent.children("[data-id~=parent_ids]")
     @addListeners()
 
   addListeners: () ->
@@ -15,9 +15,26 @@ class ConsumableParents
       self.removeParent($(this), e)
       self.setParentIds()
     )
+    @parent.on('blur', "[data-behavior~=scan_parent_barcode]", (e) ->
+      consumable = new Consumable({barcode: $(this).val()})
+
+      parent_select = $(this).siblings('select')
+
+      consumable.fetch()
+        .then(() =>
+          self.setParentSelect(parent_select, consumable.get('id'))
+          $(this).val('')
+        , () => console.error("Something went wroooong!"))
+    )
 
   setParentIds: () =>
     @parent_ids.val($.map($("select", @parent), (s) -> $(s).val() ).join(","))
+
+  setParentSelect: (parent_select, val) =>
+    $('option', parent_select).filter(() ->
+      parseInt($(this).val()) is val
+    ).prop("selected", true)
+    @setParentIds()
 
   addNewParent: (element, e) =>
     e.preventDefault()

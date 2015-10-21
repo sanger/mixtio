@@ -20,7 +20,6 @@ RSpec.describe "Consumables", type: feature do
     visit consumables_path
     click_link "Add new consumable"
     expect{
-      fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
       fill_in "Name", with: consumable.name
       fill_in "Expiry date", with: consumable.expiry_date
       fill_in "Lot number", with: consumable.lot_number
@@ -38,7 +37,6 @@ RSpec.describe "Consumables", type: feature do
     visit consumables_path
     click_link "Add new consumable"
     expect{
-      fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
       fill_in "Name", with: consumable.name
       fill_in "Expiry date", with: consumable.expiry_date
       fill_in "Lot number", with: consumable.lot_number
@@ -57,7 +55,6 @@ RSpec.describe "Consumables", type: feature do
 
     visit new_consumable_path
     expect{
-      fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
       fill_in "Name", with: consumable.name
       fill_in "Expiry date", with: consumable.expiry_date
       fill_in "Lot number", with: consumable.lot_number
@@ -77,30 +74,29 @@ RSpec.describe "Consumables", type: feature do
     visit consumables_path
     expect{
       find(:data_id, consumable.id).click_link "Edit"
-      fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
       fill_in "Name", with: new_consumable.name
       click_button "Update Consumable"
     }.to change{ consumable.reload.name }.to(new_consumable.name)
     expect(page).to have_content("Consumable successfully updated")
   end
 
-  it "does not allow an unauthorised user to manage consumables" do
-    consumable = build(:consumable)
+  # it "does not allow an unauthorised user to manage consumables" do
+  #   consumable = build(:consumable)
 
-    visit new_consumable_path
-    expect{
-      fill_in "Name", with: consumable.name
-      fill_in "Expiry date", with: consumable.expiry_date
-      fill_in "Lot number", with: consumable.lot_number
-      fill_in "Arrival date", with: consumable.arrival_date
-      fill_in "Supplier", with: consumable.supplier
-      select consumable_types.first.name, from: 'Consumable type'
-      click_button "Create Consumable"
-    }.to_not change(Consumable, :count)
+  #   visit new_consumable_path
+  #   expect{
+  #     fill_in "Name", with: consumable.name
+  #     fill_in "Expiry date", with: consumable.expiry_date
+  #     fill_in "Lot number", with: consumable.lot_number
+  #     fill_in "Arrival date", with: consumable.arrival_date
+  #     fill_in "Supplier", with: consumable.supplier
+  #     select consumable_types.first.name, from: 'Consumable type'
+  #     click_button "Create Consumable"
+  #   }.to_not change(Consumable, :count)
 
-    expect(page).to have_content("errors prohibited this record from being saved")
+  #   expect(page).to have_content("errors prohibited this record from being saved")
 
-  end
+  # end
 
 
   describe "selecting parents", js: true do
@@ -121,7 +117,6 @@ RSpec.describe "Consumables", type: feature do
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.last.name).select_option
 
-        fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
         fill_in "Lot number", with: consumable.lot_number
@@ -152,7 +147,6 @@ RSpec.describe "Consumables", type: feature do
         find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove_parent").click
         find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove_parent").click
 
-        fill_in "User swipe card id/barcode", with: scientist.swipe_card_id
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
         fill_in "Lot number", with: consumable.lot_number
@@ -164,6 +158,53 @@ RSpec.describe "Consumables", type: feature do
 
       expect(Consumable.find_by(name: consumable.name).parents.count).to eq(1)
 
+    end
+
+    it "Allows a user to create a new consumable using parent consumable barcodes" do
+      consumable = build(:consumable)
+      parent_consumables = create_list(:consumable, 2)
+
+      visit consumables_path
+      click_link "Add new consumable"
+      expect {
+        fill_in "Name", with: consumable.name
+        fill_in "Expiry date", with: consumable.expiry_date
+        fill_in "Lot number", with: consumable.lot_number
+        fill_in "Arrival date", with: consumable.arrival_date
+        fill_in "Supplier", with: consumable.supplier
+
+        text_elem = find(:data_behavior, "parents")
+          .all("li")
+          .last
+          .all("input")
+          .first
+
+        text_elem.set(parent_consumables.first.barcode)
+        text_elem.trigger("blur")
+
+        wait_for_ajax
+
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+
+        text_elem = find(:data_behavior, "parents")
+          .all("li")
+          .last
+          .all("input")
+          .first
+
+        text_elem.set(parent_consumables.last.barcode)
+        text_elem.trigger("blur")
+
+        wait_for_ajax
+
+        select consumable_types.first.name, from: 'Consumable type'
+
+        click_button "Create Consumable"
+
+      }.to change(Consumable, :count).by(1)
+
+      expect(Consumable.find_by(name: consumable.name).parents.count).to eq(2)
+      expect(Consumable.find_by(name: consumable.name).parents).to eq(parent_consumables)
     end
 
   end

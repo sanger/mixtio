@@ -29,16 +29,16 @@ module FormObject
   #
   #  class MyModelForm
   #   include FormObject
-  #   
+  #
   #   set_attributes :attr_a, :attr_b
   #   set_form_attributes :user_code
   #   validate :check_user
-  #   
+  #
   #   after_validate do
   #    my_model.save
   #    Audit.create(user_code, my_model)
   #   end
-  #   
+  #
   #   def check_user
   #    UserValidator.new.validate(self)
   #   end
@@ -55,7 +55,7 @@ module FormObject
   #   => false
   #  my_model_form.my_model # => <# MyModel: id: nil, attr_a: nil, attr_b: "b" >
   #  my_model_form.errors.full_messages # => ["attr a can't be blank."]
-  # 
+  #
   #  my_model_form = MyModelForm.new
   #  my_model_form.submit(ActionController::Parameters.new({user_code: nil, my_model: attr_a: "a", attr_b: "b"}))
   #   => false
@@ -109,7 +109,7 @@ module FormObject
 
     # modify the actions which will be carried out after a successful validation.
     def after_validate(&block)
-      define_method :save_if_valid do 
+      define_method :save_if_valid do
         run_transaction do
           instance_eval &block
         end
