@@ -31,3 +31,7 @@ class @Consumable extends @Model
   endpoint: 'consumables'
 
   id_attribute: 'barcode'
+
+class @ConsumableType extends @Model
+
+  endpoint: 'consumable_types'

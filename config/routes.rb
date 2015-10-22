@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       resources :consumables, param: :barcode, only: [:show]
+      resources :consumable_types, only: [:show]
     end
   end
 

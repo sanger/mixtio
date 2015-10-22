@@ -24,7 +24,7 @@
       </li>
       <li>
         <%= f.label :consumable_type_id %>
-        <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id) %>
+        <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id), {include_blank: true}, data: { behavior: "consumable_type" } %>
       </li>
       <li>
         <%= f.label :number_of_children %>
