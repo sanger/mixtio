@@ -11,17 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151007094742) do
+ActiveRecord::Schema.define(version: 20151022133419) do
 
   create_table "ancestors", force: :cascade do |t|
+    t.string   "family_name"
     t.integer  "family_id"
-    t.string   "family_type"
-    t.integer  "consumable_id"
+    t.string   "relation_type"
+    t.integer  "relation_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
 
-  add_index "ancestors", ["family_id", "family_type", "consumable_id"], name: "index_ancestors_on_family_id_and_family_type_and_consumable_id"
+  add_index "ancestors", ["family_id", "relation_type", "relation_id"], name: "index_ancestors_on_family_id_and_relation_type_and_relation_id"
 
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
@@ -52,6 +53,14 @@ ActiveRecord::Schema.define(version: 20151007094742) do
     t.integer  "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "temp_ancestors", force: :cascade do |t|
+    t.integer  "family_id"
+    t.string   "family_type"
+    t.integer  "consumable_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -25,4 +25,38 @@ RSpec.describe ConsumableType, type: :model do
     expect(consumable_type.expiry_date_from_today).to eq(consumable_type.days_to_keep.days_from_today)
   end
 
+  it "should be able to have one child" do
+    consumable_type = create(:consumable_type)
+    child      = create(:consumable_type)
+
+    expect(consumable_type.add_children(child).children.count).to eq(1)
+  end
+
+  it "should be able to have many children" do
+    consumable_type = create(:consumable_type)
+    children = create_list(:consumable_type, 3)
+
+    consumable_type.add_children(children)
+
+    expect(children.all? {|child| consumable_type.children.include?(child)}).to be_truthy
+    expect(children.all? {|child| child.parents.include?(consumable_type)}).to be_truthy
+  end
+
+  it "should be able to have one parent" do
+    consumable_type = create(:consumable_type)
+    parent     = create(:consumable_type)
+
+    expect(consumable_type.add_parents(parent).parents.count).to eq(1)
+  end
+
+  it "should be able to have many parents" do
+    consumable_type = create(:consumable_type)
+    parents = create_list(:consumable_type, 3)
+
+    consumable_type.add_parents(parents)
+
+    expect(parents.all? {|parent| consumable_type.parents.include?(parent)}).to be_truthy
+    expect(parents.all? {|parent| parent.children.include?(consumable_type)}).to be_truthy
+  end
+
 end
