@@ -39,7 +39,7 @@ protected
   end
 
   def consumable_type_params
-    params.require(:consumable_type).permit(:name)
+    params.require(:consumable_type).permit(:name, :days_to_keep)
   end
 
   def current_resource
