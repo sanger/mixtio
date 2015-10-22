@@ -25,8 +25,9 @@ ActiveRecord::Schema.define(version: 20151007094742) do
 
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "days_to_keep"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "consumables", force: :cascade do |t|

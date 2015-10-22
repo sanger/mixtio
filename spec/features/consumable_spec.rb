@@ -209,4 +209,17 @@ RSpec.describe "Consumables", type: feature do
 
   end
 
+  it "Sets the expiry date when a consumable type is selected", js: true do
+    consumable = build(:consumable)
+
+    visit consumables_path
+    click_link "Add new consumable"
+
+    select consumable_types.first.name, from: 'Consumable type'
+
+    wait_for_ajax
+
+    expect(find_field("Expiry date").value).to eq(consumable_types.first.expiry_date_from_today)
+  end
+
 end
