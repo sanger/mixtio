@@ -15,4 +15,5 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require jquery.turbolinks
+//= require editable_parents
 //= require_tree .
