@@ -59,4 +59,19 @@ RSpec.describe ConsumableType, type: :model do
     expect(parents.all? {|parent| parent.children.include?(consumable_type)}).to be_truthy
   end
 
+  it "should be able to have lots of ingredients" do
+    consumable_type = create(:consumable_type_with_parents)
+    expect(consumable_type.ingredients.count).to eq(consumable_type.parents.count)
+  end
+
+  it "should return the latest consumables attached to a particular type" do
+    consumable_type = create(:consumable_type_with_parents_and_consumables)
+    parent_consumable_type = create(:consumable_type)
+
+    expect(parent_consumable_type.latest_consumables).to be_empty
+
+    expect(consumable_type.latest_consumables.count).to eq(consumable_type.parents.count)
+
+  end
+
 end
