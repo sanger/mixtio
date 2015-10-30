@@ -5,16 +5,16 @@ class ConsumableParents extends @EditableParents
     super
 
     @parent.on('blur', "[data-behavior~=scan_parent_barcode]", (e) ->
-      consumable = new Consumable({barcode: $(this).val()})
+      unless $(this).val() is ""
+        consumable = new Consumable({barcode: $(this).val()})
 
-      parent_select = $(this).siblings('select')
-
-      consumable.fetch()
-        .then(() =>
-          self.setParentSelect(parent_select, consumable.get('id'))
-          $(this).val('')
-        , () => console.error("Something went wroooong!"))
-    )
+        parent_select = $(this).siblings('select')
+        consumable.fetch()
+          .then(() =>
+            self.setParentSelect(parent_select, consumable.get('id'))
+            $(this).val('')
+          )
+      )
 
   setParentSelect: (parent_select, val) =>
     $('option', parent_select).filter(() ->
