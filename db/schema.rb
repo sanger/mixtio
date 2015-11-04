@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151022133419) do
+ActiveRecord::Schema.define(version: 20151007094742) do
 
   create_table "ancestors", force: :cascade do |t|
     t.string   "family_name"
@@ -53,14 +53,6 @@ ActiveRecord::Schema.define(version: 20151022133419) do
     t.integer  "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "temp_ancestors", force: :cascade do |t|
-    t.integer  "family_id"
-    t.string   "family_type"
-    t.integer  "consumable_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
   end
 
   create_table "users", force: :cascade do |t|
