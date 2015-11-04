@@ -127,4 +127,11 @@ RSpec.describe Consumable, type: :model do
     expect(consumable2.parent_ids).to eq(ids)
   end
 
+  it "#latest should return the latest consumable created" do
+    consumable_1 = create(:consumable, created_at: Date.today-1)
+    consumable_2 = create(:consumable, created_at: Date.today-2)
+    consumable_3 = create(:consumable, created_at: Date.today-3)
+    expect(Consumable.latest).to eq(consumable_1)
+  end
+
 end

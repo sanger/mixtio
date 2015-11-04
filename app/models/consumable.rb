@@ -27,6 +27,10 @@ class Consumable < ActiveRecord::Base
     count == 0 ? 1 : maximum(:batch_number) + 1
   end
 
+  def self.latest
+    order(created_at: :desc).take
+  end
+
   private
 
   def generate_barcode

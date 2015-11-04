@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Consumables", type: feature do
+RSpec.describe "Consumables", type: :feature do
 
   let! (:consumable_types) { create_list(:consumable_type, 4) }
   let! (:scientist)        { create(:scientist) }
@@ -160,6 +160,7 @@ RSpec.describe "Consumables", type: feature do
 
     end
 
+    #TODO: This test fails intermittently with a missing barcode.
     it "Allows a user to create a new consumable using parent consumable barcodes" do
       consumable = build(:consumable)
       parent_consumables = create_list(:consumable, 2)
@@ -220,6 +221,22 @@ RSpec.describe "Consumables", type: feature do
     wait_for_ajax
 
     expect(find_field("Expiry date").value).to eq(consumable_types.first.expiry_date_from_today)
+  end
+
+  it "Allows a user to load the ingredients for the consumable", js: true do
+
+    consumable_type = create(:consumable_type_with_parents_and_consumables)
+
+    visit consumables_path
+    click_link "Add new consumable"
+
+    select consumable_type.name, from: 'Consumable type'
+    click_link "Load ingredients"
+
+    consumable_type.latest_consumables.each do |consumable|
+      expect(find(:data_output, "ingredients-list")).to have_content(consumable.name)
+    end
+    
   end
 
 end
