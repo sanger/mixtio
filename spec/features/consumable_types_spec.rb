@@ -41,8 +41,8 @@ RSpec.describe "ConsumableTypes", type: :feature do
     expect(page).to have_content("error prohibited this record from being saved")
   end
 
-  it "Allows a user to edit an existing consumable type" do
-    consumable_type = create(:consumable_type)
+  it "Allows a user to edit an existing consumable type", js: true do
+    consumable_type = create(:consumable_type_with_parents)
     new_consumable_type = build(:consumable_type)
 
     visit consumable_types_path
@@ -50,9 +50,11 @@ RSpec.describe "ConsumableTypes", type: :feature do
       find(:data_id, consumable_type.id).click_link "Edit"
       fill_in "Name", with: new_consumable_type.name
       fill_in "Days to keep", with: 9
+      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "remove_parent").click
       click_button "Update Consumable type"
     }.to change{ consumable_type.reload.name }.to(new_consumable_type.name)
     expect(consumable_type.days_to_keep).to eq(9)
+    expect(consumable_type.parents.count).to eq(2)
     expect(page).to have_content("Consumable type successfully updated")
   end
 

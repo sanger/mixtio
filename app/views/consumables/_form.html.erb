@@ -31,12 +31,12 @@
         <%= f.label :number_of_children %>
         <%= f.text_field :number_of_children %>
       </li>
-      <%= render layout: 'editable_parents', locals: { collection: Consumable.all, behavior: 'parents', form: f } do %>
-
-        <%= label_tag(:parent_barcode) %>
-        <%= text_field_tag(:parent_barcode, '', data: { behavior: "scan_parent_barcode" }) %>
-
-      <% end %>
+        <%= render partial: 'ingredients', locals: {
+          all_ingredients: Consumable.all,
+          behavior: 'parents',
+          form: f,
+          scannable: true
+        } %>
       <li data-output="ingredients-list">
       </li>
       <li>
