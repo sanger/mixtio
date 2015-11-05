@@ -2,7 +2,7 @@ class ConsumableType < ActiveRecord::Base
 
   include HasAncestry
 
-  after_save :set_parents, if: -> { parent_ids.present? }
+  after_save :update_parents, if: -> { parent_ids.present? }
   has_many :consumables
 
   validates :name, presence: true, uniqueness: {case_sensitive: false}
@@ -20,8 +20,8 @@ class ConsumableType < ActiveRecord::Base
 
 private
 
-  def set_parents
-    add_parents(ConsumableType.where(id: self.parent_ids))
+  def update_parents
+    set_parents(ConsumableType.where(id: self.parent_ids))
   end
 
 end

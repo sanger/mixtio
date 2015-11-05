@@ -1,0 +1,16 @@
+<div data-behavior="<%= local_assigns.fetch(:behavior, 'ingredients') %>">
+  <%= form.hidden_field :parent_ids, value: local_assigns.fetch(:current_ingredients, ""), data: { id: "parent_ids" } %>
+
+  <% current_ingredients = local_assigns.fetch(:current_ingredients, []) %>
+
+  <% if current_ingredients.present? %>
+
+    <% current_ingredients.each do |ingredient| %>
+      <%= render partial: 'ingredient', locals: local_assigns.merge(ingredient: ingredient.id) %>
+    <% end %>
+
+  <% else %>
+    <%= render partial: 'ingredient', locals: local_assigns %>
+  <% end %>
+
+</div>
