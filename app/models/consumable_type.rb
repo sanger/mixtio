@@ -11,7 +11,7 @@ class ConsumableType < ActiveRecord::Base
   alias_attribute :ingredients, :parents
 
   def expiry_date_from_today
-    Date.today.advance(days: days_to_keep).to_date.to_s(:uk) if days_to_keep.present?
+    Date.today.advance(days: days_to_keep).to_s(:uk) if days_to_keep.present?
   end
 
   def latest_consumables

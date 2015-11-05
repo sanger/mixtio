@@ -22,7 +22,7 @@ RSpec.describe ConsumableType, type: :model do
     expect(consumable_type.expiry_date_from_today).to be_nil
 
     consumable_type = build(:consumable_type)
-    expect(consumable_type.expiry_date_from_today).to eq(consumable_type.days_to_keep.days_from_today)
+    expect(consumable_type.expiry_date_from_today).to eq((Date.today + consumable_type.days_to_keep).to_s(:uk))
   end
 
   it "should be able to have one child" do
