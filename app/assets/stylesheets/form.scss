@@ -120,3 +120,16 @@ fieldset{
   }
 
 }
+
+ul{
+  li{
+    ul{
+      clear: both;
+      
+      li{
+        display: inline-block;
+        margin-right: 20px;
+      }
+    }
+  }
+}
