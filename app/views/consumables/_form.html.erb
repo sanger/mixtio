@@ -7,9 +7,18 @@
         <%= f.text_field :name %>
       </li>
        <li>
-        <%= f.label :consumable_type_id %>
-        <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id), {include_blank: true}, data: { behavior: "consumable_type" } %>
-        <%= link_to 'Load ingredients', "#", data: { behavior: "load_ingredients"}, title: "Load ingredients" %>
+        <ul>
+          <li>
+            <%= f.label :consumable_type_id %>
+            <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id), {include_blank: true}, data: { behavior: "consumable-type" } %>
+          </li>
+          <li>
+            <%= link_to 'Load ingredients', "#", data: { behavior: "load-ingredients"}, title: "Load ingredients" %>
+          </li>
+        </ul>
+      </li>
+      <li data-output="ingredients-list" class="ingredients-list" style="display:none;">
+        <h4>Ingredients</h4>
       </li>
       <li>
         <%= f.label :expiry_date %>
@@ -31,13 +40,11 @@
         <%= f.label :number_of_children %>
         <%= f.text_field :number_of_children %>
       </li>
-      <%= render layout: 'editable_parents', locals: { collection: Consumable.all, behavior: 'parents', form: f } do %>
-
-        <%= label_tag(:parent_barcode) %>
-        <%= text_field_tag(:parent_barcode, '', data: { behavior: "scan_parent_barcode" }) %>
-
-      <% end %>
-      <li data-output="ingredients-list">
+      <li>
+        <%= render layout: 'editable_parents', locals: { collection: Consumable.all, behavior: 'parents', form: f } do %>
+          <%= label_tag(:parent_barcode) %>
+          <%= text_field_tag(:parent_barcode, '', data: { behavior: "scan-parent-barcode" }) %>
+        <% end %>
       </li>
       <li>
         <%= f.submit %>

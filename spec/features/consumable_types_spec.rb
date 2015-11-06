@@ -14,10 +14,10 @@ RSpec.describe "ConsumableTypes", type: :feature do
       fill_in "Days to keep", with: consumable_type.days_to_keep
 
       find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types.first.name).select_option
-      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add_parent").click
+      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add-parent").click
 
       find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types[1].name).select_option
-      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add_parent").click
+      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add-parent").click
 
       find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types.last.name).select_option
 
