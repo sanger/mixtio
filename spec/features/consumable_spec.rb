@@ -42,7 +42,7 @@ RSpec.describe "Consumables", type: :feature do
       fill_in "Lot number", with: consumable.lot_number
       fill_in "Arrival date", with: consumable.arrival_date
       fill_in "Supplier", with: consumable.supplier
-      fill_in "Number of children", with: 3
+      fill_in "Aliquots", with: 3
       select consumable_types.first.name, from: 'Consumable type'
       click_button "Create Consumable"
     }.to change(Consumable, :count).by(3)

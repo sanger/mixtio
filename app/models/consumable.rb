@@ -8,14 +8,14 @@ class Consumable < ActiveRecord::Base
   validates :expiry_date, presence: true, expiry_date: true
   validates :lot_number, presence: true
   validates :consumable_type, existence: true
-  validates_numericality_of :number_of_children, greater_than: 0
+  validates_numericality_of :aliquots, greater_than: 0
 
   after_initialize :set_batch_number
   after_create :generate_barcode
 
   def mix
-    (1..self.number_of_children).collect do |n|
-      Consumable.create(self.attributes.except('number_of_children')).add_parents(Consumable.where(id: self.parent_ids))
+    (1..self.aliquots).collect do |n|
+      Consumable.create(self.attributes.except('aliquots')).add_parents(Consumable.where(id: self.parent_ids))
     end
   end
 

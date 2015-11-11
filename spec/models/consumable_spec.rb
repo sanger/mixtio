@@ -25,9 +25,9 @@ RSpec.describe Consumable, type: :model do
     expect(build(:consumable, consumable_type_id: nil)).to_not be_valid
   end
 
-  it "should not be valid without a valid number of children" do
-    expect(build(:consumable, number_of_children: 0)).to_not be_valid
-    expect(build(:consumable, number_of_children: 'asdf')).to_not be_valid
+  it "should not be valid without a valid number of aliquots" do
+    expect(build(:consumable, aliquots: 0)).to_not be_valid
+    expect(build(:consumable, aliquots: 'asdf')).to_not be_valid
   end
 
   it "should generate a barcode after creation" do
@@ -89,19 +89,19 @@ RSpec.describe Consumable, type: :model do
     expect(consumables.count).to eq(1)
     expect(consumables.first.parents).to be_empty
 
-    consumable = build(:consumable, parent_ids: parents.map(&:id), number_of_children: 3)
+    consumable = build(:consumable, parent_ids: parents.map(&:id), aliquots: 3)
     consumables = consumable.save_or_mix
     expect(consumables.count).to eq(3)
     expect(consumables.all? {|consumable| consumable.parents == parents }).to be_truthy
   end
 
   it "should have the same batch number for consumables created at the same time" do
-    consumable = build(:consumable_with_children)
+    consumable = build(:consumable_with_aliquots)
     consumables = consumable.save_or_mix
 
     expect(consumables.all? { |c| c[:batch_number] == 1 }).to be_truthy()
 
-    consumable2 = build(:consumable_with_children)
+    consumable2 = build(:consumable_with_aliquots)
     consumables2 = consumable2.save_or_mix
 
     expect(consumables2.all? { |c| c[:batch_number] == 2 }).to be_truthy()
@@ -109,11 +109,11 @@ RSpec.describe Consumable, type: :model do
   end
 
   it "should not assign number_of_children attribute when children are created" do
-    consumable_with_children = build(:consumable_with_children)
+    consumable_with_aliquots = build(:consumable_with_aliquots)
 
-    consumables = consumable_with_children.save_or_mix
+    consumables = consumable_with_aliquots.save_or_mix
 
-    expect(consumables.all? { |c| c[:number_of_children] == 1 }).to be_truthy
+    expect(consumables.all? { |c| c[:aliquots] == 1 }).to be_truthy
   end
 
   it "should assign parent ids correctly" do
