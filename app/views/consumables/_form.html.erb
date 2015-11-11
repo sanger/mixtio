@@ -37,8 +37,8 @@
         <%= f.text_field :supplier %>
       </li>
       <li>
-        <%= f.label :number_of_children %>
-        <%= f.text_field :number_of_children %>
+        <%= f.label :aliquots %>
+        <%= f.text_field :aliquots %>
       </li>
       <li>
         <%= render layout: 'editable_parents', locals: { collection: Consumable.all, behavior: 'parents', form: f } do %>

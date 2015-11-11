@@ -1,6 +1,12 @@
 <article id="<%= dom_id(consumable_type) %>" data-id="<%= consumable_type.id %>">
   <div>
+    <%= consumable_type.id %>
+  </div>
+  <div class="name">
     <%= consumable_type.name %>
+  </div>
+  <div>
+    <%= consumable_type.days_to_keep %>
   </div>
   <div>
     <%= link_to "Edit", edit_consumable_type_path(consumable_type) %>

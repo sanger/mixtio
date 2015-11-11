@@ -1,6 +1,27 @@
 <article id="<%= dom_id(consumable) %>" data-id="<%= consumable.id %>">
   <div>
+    <%= consumable.id %>
+  </div>
+  <div class="name">
     <%= consumable.name %>
+  </div>
+  <div>
+    <%= consumable.expiry_date %>
+  </div>
+  <div>
+    <%= consumable.arrival_date %>
+  </div>
+  <div>
+    <%= consumable.depleted %>
+  </div>
+  <div>
+    <%= consumable.lot_number %>
+  </div>
+  <div>
+    <%= consumable.supplier %>
+  </div>
+  <div>
+    <%= consumable.batch_number %>
   </div>
   <div>
     <%= link_to "Edit", edit_consumable_path(consumable) %>
