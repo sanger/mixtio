@@ -18,8 +18,8 @@ FactoryGirl.define do
       end
     end
 
-    factory :consumable_with_children do
-      number_of_children 3
+    factory :consumable_with_aliquots do
+      aliquots 3
     end
   end
 

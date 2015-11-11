@@ -42,7 +42,7 @@ RSpec.describe "Consumables", type: :feature do
       fill_in "Lot number", with: consumable.lot_number
       fill_in "Arrival date", with: consumable.arrival_date
       fill_in "Supplier", with: consumable.supplier
-      fill_in "Number of children", with: 3
+      fill_in "Aliquots", with: 3
       select consumable_types.first.name, from: 'Consumable type'
       click_button "Create Consumable"
     }.to change(Consumable, :count).by(3)
@@ -110,10 +110,10 @@ RSpec.describe "Consumables", type: :feature do
 
       expect {
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.first.name).select_option
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add-parent").click
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables[1].name).select_option
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add-parent").click
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.last.name).select_option
 
@@ -137,15 +137,15 @@ RSpec.describe "Consumables", type: :feature do
 
       expect {
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.first.name).select_option
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add-parent").click
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables[1].name).select_option
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add-parent").click
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.last.name).select_option
 
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove_parent").click
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove_parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove-parent").click
+        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove-parent").click
 
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
@@ -160,7 +160,6 @@ RSpec.describe "Consumables", type: :feature do
 
     end
 
-    #TODO: This test fails intermittently with a missing barcode.
     it "Allows a user to create a new consumable using parent consumable barcodes" do
       consumable = build(:consumable)
       parent_consumables = create_list(:consumable, 2)
@@ -174,28 +173,17 @@ RSpec.describe "Consumables", type: :feature do
         fill_in "Arrival date", with: consumable.arrival_date
         fill_in "Supplier", with: consumable.supplier
 
-        text_elem = find(:data_behavior, "parents")
-          .all("li")
-          .last
-          .all("input")
-          .first
 
+        text_elem = find(:data_behavior, "scan-parent-barcode")    
         text_elem.set(parent_consumables.first.barcode)
         text_elem.trigger("blur")
-
         wait_for_ajax
 
-        find(:data_behavior, "parents").all("li").last.find(:data_behavior, "add_parent").click
+        find(:data_behavior, "add-parent").click
 
-        text_elem = find(:data_behavior, "parents")
-          .all("li")
-          .last
-          .all("input")
-          .first
-
+        text_elem = all(:data_behavior, "scan-parent-barcode").last
         text_elem.set(parent_consumables.last.barcode)
         text_elem.trigger("blur")
-
         wait_for_ajax
 
         select consumable_types.first.name, from: 'Consumable type'

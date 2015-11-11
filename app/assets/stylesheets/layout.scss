@@ -181,8 +181,36 @@ article{
     top: 10px;
     bottom: 10px;
   }
+
+  div{
+    display: inline-block;
+    width: 100px;
+  }
+
+  .name{
+    width: 200px;
+  }
 }
 
 section{
   margin-left: 50px;
 }
+
+table{
+  width: 100%;
+  padding: 5px;
+
+  td{
+    text-align: center;
+  }
+}
+
+.ingredients-list{
+  margin-top: 20px;
+  margin-bottom: 20px;
+ 
+  h4{
+    margin-bottom: 10px;
+  }
+}
+
