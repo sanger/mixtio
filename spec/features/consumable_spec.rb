@@ -174,7 +174,7 @@ RSpec.describe "Consumables", type: :feature do
         fill_in "Supplier", with: consumable.supplier
 
 
-        text_elem = find(:data_behavior, "scan-parent-barcode")    
+        text_elem = find(:data_behavior, "scan-parent-barcode")
         text_elem.set(parent_consumables.first.barcode)
         text_elem.trigger("blur")
         wait_for_ajax
@@ -196,6 +196,12 @@ RSpec.describe "Consumables", type: :feature do
       expect(Consumable.find_by(name: consumable.name).parents).to eq(parent_consumables)
     end
 
+  end
+
+  it 'Shows the parents of a consumable when editing it', js: true do
+    consumable = create(:consumable_with_parents)
+    visit edit_consumable_path(consumable)
+    expect(find(:data_behavior, "parents").all("select").length).to eq(consumable.parents.count)
   end
 
   it "Sets the expiry date when a consumable type is selected", js: true do
@@ -224,7 +230,7 @@ RSpec.describe "Consumables", type: :feature do
     consumable_type.latest_consumables.each do |consumable|
       expect(find(:data_output, "ingredients-list")).to have_content(consumable.name)
     end
-    
+
   end
 
 end
