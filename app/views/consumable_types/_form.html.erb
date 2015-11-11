@@ -10,11 +10,7 @@
         <%= f.label :days_to_keep %>
         <%= f.text_field :days_to_keep %>
       </li>
-        <%= render partial: 'ingredients', locals: {
-          all_ingredients: ConsumableType.all,
-          current_ingredients: @consumable_type.parent_ids,
-          form: f
-        } %>
+      <%= render partial: 'editable_parents', locals: { parent_ids: @consumable_type.parent_ids, collection: ConsumableType.all, behavior: 'ingredients', form: f } %>
       <li>
         <%= f.submit %>
       </li>

@@ -15,6 +15,7 @@ class ConsumableType < ActiveRecord::Base
   end
 
   def latest_consumables
+    return unless parents
     parents.collect { |parent| parent.consumables.latest }.compact
   end
 

@@ -37,7 +37,7 @@ module HasAncestry
   end
 
   def parent_ids
-    @parent_ids ||= parents.select(&:id)
+    @parent_ids ||= parents.map(&:id)
   end
 
   def parent_ids=(parent_ids)

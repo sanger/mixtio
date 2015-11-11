@@ -41,7 +41,7 @@
         <%= f.text_field :aliquots %>
       </li>
       <li>
-        <%= render layout: 'editable_parents', locals: { collection: Consumable.all, behavior: 'parents', form: f } do %>
+        <%= render layout: 'editable_parents', locals: { parent_ids: @consumable.parent_ids, collection: Consumable.all, behavior: 'parents', form: f } do %>
           <%= label_tag(:parent_barcode) %>
           <%= text_field_tag(:parent_barcode, '', data: { behavior: "scan-parent-barcode" }) %>
         <% end %>

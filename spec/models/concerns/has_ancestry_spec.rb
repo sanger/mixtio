@@ -29,7 +29,7 @@ RSpec.describe HasAncestry, type: :model do
     expect(model.parents).to eq(ancestors)
     expect(ancestors.all? {|parent| parent.children.include?(model)}).to be_truthy
 
-    expect(model.parent_ids).to eq(ancestors.select(&:id))
+    expect(model.parent_ids).to eq([ancestors.first.id, ancestors[1].id, ancestors.last.id])
 
     model.parent_ids = "10,11,12"
 

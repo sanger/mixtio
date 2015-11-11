@@ -3,6 +3,7 @@ class @EditableParents
   constructor: (parent) ->
     @parent        = $(parent)
     @parentIds     = @parent.children("[data-id~=parent-ids]")
+    @parentSelect  = @parent.children("[data-behavior~=parent-select]")
     @addListeners()
 
   addListeners: () ->
@@ -21,8 +22,9 @@ class @EditableParents
 
   addNewParent: (element, e) =>
     e.preventDefault()
-    @parent.append('<ul data-behavior="parent-select">' + $(element.closest("[data-behavior~=parent-select]")).html() + '</ul>')
+    @parentSelect.append("<ul>" + @parentSelect.children("ul").last().html() + "</ul>")
+    @parentSelect.find("select:last option[value='']").attr('selected', true)
 
   removeParent: (element, e) =>
     e.preventDefault()
-    $(element.closest("[data-behavior~=parent-select]")).remove()
+    $(element.closest("ul")).remove()
