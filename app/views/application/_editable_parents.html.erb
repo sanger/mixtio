@@ -1,16 +1,20 @@
 <div data-behavior="<%= behavior %>">
   <%= form.hidden_field :parent_ids, value: "", data: { id: "parent-ids" } %>
   <ul data-behavior="parent-select">
-    <li>
-      <%= label_tag(:parent) %>
-          <%= select_tag :parent, options_from_collection_for_select(collection, :id, :name), {include_blank: true, data: { output: "parent-id"}} %>
-    </li>
-    <li>
-      <%= yield %>
-    </li>
-    <li>
-      <%= link_to '+', "#", data: { behavior: "add-parent"}, title: "Add Parent" %>
-      <%= link_to '-', "#", data: { behavior: "remove-parent"}, title: "Remove Parent" %>
-    </li>
+  <% parent_ids.with_nil.each do |parent_id| %>
+    <ul data-behavior="parent">
+      <li>
+        <%= label_tag(:parent) %>
+        <%= select_tag :parent, options_from_collection_for_select(collection, :id, :name, parent_id), {include_blank: true, data: { output: "parent-id"}} %>
+      </li>
+      <li>
+        <%= yield %>
+      </li>
+      <li>
+        <%= link_to '+', "#", data: { behavior: "add-parent"}, title: "Add Parent" %>
+        <%= link_to '-', "#", data: { behavior: "remove-parent"}, title: "Remove Parent" %>
+      </li>
+    </ul>
+  <% end %>
   </ul>
 </div>

@@ -41,8 +41,8 @@ RSpec.describe "ConsumableTypes", type: :feature do
     expect(page).to have_content("error prohibited this record from being saved")
   end
 
-  it "Allows a user to edit an existing consumable type" do
-    consumable_type = create(:consumable_type)
+  it "Allows a user to edit an existing consumable type", js: true do
+    consumable_type = create(:consumable_type_with_parents)
     new_consumable_type = build(:consumable_type)
 
     visit consumable_types_path
