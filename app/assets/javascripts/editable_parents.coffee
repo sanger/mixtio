@@ -22,9 +22,9 @@ class @EditableParents
 
   addNewParent: (element, e) =>
     e.preventDefault()
-    @parentSelect.append("<ul>" + @parentSelect.children("ul").last().html() + "</ul>")
+    @parentSelect.append("<ul data-behavior='parent'>" + @parentSelect.children("ul").last().html() + "</ul>")
     @parentSelect.find("select:last option[value='']").attr('selected', true)
 
   removeParent: (element, e) =>
     e.preventDefault()
-    $(element.closest("ul")).remove()
+    $(element.closest("[data-behavior~=parent]")).remove()
