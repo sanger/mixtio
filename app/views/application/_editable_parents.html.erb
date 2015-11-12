@@ -2,7 +2,7 @@
   <%= form.hidden_field :parent_ids, value: "", data: { id: "parent-ids" } %>
   <ul data-behavior="parent-select">
   <% parent_ids.with_nil.each do |parent_id| %>
-    <ul>
+    <ul data-behavior="parent">
       <li>
         <%= label_tag(:parent) %>
         <%= select_tag :parent, options_from_collection_for_select(collection, :id, :name, parent_id), {include_blank: true, data: { output: "parent-id"}} %>
