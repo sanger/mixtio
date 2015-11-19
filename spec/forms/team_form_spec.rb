@@ -5,8 +5,7 @@ RSpec.describe TeamForm, type: :model do
   let(:controller_params)           { { controller: "teams", action: "create"} }
   let(:params)                      { ActionController::Parameters.new(controller_params) }
   let(:team_form)                   { TeamForm.new }
-  let!(:administrator)              { create(:administrator) }
-  let(:team_params)                 { attributes_for(:team).merge('current_user' => administrator.barcode) }
+  let(:team_params)                 { attributes_for(:team) }
 
   it "should create a team from valid attributes" do
     expect {

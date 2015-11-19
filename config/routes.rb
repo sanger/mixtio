@@ -12,6 +12,10 @@ Rails.application.routes.draw do
 
   resources :teams
 
+  resources :sessions, only: [:new, :create, :destroy]
+  get 'sign_in', to: 'sessions#new'
+  delete 'sign_out', to: 'sessions#destroy'
+
   root 'consumables#index'
 
   namespace :api, defaults: { format: :json } do

@@ -6,8 +6,7 @@ RSpec.describe UserForm, type: :model do
   let(:params)                      { ActionController::Parameters.new(controller_params) }
   let(:user_form)                   { UserForm.new }
   let!(:team)                       { create(:team) }
-  let!(:administrator)              { create(:administrator)}
-  let(:user_attributes)             { attributes_for(:user).merge('team_id' => team.id, 'current_user' => administrator.swipe_card_id) }
+  let(:user_attributes)             { attributes_for(:user).merge('team_id' => team.id) }
 
   it "should create a user from valid attributes" do
     expect {
@@ -27,9 +26,9 @@ RSpec.describe UserForm, type: :model do
     new_user = build(:user)
     user_form = UserForm.new(user)
 
-    user_form.submit(params.merge(user: user_attributes.merge('login' => new_user.login)))
+    user_form.submit(params.merge(user: user_attributes.merge('username' => new_user.username)))
 
-    expect(user.reload.login).to eq(new_user.login)
+    expect(user.reload.username).to eq(new_user.username)
   end
 
 end

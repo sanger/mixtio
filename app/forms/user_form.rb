@@ -1,8 +1,8 @@
 class UserForm
 
-  include AuthenticationForm
+  include FormObject
 
-  set_attributes :login, :swipe_card_id, :barcode, :team_id, :status, :type
+  set_attributes :username, :team_id, :status, :type
 
   delegate :becomes, to: :user
   
