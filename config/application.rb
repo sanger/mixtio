@@ -36,8 +36,24 @@ module Mixtio
             controller_specs: false,
             request_specs: true
         g.fixture_replacement :factory_girl, dir: "spec/factories"
-      end
+    end
+
+    Warden::Manager.serialize_into_session do |user|
+      user.username
+    end
+
+    Warden::Manager.serialize_from_session do |username|
+      User.find_by_username(username)
+    end
+
+    config.middleware.insert_after ActionDispatch::ParamsParser, Warden::Manager do |manager|
+        manager.default_strategies :password
+        manager.failure_app = UnauthorizedController
+    end
+
+    config.action_dispatch.default_headers.merge!('X-Auth-Token' => '')
   end
 
 
 end
+

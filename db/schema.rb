@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110085315) do
+ActiveRecord::Schema.define(version: 20151118134348) do
 
   create_table "ancestors", force: :cascade do |t|
     t.string   "family_name"
@@ -55,10 +55,16 @@ ActiveRecord::Schema.define(version: 20151110085315) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tokens", force: :cascade do |t|
+    t.string   "uuid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "tokens", ["uuid"], name: "index_tokens_on_uuid"
+
   create_table "users", force: :cascade do |t|
-    t.string   "login"
-    t.string   "swipe_card_id"
-    t.string   "barcode"
+    t.string   "username"
     t.string   "type"
     t.integer  "status",         default: 0
     t.datetime "deactivated_at"
