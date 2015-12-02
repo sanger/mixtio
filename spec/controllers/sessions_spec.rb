@@ -13,7 +13,6 @@ RSpec.describe SessionsController, type: :request do |variable|
       follow_redirect!
       expect(response.body).to include("Signed In Successfully")
       token = response.headers['X-Auth-Token'].to_s
-      p token
       expect(Token.find_by_uuid(token)).to_not be_nil
     end
 

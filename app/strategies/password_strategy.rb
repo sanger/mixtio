@@ -14,5 +14,3 @@ class PasswordStrategy < ::Warden::Strategies::Base
     end
   end
 end
-
-Warden::Strategies.add(:password, PasswordStrategy)
