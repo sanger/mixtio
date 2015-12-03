@@ -6,12 +6,12 @@ class TeamsController < ApplicationController
   end
 
   def new
-    @team = TeamForm.new
+    @team = Team.new
   end
 
   def create
-    @team = TeamForm.new
-    if @team.submit(params)
+    @team = Team.new(team_params)
+    if @team.save
       redirect_to teams_path, notice: "Team successfully created"
     else
       render :new
@@ -19,12 +19,12 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    @team = TeamForm.new(current_resource)
+    @team = current_resource
   end
 
   def update
-    @team = TeamForm.new(current_resource)
-    if @team.submit(params)
+    @team = current_resource
+    if @team.update_attributes(team_params)
       redirect_to teams_path, notice: "Team successfully updated"
     else
       render :edit
@@ -39,6 +39,10 @@ protected
 
   def current_resource
     @current_resource ||= Team.find(params[:id]) if params[:id]
+  end
+
+  def team_params
+    params.require(:team).permit(:name, :number)
   end
 
   helper_method :teams
