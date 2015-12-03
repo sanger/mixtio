@@ -1,1 +1,0 @@
-Warden::Strategies.add(:password, PasswordStrategy)

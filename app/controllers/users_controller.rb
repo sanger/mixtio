@@ -6,12 +6,12 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = UserForm.new
+    @user = User.new
   end
 
   def create
-    @user = UserForm.new
-    if @user.submit(params)
+    @user = User.new(user_params)
+    if @user.save
       redirect_to users_path, notice: "User successfully created"
     else
       render :new
@@ -19,12 +19,12 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = UserForm.new(current_resource)
+    @user =current_resource
   end
 
   def update
-    @user = UserForm.new(current_resource)
-    if @user.submit(params)
+    @user = current_resource
+    if @user.update_attributes(user_params)
       redirect_to users_path, notice: "User successfully updated"
     else
       render :edit
@@ -38,6 +38,10 @@ class UsersController < ApplicationController
   helper_method :users
 
 protected
+
+  def user_params
+    params.require(:user).permit(:username, :team_id, :status, :type)
+  end
 
   def current_resource
     @current_resource ||= User.find(params[:id]) if params[:id]
