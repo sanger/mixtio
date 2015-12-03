@@ -4,17 +4,13 @@ require "rails_helper"
 RSpec.describe "Users", type: :feature do
 
   let!(:teams)            { create_list(:team, 2)}
-  let! (:administrator)   { create(:administrator) }
 
   it "Allows a user to create a new user" do
     user = build(:user)
     visit users_path
     click_link "Add new user"
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
-      fill_in "Login", with: user.login
-      fill_in "Swipe card", with: user.swipe_card_id
-      fill_in "Barcode", with: user.barcode
+      fill_in "Username", with: user.username
       select teams.first.name, from: "Team"
       click_button "Create User"
     }.to change(User, :count).by(1)
@@ -25,7 +21,6 @@ RSpec.describe "Users", type: :feature do
     user = create(:user)
     visit edit_user_path(user)
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
       uncheck "Active"
       click_button "Update User"
     }.to change { user.reload.active? }
@@ -36,9 +31,6 @@ RSpec.describe "Users", type: :feature do
     visit users_path
     click_link "Add new user"
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
-      fill_in "Swipe card", with: user.swipe_card_id
-      fill_in "Barcode", with: user.barcode
       select teams.first.name, from: "Team"
       click_button "Create User"
     }.to_not change(User, :count)
@@ -50,29 +42,12 @@ RSpec.describe "Users", type: :feature do
     visit users_path
     click_link "Add new user"
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
-      fill_in "Login", with: user.login
-      fill_in "Swipe card", with: user.swipe_card_id
-      fill_in "Barcode", with: user.barcode
+      fill_in "Username", with: user.username
       select "Administrator", from: "Type"
       select teams.first.name, from: "Team"
       click_button "Create User"
     }.to change(Administrator, :count).by(1)
     expect(page).to have_content("User successfully created")
-  end
-
-  it "Reports an error if the user is not authorised" do
-    user = build(:user)
-    visit users_path
-    click_link "Add new user"
-    expect {
-      fill_in "Login", with: user.login
-      fill_in "Swipe card", with: user.swipe_card_id
-      fill_in "Barcode", with: user.barcode
-      select teams.first.name, from: "Team"
-      click_button "Create User"
-    }.to_not change(User, :count)
-    expect(page).to have_content("errors prohibited this record from being saved")
   end
 
 end
