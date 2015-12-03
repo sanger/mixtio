@@ -1,0 +1,89 @@
+1:
+  name: CDM-BSA
+  days_to_keep: 14
+  ingredients:
+    1:
+      name: IMDM
+      lot_number: 1695234
+      supplier: LIFE TECH 21980-032
+    2:
+      name: F12 Nut Mix
+      lot_number: 1696982
+      supplier: LIFE TECH 31765-027
+    3:
+      name: BSA
+      lot_number: K00113-2235
+      supplier: PAA
+    4:
+      name: CD Lipid Concentrate
+      lot_number: 1698721
+      supplier: LIFE TECH 11905-031
+    5:
+      name: Insulin
+      lot_number: 10372900
+      supplier: ROCHE 11376497001
+    6:
+      name: Pen Strep
+      lot_number: 1712151
+      supplier: LIFE-TECH 15140-122
+    7:
+      name: 1-Thiogilyclcerol
+      lot_number: 120M16962V
+      supplier: SIGMA M6145-25ML
+    8:
+      name: Transferrin
+      lot_number: 10204500
+      supplier: ROCHE 10652202001
+2:
+  name: Trypsin (mesc - Pathogens)
+  days_to_keep: 180
+  ingredients:
+    1:
+      name: DPBS
+      lot_number: 1695274
+      supplier: LIFE TECH 14190-094
+    2:
+      name: Chicken Serum
+      lot_number: LIMSBATCH1005480
+      supplier: GIBCO 16110-082
+    3:
+      name: EDTA (mesc - Pathogens)
+      lot_number: BCBM5781V
+      supplier: SIGMA E6511
+    4:
+      name: 2.5% Trypsin
+      lot_number: 1695978
+      supplier: GIBCO 15090-046
+3:
+  name: EPO
+  days_to_keep: 90
+  ingredients:
+    1:
+      name: Recombinant human EPO
+      lot_number: FZ1914061
+      supplier: R AND D SYSTEMS
+    2:
+      name: 0.1% HSA in PBS
+      lot_number: BATCH1007103
+      supplier: CGAP
+4:
+  name: M(minus)
+  days_to_keep: 30
+  ingredients:
+    1:
+      name: AdvDMEM F12
+      lot_number: 1715661
+      supplier: LIFE TECH 12634-010
+    2:
+      name: L-Glutamine
+      lot_number: 1672599
+      supplier: SIGMA
+    3:
+      name: 2-Mercaptoethanol
+      lot_number: STBD6281V
+      supplier: SIGMA M6250-100ML
+    4:
+      name: FBS
+      lot_number: 40508
+      supplier: LAB TECH FCS-SA
+
