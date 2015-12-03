@@ -6,12 +6,13 @@ class ConsumablesController < ApplicationController
   end
 
   def new
-    @consumable = ConsumableForm.new
+    @consumable = Consumable.new
   end
 
   def create
-    @consumable = ConsumableForm.new
-    if @consumable.submit(params)
+    @consumable = Consumable.new(consumable_params)
+    if @consumable.valid?
+      @consumable.save_or_mix
       redirect_to consumables_path, notice: "Consumable successfully created"
     else
       render :new
@@ -19,12 +20,14 @@ class ConsumablesController < ApplicationController
   end
 
   def edit
-    @consumable = ConsumableForm.new(current_resource)
+    @consumable = current_resource
   end
 
   def update
-    @consumable = ConsumableForm.new(current_resource)
-    if @consumable.submit(params)
+    @consumable = current_resource
+    @consumable.attributes = consumable_params
+    if @consumable.valid?
+      @consumable.save_or_mix
       redirect_to consumables_path, notice: "Consumable successfully updated"
     else
       render :edit
@@ -39,6 +42,10 @@ class ConsumablesController < ApplicationController
 
   def consumables
     @consumables ||= Consumable.all
+  end
+
+  def consumable_params
+    params.require(:consumable).permit(:name, :expiry_date, :lot_number, :arrival_date, :supplier, :consumable_type_id, :parent_ids, :aliquots)
   end
 
   helper_method :consumables

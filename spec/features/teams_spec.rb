@@ -3,14 +3,11 @@ require "rails_helper"
 
 RSpec.describe "Teams", type: :feature do
 
-  let! (:administrator)        { create(:administrator) }
-
   it "Allows a user to create a new team" do
     team = build(:team)
     visit teams_path
     click_link "Add new team"
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
       fill_in "Name", with: team.name
       fill_in "Number", with: team.number
       click_button "Create Team"
@@ -23,7 +20,6 @@ RSpec.describe "Teams", type: :feature do
     new_team = build(:team)
     visit edit_team_path(team)
     expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
       fill_in "Number", with: new_team.number
       click_button "Update Team"
     }.to change { team.reload.number }
@@ -34,18 +30,6 @@ RSpec.describe "Teams", type: :feature do
     visit teams_path
     click_link "Add new team"
     expect {
-      fill_in "Name", with: team.name
-      click_button "Create Team"
-    }.to_not change(Team, :count)
-    expect(page).to have_content("errors prohibited this record from being saved")
-  end
-
-  it "Reports an error if the user is not authorised" do
-    team = build(:team)
-    visit teams_path
-    click_link "Add new team"
-    expect {
-      fill_in "User swipe card id/barcode", with: administrator.swipe_card_id
       fill_in "Name", with: team.name
       click_button "Create Team"
     }.to_not change(Team, :count)
