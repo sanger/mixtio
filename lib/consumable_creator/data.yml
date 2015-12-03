@@ -60,11 +60,11 @@
   ingredients:
     1:
       name: Recombinant human EPO
-      lot: FZ1914061
+      lot_number: FZ1914061
       supplier: R AND D SYSTEMS
     2:
       name: 0.1% HSA in PBS
-      lot: BATCH1007103
+      lot_number: BATCH1007103
       supplier: CGAP
 4:
   name: M(minus)
