@@ -6,16 +6,17 @@ class ConsumableTypeSelect
 
   constructor: (consumableType) ->
     @consumableType = $(consumableType)
+    @consumableName = $('#consumable_name')
     @expiryDateElem = $('#consumable_expiry_date')
     @loadIngredientsLink = $("[data-behavior~=load-ingredients]").first()
     @ingredientsTag = $("[data-output~=ingredients-list]").first()
     @addListeners()
 
   addListeners: () ->
-    @consumableType.on("change", @update_expiry_date)
+    @consumableType.on("change", @consumable_type_changed)
     @loadIngredientsLink.on("click", @loadIngredients)
 
-  update_expiry_date: (e) =>
+  consumable_type_changed: (e) =>
     return if @consumableType.val() is ""
 
     consumableType = new ConsumableType({id: @consumableType.val()})
@@ -23,7 +24,11 @@ class ConsumableTypeSelect
     consumableType.fetch()
       .then(() =>
         @set_expiry_date(consumableType.get('expiry_date_from_today'))
+        @set_name(consumableType.get('name'))
       )
+
+  set_name: (name) =>
+    @consumableName.val(name)
 
   set_expiry_date: (date) =>
     @expiryDateElem.val(date)
@@ -61,7 +66,7 @@ class ConsumableTypeSelect
   padNullString: (str) ->
     if str == null then "&nbsp;" else str
 
-   
+
 jQuery ->
   for consumableType in $("[data-behavior~=consumable-type]")
     new ConsumableTypeSelect consumableType

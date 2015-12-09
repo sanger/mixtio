@@ -35,7 +35,7 @@ class ConsumableTypesController < ApplicationController
 protected
 
   def consumable_types
-    @consumable_types ||= ConsumableType.all
+    @consumable_types ||= ConsumableType.order_by_name
   end
 
   def consumable_type_params

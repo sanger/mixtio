@@ -2,10 +2,6 @@
   <fieldset>
     <legend></legend>
     <ul>
-      <li>
-        <%= f.label :name %>
-        <%= f.text_field :name %>
-      </li>
        <li>
         <ul>
           <li>
@@ -16,6 +12,10 @@
             <%= link_to 'Load ingredients', "#", data: { behavior: "load-ingredients"}, title: "Load ingredients" %>
           </li>
         </ul>
+      </li>
+      <li>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
       </li>
       <li data-output="ingredients-list" class="ingredients-list" style="display:none;">
         <h4>Ingredients</h4>
