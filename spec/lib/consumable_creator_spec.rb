@@ -30,7 +30,7 @@ RSpec.describe ConsumableCreator, type: :model do
     consumables.each do |k, v|
       consumable_type = ConsumableType.find_by_name(v["name"])
       consumable_type.ingredients.each do |ingredient|
-        expect(ingredient.consumables.count).to eq(3)
+        expect(ingredient.consumables).to_not be_empty
         expect(ingredient.consumables.latest.created_at.to_date).to eq(Date.today)
       end
     end
