@@ -1,6 +1,7 @@
 class ConsumableType < ActiveRecord::Base
 
   include HasAncestry
+  include HasOrderByName
 
   after_save :update_parents, if: -> { parent_ids.present? }
   has_many :consumables
