@@ -86,4 +86,82 @@
       name: FBS
       lot_number: 40508
       supplier: LAB TECH FCS-SA
+5:
+  name: E8
+  days_to_keep: 14
+  ingredients:
+    1:
+      name: E8 Supplement
+      lot_number: 1732952
+      supplier: LIFE TECH A15171-01
+    2:
+      name: Pen Strep
+      lot_number: 1705702
+      supplier: LIFE-TECH 15140-122
+    3:
+      name: E8
+      lot_number: 1744347
+      supplier: LIFE-TECH A15169-01
+6:
+  name: K (plus) without FGF2
+  days_to_keep: 14
+  ingredients:
+    1:
+      name: AdvDMEM F12
+      lot_number: 1723941
+      supplier: GIBCO 12634-010
+    2:
+      name: Pen Strep
+      lot_number: 1705702
+      supplier: LIFE TECH 15140-122
+    3:
+      name: L-Glutamine
+      lot_number: RNBD9302
+      supplier: SIGMA G7513
+    4:
+      name: 2-Mercaptoethanol
+      lot_number: STBD6281V
+      supplier: SIGMA M6250-100ML
+    5:
+      name: KSR
+      lot_number: 1681765
+      supplier: LIFE TECH
+7:
+  name: K (plus) with FGF2
+  days_to_keep: 3
+  ingredients:
+    1:
+      name: FGF
+      lot_number: 020315
+      supplier: CAMBRIDGE UNIVERSITY
+    2:
+      name: K plus without FGF
+      lot_number: 1007089
+      supplier: CGAP
+8:
+  name: M (plus)
+  days_to_keep: 14
+  ingredients:
+    1:
+      name: AdvDMEM F12
+      lot_number: 1723941
+      supplier: GIBCO 12634-010
+    2:
+      name: Pen Strep
+      lot_number: 1705702
+      supplier: LIFE TECH 15140-122
+    3:
+      name: L-Glutamine
+      lot_number: RNBD9302
+      supplier: SIGMA G7513
+    4:
+      name: 2-Mercaptoethanol
+      lot_number: STBD6281V
+      supplier: SIGMA M6250-100ML
+    5:
+      name: FBS
+      lot_number: 40508
+      supplier: LAB TECH FCS-SA
+
+
 
