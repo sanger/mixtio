@@ -31,6 +31,24 @@ RSpec.describe "Consumables", type: :feature do
     expect(page).to have_content("Consumable successfully created")
   end
 
+  it "Allows a user to create a new consumable without entering a name", js: true do
+    consumable = build(:consumable)
+
+    visit consumables_path
+    click_link "Add new consumable"
+    expect{
+      select consumable_types.first.name, from: 'Consumable type'
+      wait_for_ajax
+      fill_in "Expiry date", with: consumable.expiry_date
+      fill_in "Lot number", with: consumable.lot_number
+      fill_in "Arrival date", with: consumable.arrival_date
+      fill_in "Supplier", with: consumable.supplier
+      click_button "Create Consumable"
+    }.to change(Consumable, :count).by(1)
+    expect(page).to have_content("Consumable successfully created")
+    expect(Consumable.find_by(name: consumable_types.first.name)).to_not be_nil
+  end
+
   it "Allows a user to create multiple new consumables" do
     consumable = build(:consumable)
 
@@ -80,25 +98,6 @@ RSpec.describe "Consumables", type: :feature do
     expect(page).to have_content("Consumable successfully updated")
   end
 
-  # it "does not allow an unauthorised user to manage consumables" do
-  #   consumable = build(:consumable)
-
-  #   visit new_consumable_path
-  #   expect{
-  #     fill_in "Name", with: consumable.name
-  #     fill_in "Expiry date", with: consumable.expiry_date
-  #     fill_in "Lot number", with: consumable.lot_number
-  #     fill_in "Arrival date", with: consumable.arrival_date
-  #     fill_in "Supplier", with: consumable.supplier
-  #     select consumable_types.first.name, from: 'Consumable type'
-  #     click_button "Create Consumable"
-  #   }.to_not change(Consumable, :count)
-
-  #   expect(page).to have_content("errors prohibited this record from being saved")
-
-  # end
-
-
   describe "selecting parents", js: true do
 
     let!(:consumables) { create_list(:consumable, 3) }
@@ -117,12 +116,12 @@ RSpec.describe "Consumables", type: :feature do
 
         find(:data_behavior, "parents").all("select").last.find("option", text: consumables.last.name).select_option
 
+        select consumable_types.first.name, from: 'Consumable type'
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
         fill_in "Lot number", with: consumable.lot_number
         fill_in "Arrival date", with: consumable.arrival_date
         fill_in "Supplier", with: consumable.supplier
-        select consumable_types.first.name, from: 'Consumable type'
         click_button "Create Consumable"
       }.to change(Consumable, :count).by(1)
 
@@ -147,12 +146,12 @@ RSpec.describe "Consumables", type: :feature do
         find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove-parent").click
         find(:data_behavior, "parents").all("li").last.find(:data_behavior, "remove-parent").click
 
+        select consumable_types.first.name, from: 'Consumable type'
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
         fill_in "Lot number", with: consumable.lot_number
         fill_in "Arrival date", with: consumable.arrival_date
         fill_in "Supplier", with: consumable.supplier
-        select consumable_types.first.name, from: 'Consumable type'
         click_button "Create Consumable"
       }.to change(Consumable, :count).by(1)
 
@@ -167,6 +166,7 @@ RSpec.describe "Consumables", type: :feature do
       visit consumables_path
       click_link "Add new consumable"
       expect {
+        select consumable_types.first.name, from: 'Consumable type'
         fill_in "Name", with: consumable.name
         fill_in "Expiry date", with: consumable.expiry_date
         fill_in "Lot number", with: consumable.lot_number
@@ -185,8 +185,6 @@ RSpec.describe "Consumables", type: :feature do
         text_elem.set(parent_consumables.last.barcode)
         text_elem.trigger("blur")
         wait_for_ajax
-
-        select consumable_types.first.name, from: 'Consumable type'
 
         click_button "Create Consumable"
 
