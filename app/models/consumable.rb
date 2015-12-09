@@ -1,6 +1,7 @@
 class Consumable < ActiveRecord::Base
 
   include HasAncestry
+  include HasOrderByName
 
   belongs_to :consumable_type
 

@@ -134,4 +134,8 @@ RSpec.describe Consumable, type: :model do
     expect(Consumable.latest).to eq(consumable_1)
   end
 
+  it "should be able to return a collection by name (ignoring case)" do
+    expect(ConsumableType).to respond_to(:order_by_name)
+  end
+
 end

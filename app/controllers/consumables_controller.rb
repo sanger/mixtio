@@ -41,7 +41,7 @@ class ConsumablesController < ApplicationController
   end
 
   def consumables
-    @consumables ||= Consumable.all
+    @consumables ||= Consumable.order_by_name
   end
 
   def consumable_params
