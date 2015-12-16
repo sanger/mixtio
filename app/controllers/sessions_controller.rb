@@ -16,4 +16,5 @@ class SessionsController < ApplicationController
     sign_out!
     redirect_to root_path, notice: "Signed Out Successfully"
   end
+
 end
