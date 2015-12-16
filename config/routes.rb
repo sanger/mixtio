@@ -8,21 +8,27 @@ Rails.application.routes.draw do
 
   resources :consumable_types, :consumables
 
+  resources :batches
+
   resources :users
 
   resources :teams
+
+  resources :suppliers
 
   resources :sessions, only: [:new, :create, :destroy]
   get 'sign_in', to: 'sessions#new'
   delete 'sign_out', to: 'sessions#destroy'
 
-  root 'consumables#index'
+  root 'batches#index'
 
   namespace :api, defaults: { format: :json } do
 
     namespace :v1 do
       resources :consumables, param: :barcode, only: [:show]
       resources :consumable_types, only: [:show]
+      resources :batches, only: [:show]
+      resources :lots, only: [:show]
     end
   end
 

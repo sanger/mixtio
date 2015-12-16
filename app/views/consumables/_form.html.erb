@@ -17,8 +17,14 @@
         <%= f.label :name %>
         <%= f.text_field :name %>
       </li>
-      <li data-output="ingredients-list" class="ingredients-list" style="display:none;">
+      <li>
         <h4>Ingredients</h4>
+        <table>
+          <tr>
+            <th>Ingredient</th><th>Lot Number</th><th>Supplier</th><th></th>
+          </tr>
+          <%= render partial: 'ingredients', locals: { ingredients: @consumable.parents } %>
+        </table>
       </li>
       <li>
         <%= f.label :expiry_date %>
@@ -39,11 +45,6 @@
       <li>
         <%= f.label :aliquots %>
         <%= f.text_field :aliquots %>
-      </li>
-      <li>
-        <%= render layout: 'editable_parents', locals: { parent_ids: @consumable.parent_ids, collection: Consumable.order_by_name, behavior: 'parents', form: f } do %>
-          <%= text_field_tag(:parent_barcode, '', data: { behavior: "scan-parent-barcode" }) %>
-        <% end %>
       </li>
       <li>
         <%= f.submit %>
