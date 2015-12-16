@@ -6,10 +6,6 @@
         <%= f.text_field :username %>
       </li>
       <li>
-        <%= f.label :type %>
-        <%= f.select :type, options_for_select(User.types, @user.type) %>
-      </li>
-      <li>
         <%= f.label :team_id, "Team" %>
         <%= f.select :team_id, options_from_collection_for_select(Team.all, :id, :name) %>
       </li>

@@ -14,23 +14,6 @@ RSpec.describe User, type: :model do
     expect(build(:user, team: nil)).to_not be_valid
   end
 
-  describe "User Types" do
-    it "should be able to create an Administrator" do
-      user = create(:user, type: "Administrator")
-      expect(Administrator.all.count).to eq(1)
-    end
-
-    it "should be able to create a Scientist" do
-      user = create(:user, type: "Scientist")
-      expect(Scientist.all.count).to eq(1)
-    end
-
-    it "shuould be able to create a Guest" do
-      user = create(:user, type: "Guest")
-      expect(Guest.all.count).to eq(1)
-    end
-  end
-
   it "should authenticate the user" do
     user_1 = create(:user)
     user_2 = build(:user)
