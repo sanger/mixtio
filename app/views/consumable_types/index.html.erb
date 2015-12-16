@@ -1,9 +1,33 @@
-<section>
-  <h1>New consumable Type</h1>
-  <div>
-    <%= link_to "Add new consumable type", new_consumable_type_path %>
+<div class="row">
+  <div class="col-md-12">
+    <h1>Consumable Types <%= link_to new_consumable_type_path, { class: 'btn btn-success btn-large pull-right', role: 'button' } do %>
+      <%= fa_icon "plus" %> New Consumable Type
+    <% end %>
+    </h1>
   </div>
-  <div>
-    <%= render consumable_types %>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="text-center">
+      <%= paginate consumable_types %>
+    </div>
   </div>
-</section>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <tr>
+        <th>Name</th><th>Days To Keep</th><th></th>
+      </tr>
+      <%= render consumable_types %>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="text-center">
+      <%= paginate consumable_types %>
+    </div>
+  </div>
+</div>
+

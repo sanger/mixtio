@@ -1,0 +1,7 @@
+<tr>
+  <td>
+    <%= select_tag "ingredient_ids[]", options_from_collection_for_select(ConsumableType.order_by_name, :id, :name, ingredient.id), { include_blank: true, class: 'form-control' }
+    %>
+  </td>
+  <td><%= link_to '#', { "data-behavior": "remove_row" } do fa_icon 'times' end %></td>
+</tr>

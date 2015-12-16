@@ -11,7 +11,7 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type, name: consumable_type.name)).to_not be_valid
   end
 
-  it "should not be valid without a number greater than zero" do
+  it "should not be valid without a days_to_keep greater than zero" do
     expect(build(:consumable_type, days_to_keep: 0)).to_not be_valid
     expect(build(:consumable_type, days_to_keep: 'abc')).to_not be_valid
     expect(build(:consumable_type, days_to_keep: '')).to be_valid
@@ -25,52 +25,50 @@ RSpec.describe ConsumableType, type: :model do
     expect(consumable_type.expiry_date_from_today).to eq((Date.today + consumable_type.days_to_keep).to_s(:uk))
   end
 
-  it "should be able to have one child" do
+  it "should be able to have one ingredient" do
     consumable_type = create(:consumable_type)
     child      = create(:consumable_type)
+    consumable_type.ingredients << child
 
-    expect(consumable_type.add_children(child).children.count).to eq(1)
+    expect(consumable_type.ingredients.count).to eq(1)
   end
 
-  it "should be able to have many children" do
+  it "should be able to have many ingredients" do
     consumable_type = create(:consumable_type)
-    children = create_list(:consumable_type, 3)
+    ingredients = create_list(:consumable_type, 3)
 
-    consumable_type.add_children(children)
+    consumable_type.ingredients = ingredients
 
-    expect(children.all? {|child| consumable_type.children.include?(child)}).to be_truthy
-    expect(children.all? {|child| child.parents.include?(consumable_type)}).to be_truthy
+    expect(ingredients.all? {|ingredient| consumable_type.ingredients.include?(ingredient)}).to be_truthy
+    expect(ingredients.all? {|ingredient| ingredient.ingredient_of.include?(consumable_type) }).to be_truthy
   end
 
-  it "should be able to have one parent" do
-    consumable_type = create(:consumable_type)
-    parent     = create(:consumable_type)
+  it "should be able to have one consumable type it is an ingredient of" do
+    consumable_type         = create(:consumable_type)
+    another_consumable_type = create(:consumable_type)
 
-    expect(consumable_type.add_parents(parent).parents.count).to eq(1)
+    consumable_type.ingredient_of << another_consumable_type
+
+    expect(consumable_type.ingredient_of.count).to eq(1)
   end
 
-  it "should be able to have many parents" do
-    consumable_type = create(:consumable_type)
-    parents = create_list(:consumable_type, 3)
+  it "should be able to have many consumable types it is an ingredient of" do
+    ingredient = create(:consumable_type)
+    consumable_types = create_list(:consumable_type, 3)
 
-    consumable_type.add_parents(parents)
+    ingredient.ingredient_of << consumable_types
 
-    expect(parents.all? {|parent| consumable_type.parents.include?(parent)}).to be_truthy
-    expect(parents.all? {|parent| parent.children.include?(consumable_type)}).to be_truthy
+    expect(consumable_types.all? {|consumable_type| consumable_type.ingredients.include?(ingredient)}).to be_truthy
+    expect(consumable_types.all? {|consumable_type| ingredient.ingredient_of.include?(consumable_type)}).to be_truthy
   end
 
-  it "should be able to have lots of ingredients" do
-    consumable_type = create(:consumable_type_with_parents)
-    expect(consumable_type.ingredients.count).to eq(consumable_type.parents.count)
-  end
-
-  it "should return the latest consumables attached to a particular type" do
-    consumable_type = create(:consumable_type_with_parents_and_consumables)
+  it "should return the latest lots attached to a particular type" do
+    consumable_type = create(:consumable_type_with_ingredients_with_lots)
     parent_consumable_type = create(:consumable_type)
 
-    expect(parent_consumable_type.latest_consumables).to be_empty
+    expect(parent_consumable_type.latest_ingredients).to be_empty
 
-    expect(consumable_type.latest_consumables.count).to eq(consumable_type.parents.count)
+    expect(consumable_type.latest_ingredients.count).to eq(consumable_type.ingredients.count)
 
   end
 

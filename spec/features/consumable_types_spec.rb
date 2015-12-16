@@ -8,23 +8,25 @@ RSpec.describe "ConsumableTypes", type: :feature do
     consumable_type = build(:consumable_type)
 
     visit consumable_types_path
-    click_link "Add new consumable type"
+    click_link "New Consumable Type"
+
     expect{
       fill_in "Name", with: consumable_type.name
       fill_in "Days to keep", with: consumable_type.days_to_keep
 
-      find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types.first.name).select_option
-      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add-parent").click
+      click_button "Add Ingredient"
+      all("select").last.select(consumable_types.first.name)
 
-      find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types[1].name).select_option
-      find(:data_behavior, "ingredients").all("li").last.find(:data_behavior, "add-parent").click
+      click_button "Add Ingredient"
+      all("select").last.select(consumable_types[1].name)
 
-      find(:data_behavior, "ingredients").all("select").last.find("option", text: consumable_types.last.name).select_option
+      click_button "Add Ingredient"
+      all("select").last.select(consumable_types[2].name)
 
       click_button "Create Consumable type"
     }.to change(ConsumableType, :count).by(1)
 
-    expect(ConsumableType.find_by(name: consumable_type.name).parents.count).to eq(3)
+    expect(ConsumableType.find_by(name: consumable_type.name).ingredients.count).to eq(3)
     expect(page).to have_content("Consumable type successfully created")
 
   end
@@ -42,12 +44,11 @@ RSpec.describe "ConsumableTypes", type: :feature do
   end
 
   it "Allows a user to edit an existing consumable type", js: true do
-    consumable_type = create(:consumable_type_with_parents)
+    consumable_type = create(:consumable_type_with_ingredients)
     new_consumable_type = build(:consumable_type)
 
-    visit consumable_types_path
+    visit edit_consumable_type_path(consumable_type)
     expect{
-      find(:data_id, consumable_type.id).click_link "Edit"
       fill_in "Name", with: new_consumable_type.name
       fill_in "Days to keep", with: 9
       click_button "Update Consumable type"

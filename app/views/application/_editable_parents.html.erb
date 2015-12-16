@@ -2,6 +2,7 @@
   <%= form.hidden_field :parent_ids, value: "", data: { id: "parent-ids" } %>
   <h3>Ingredients</h3>
   <ul data-behavior="parent-select">
+
   <% parent_ids.with_nil.each do |parent_id| %>
     <ul data-behavior="parent">
       <li>
@@ -16,5 +17,6 @@
       </li>
     </ul>
   <% end %>
+
   </ul>
 </div>
