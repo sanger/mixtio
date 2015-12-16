@@ -5,4 +5,6 @@ class ApplicationController < ActionController::Base
 
   serialization_scope :view_context
 
+  include Authentication::ControllerConcern
+  
 end

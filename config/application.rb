@@ -22,7 +22,7 @@ module Mixtio
 
     config.autoload_paths += %W(#{config.root}/lib/validators)
 
-    config.autoload_paths += %W(#{config.root}/app/models/users/)
+    config.filter_parameters += [:password]
 
     config.autoload_paths += %W(#{config.root}/app/forms)
 
