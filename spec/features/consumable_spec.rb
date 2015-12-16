@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.describe "Consumables", type: :feature do
 
   let! (:consumable_types) { create_list(:consumable_type, 4) }
-  let! (:scientist)        { create(:scientist) }
 
   it "Displays a list of consumables to the user" do
     consumable = create(:consumable)
