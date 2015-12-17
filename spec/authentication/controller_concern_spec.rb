@@ -4,7 +4,9 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
 
   test_routes = Proc.new do
     get '/anonymous' => 'anonymous#index'
+
   end
+
   Rails.application.routes.send(:eval_block, test_routes)
 
   class AnonymousController < ActionController::Base
@@ -39,6 +41,15 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
     controller.authenticate?("user1", "password")
     expect(controller.current_user).to be_signed_in
     expect(controller.current_user.name).to eq("user1")
+    expect(controller.signed_in?).to be_truthy
+  end
+
+  it "should be able to sign a user out" do
+    controller.authenticate?(user.username, "password")
+    controller.sign_out!
+    expect(controller.session[:username]).to be_nil
+    expect(controller.current_user).to_not be_signed_in
+>>>>>>> A bit of tidying up.
   end
 
   it "should redirect to sign in path if not authenticated" do

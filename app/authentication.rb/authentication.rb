@@ -1,8 +1,12 @@
 module Authentication
   module ControllerConcern
 
-    extend ActiveSupport::Concern 
+    extend ActiveSupport::Concern
 
+    included do
+      helper_method :current_user
+    end
+  
     def authenticate!
       redirect_to(new_session_path) unless signed_in?
     end
@@ -29,8 +33,11 @@ module Authentication
       current_user.sign_out!
     end
 
+    
+
     class CurrentUser
       attr_reader :user
+      delegate :username, to: :user
 
       def initialize(username)
         @user = User.new(username: username)
