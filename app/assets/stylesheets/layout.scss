@@ -12,6 +12,12 @@
   margin: 20px 0;
 }
 
+//Added because was sometimes being hidden under barcode scan input
 .ui-datepicker {
   z-index: 2 !important;
+}
+
+.table > tbody > tr > td.valign {
+  display: table-cell;
+  vertical-align: middle;
 }
