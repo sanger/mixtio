@@ -4,7 +4,9 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
 
   test_routes = Proc.new do
     get '/anonymous' => 'anonymous#index'
+
   end
+
   Rails.application.routes.send(:eval_block, test_routes)
 
   class AnonymousController < ActionController::Base
@@ -39,6 +41,7 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
   it "should be able to check if the user is signed in" do
     controller.authenticate?(user.username, "password")
     expect(controller.current_user).to be_signed_in
+    expect(controller.current_user.username).to eq(user.username)
     expect(controller.signed_in?).to be_truthy
   end
 
