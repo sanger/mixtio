@@ -31,4 +31,9 @@ RSpec.describe "Authentication", type: :feature do
     expect(page).to have_content("Invalid username or password")
   end
 
+  it "should allow a user to sign out" do
+    visit sign_out_path
+    expect(page).to have_content("Signed Out Successfully")
+  end
+
 end
