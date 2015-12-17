@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:new, :create, :destroy]
   get 'sign_in', to: 'sessions#new'
-  delete 'sign_out', to: 'sessions#destroy'
+  get 'sign_out', to: 'sessions#destroy'
 
   root 'batches#index'
 
