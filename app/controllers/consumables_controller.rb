@@ -1,7 +1,7 @@
 class ConsumablesController < ApplicationController
 
   before_action :consumables, only: [:index]
-  before_action :authenticate!, except: [:index]
+  # before_action :authenticate!, except: [:index]
 
   def index
   end

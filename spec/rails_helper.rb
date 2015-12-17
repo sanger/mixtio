@@ -98,6 +98,4 @@ RSpec.configure do |config|
     xpath { |output| XPath.css("[data-output='#{output}']") }
   end
 
-  config.infer_base_class_for_anonymous_controllers = true
-
 end
