@@ -1,6 +1,7 @@
 class ConsumableTypesController < ApplicationController
 
   before_action :consumable_types, only: [:index]
+  before_action :authenticate!, except: [:index]
 
   def index
   end
