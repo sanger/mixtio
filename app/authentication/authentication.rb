@@ -6,24 +6,13 @@ module Authentication
     included do
       helper_method :current_user
     end
-
-    def store_location
-      session[:return_to] = request.path if request.get?
-    end
-
-    def get_location(default)
-      session.delete(:return_to) || default
-    end
   
     def authenticate!
-      unless signed_in?
-        store_location
-        redirect_to(new_session_path)
-      end
+      redirect_to(new_session_path) unless signed_in?
     end
 
     def authenticate?(username, password)
-      if Authentication::Ldap.authenticate(username, password)
+      if User.exists?(username: username) && Authentication::Ldap.authenticate(username, password)
         session[:username] = username
         true
       else
@@ -47,31 +36,45 @@ module Authentication
   end
 
   class CurrentUser
-    attr_reader :name
+    attr_reader :user
+    delegate :username, to: :user
 
-    def initialize(name)
-      @name = name
+    def initialize(username)
+      @user = User.new(username: username)
     end
 
     def signed_in?
-      name.present?
+      user.username.present?
     end
 
     def sign_out!
-      @name = nil
+      user.username = nil
     end
 
   end
 
   class Ldap
 
-    cattr_accessor :settings
-    self.settings ||= Rails.configuration.ldap
+    cattr_accessor :port
+    self.port = 111
+
+    cattr_accessor :host
+    self.host = "host"
+
+    cattr_accessor :dn_attribute
+    self.dn_attribute = "dn"
+
+    cattr_accessor :prefix
+    self.prefix = "ou=abc"
+
+    cattr_accessor :dc 
+    self.dc = ["a","b","c"]
 
     attr_reader :username
 
-    def self.setup(settings)
-      self.settings = OpenStruct.new(settings)
+    def self.setup(options = {})
+      set_options(options) unless options.empty?
+      yield self if block_given?
     end
 
     def self.authenticate(username, password)
@@ -88,8 +91,8 @@ module Authentication
 
     def options(password)
       {
-        host: self.settings.host,
-        port: self.settings.port,
+        host: self.host,
+        port: self.port,
         encryption: :simple_tls,
         auth: { method: :simple, username: username, password: password }
       }
@@ -98,7 +101,13 @@ module Authentication
   private
 
     def set_username(username)
-      "#{self.settings.dn_attribute}=#{username},#{self.settings.prefix}" << self.settings.dc.collect { |dc| ",dc=#{dc}"}.reduce(:<<)
+      "#{self.dn_attribute}=#{username},#{self.prefix}" << self.dc.collect { |dc| ",dc=#{dc}"}.reduce(:<<)
+    end
+
+    def self.set_options(options)
+      options.each do |k,v|
+        class_variable_set("@@#{k.to_s}",v)
+      end
     end
     
   end

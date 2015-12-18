@@ -1,7 +1,5 @@
 <% if current_user.signed_in? %>
-  <div>You are signed in as <%= current_user.name %></div>
   <div><%= link_to "Sign Out", sign_out_path %></div>
 <% else %>
-  <div>You are not currently signed in</div>
   <div><%= link_to "Sign In", sign_in_path %></div>
 <% end %>
