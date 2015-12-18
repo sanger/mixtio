@@ -21,7 +21,7 @@ module Authentication
     end
 
     def current_user
-      @current_user ||= CurrentUser.new(session[:username])
+      @current_user ||= Authentication::CurrentUser.new(session[:username])
     end
 
     def signed_in?
@@ -33,25 +33,24 @@ module Authentication
       current_user.sign_out!
     end
 
-    
+  end
 
-    class CurrentUser
-      attr_reader :user
-      delegate :username, to: :user
+  class CurrentUser
+    attr_reader :user
+    delegate :username, to: :user
 
-      def initialize(username)
-        @user = User.new(username: username)
-      end
-
-      def signed_in?
-        user.username.present?
-      end
-
-      def sign_out!
-        user.username = nil
-      end
-
+    def initialize(username)
+      @user = User.new(username: username)
     end
+
+    def signed_in?
+      user.username.present?
+    end
+
+    def sign_out!
+      user.username = nil
+    end
+
   end
 
   class Ldap
