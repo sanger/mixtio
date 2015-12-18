@@ -60,6 +60,7 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 
   config.include WaitForAjax
+  config.include AuthenticationHelper
 
   config.extend WithModel
 
