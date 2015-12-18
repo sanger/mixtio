@@ -5,26 +5,32 @@ RSpec.describe "Authentication", type: :feature do
   let!(:user) { create(:user)}
 
   it "should sign in a user with a valid username and password" do
-    allow_any_instance_of(ApplicationController).to receive(:authenticate?).and_return(true)
-    visit sign_in_path
+    allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
+    visit root_path
+    click_link "Sign In"
     fill_in "Username", with: user.username
     fill_in "Password", with: "password"
     click_button "Sign In"
     expect(page).to have_content("Signed In Successfully")
+    expect(page).to have_content("You are signed in as #{user.username}")
   end
 
   it "should not sign in a user without a valid password" do
-    allow_any_instance_of(ApplicationController).to receive(:authenticate?).and_return(false)
-    visit sign_in_path
+    allow(Authentication::Ldap).to receive(:authenticate).and_return(false)
+    visit root_path
+    click_link "Sign In"
     fill_in "Username", with: user.username
     fill_in "Password", with: "badpassword"
     click_button "Sign In"
     expect(page).to have_content("Invalid username or password")
+    expect(page).to have_content("You are not currently signed in")
+
   end
 
   it "should not sign in an invalid user" do
     invalid_user = build(:user)
-    visit sign_in_path
+    visit root_path
+    click_link "Sign In"
     fill_in "Username", with: invalid_user.username
     fill_in "Password", with: "password"
     click_button "Sign In"
@@ -32,7 +38,8 @@ RSpec.describe "Authentication", type: :feature do
   end
 
   it "should allow a user to sign out" do
-    visit sign_out_path
+    sign_in
+    click_link "Sign Out"
     expect(page).to have_content("Signed Out Successfully")
   end
 
