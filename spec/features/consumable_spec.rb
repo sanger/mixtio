@@ -4,6 +4,10 @@ RSpec.describe "Consumables", type: :feature do
 
   let! (:consumable_types) { create_list(:consumable_type, 4) }
 
+  before(:each) do
+    sign_in
+  end
+
   it "Displays a list of consumables to the user" do
     consumable = create(:consumable)
     consumable_2 = create(:consumable)

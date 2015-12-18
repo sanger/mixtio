@@ -4,6 +4,10 @@ RSpec.describe "ConsumableTypes", type: :feature do
 
   let! (:consumable_types) { create_list(:consumable_type, 3) }
 
+  before(:each) do
+    sign_in
+  end
+
   it "Allows a user to create a new consumable type with ingredients", js: true do
     consumable_type = build(:consumable_type)
 
