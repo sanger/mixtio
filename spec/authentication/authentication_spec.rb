@@ -43,4 +43,13 @@ RSpec.describe "Authentication", type: :feature do
     expect(page).to have_content("Signed Out Successfully")
   end
 
+  it "should redirect user back to referrer after signing in" do
+    allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
+    visit "/anonymous"
+    fill_in "Username", with: user.username
+    fill_in "Password", with: "password"
+    click_button "Sign In"
+    expect(current_path).to eq("/anonymous")
+  end
+
 end
