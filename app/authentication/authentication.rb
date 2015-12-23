@@ -6,9 +6,20 @@ module Authentication
     included do
       helper_method :current_user
     end
+
+    def store_location
+      session[:return_to] = request.path if request.get?
+    end
+
+    def get_location(default)
+      session.delete(:return_to) || default
+    end
   
     def authenticate!
-      redirect_to(new_session_path) unless signed_in?
+      unless signed_in?
+        store_location
+        redirect_to(new_session_path)
+      end
     end
 
     def authenticate?(username, password)
