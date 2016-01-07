@@ -63,7 +63,7 @@ class BatchForm
     begin
       ActiveRecord::Base.transaction do
         batch.save!
-        aliquots.to_i.times { batch.consumables.create!(lots: ingredients) }
+        batch.consumables.create!( (1..aliquots.to_i).map { { lots: ingredients } } )
       end
     rescue StandardError => e
       errors[:save] << e.to_s
