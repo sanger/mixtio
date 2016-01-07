@@ -55,14 +55,14 @@ class BatchForm
   end
 
   def batch
-    @batch ||= Batch.new(lot: lot, expiry_date: expiry_date)
+    @batch ||= Batch.new(lot: lot, expiry_date: expiry_date, ingredients: ingredients)
   end
 
   def save
     return false unless valid?
     ActiveRecord::Base.transaction do
       batch.save!
-      batch.consumables.create!( (1..aliquots.to_i).map { {lots: ingredients} } )
+      batch.consumables.create!(Array.new(aliquots.to_i, {}))
     end
   end
 

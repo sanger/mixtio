@@ -128,12 +128,9 @@ RSpec.describe "Batches", type: feature do
         click_button "Create Batch"
         expect(page).to have_content("Reagent batch successfully created")
 
-        consumables = Batch.last.consumables
-        expect(consumables.all? { |c| c.lots.size == 3 }).to be_truthy
-
-        consumables.each do |consumable|
-          expect(consumable.lots).to eq(@consumable_type.latest_ingredients)
-        end
+        batch = Batch.last
+        expect(batch.ingredients.size).to eq(3)
+        expect(batch.ingredients).to eq(@consumable_type.latest_ingredients)
       end
 
       describe 'editing ingredients' do
@@ -144,12 +141,9 @@ RSpec.describe "Batches", type: feature do
           click_button "Create Batch"
           expect(page).to have_content("Reagent batch successfully created")
 
-          consumables = Batch.last.consumables
-          expect(consumables.all? { |c| c.lots.size == 2 }).to be_truthy
-
-          consumables.each do |consumable|
-            expect(consumable.lots).to eq(@consumable_type.latest_ingredients.take(2))
-          end
+          batch = Batch.last
+          expect(batch.ingredients.size).to eq(2)
+          expect(batch.ingredients).to eq(@consumable_type.latest_ingredients.take(2))
         end
 
         it 'can add an ingredient' do
@@ -164,15 +158,14 @@ RSpec.describe "Batches", type: feature do
 
           expect(page).to have_content("Reagent batch successfully created")
 
-          consumables = Batch.last.consumables
+          batch = Batch.last
 
-          expect(consumables.all? { |c| c.lots.size == 4 }).to be_truthy
+          expect(batch.ingredients.size).to eq(4)
 
           all_ingredients = @consumable_type.latest_ingredients << @lot
 
-          consumables.each do |consumable|
-            expect(consumable.lots).to eq(all_ingredients)
-          end
+          expect(batch.ingredients).to eq(all_ingredients)
+
         end
 
         before do
@@ -190,8 +183,8 @@ RSpec.describe "Batches", type: feature do
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
-          expect(batch.consumables.all? { |c| c.lots.size == 4 }).to be_truthy
-          expect(batch.consumables.all? { |c| c.lots.include?(@consumable.batch.lot) }).to be_truthy
+          expect(batch.ingredients.size).to eq(4)
+          expect(batch.ingredients.include?(@consumable.batch.lot)).to be_truthy
 
         end
       end

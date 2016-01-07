@@ -7,14 +7,6 @@ RSpec.describe Consumable, type: :model do
     expect(consumable.barcode).to eq("mx-#{consumable.id}")
   end
 
-  it "should assign lots correctly" do
-    consumable = create(:consumable)
-    lots       = create_list(:lot, 3)
-
-    consumable.lots = lots
-    expect(consumable.lots).to eq(lots)
-  end
-
   it "should not be valid without being part of a batch" do
     expect(build(:consumable, batch: nil)).to_not be_valid
   end
