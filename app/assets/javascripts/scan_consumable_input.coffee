@@ -15,7 +15,12 @@ class @ScanConsumableInput
         lot = new Lot(id: consumable.get("lot").id)
         lot.fetch()
       ).then(() =>
-        @ingredients_table.add_ingredient(lot.attributes)
+        ingredient =
+          consumable_type_id: lot.get("consumable_type").id
+          supplier_id: lot.get("supplier").id
+          name: lot.get("name")
+
+        @ingredients_table.add_ingredient(ingredient)
         @value('')
       )
 

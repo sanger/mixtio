@@ -16,7 +16,7 @@ class @BatchForm
     consumableType.fetch()
       .then(() =>
         @set_expiry_date(consumableType.get('expiry_date_from_today'))
-        @set_ingredients(consumableType.get('ingredients'))
+        @set_ingredients(consumableType.get('latest_ingredients'))
       )
 
   set_expiry_date: (date) ->
