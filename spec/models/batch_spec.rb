@@ -23,4 +23,12 @@ RSpec.describe Batch, type: :model do
 
     expect(Batch.order_by_created_at).to eq([batch2, batch3, batch1])
   end
+
+  it "should assign lots as ingredients correctly" do
+    batch = create(:batch)
+    lots  = create_list(:lot, 3)
+
+    batch.ingredients = lots
+    expect(batch.ingredients).to eq(lots)
+  end
 end

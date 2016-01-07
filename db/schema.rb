@@ -52,11 +52,6 @@ ActiveRecord::Schema.define(version: 20151216153548) do
 
   add_index "consumables", ["batch_id"], name: "index_consumables_on_batch_id"
 
-  create_table "consumables_lots", id: false, force: :cascade do |t|
-    t.integer "consumable_id", null: false
-    t.integer "lot_id",        null: false
-  end
-
   create_table "lots", force: :cascade do |t|
     t.integer  "consumable_type_id"
     t.integer  "supplier_id"
@@ -67,6 +62,16 @@ ActiveRecord::Schema.define(version: 20151216153548) do
 
   add_index "lots", ["consumable_type_id"], name: "index_lots_on_consumable_type_id"
   add_index "lots", ["supplier_id"], name: "index_lots_on_supplier_id"
+
+  create_table "mixtures", force: :cascade do |t|
+    t.integer  "lot_id"
+    t.integer  "batch_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "mixtures", ["batch_id"], name: "index_mixtures_on_batch_id"
+  add_index "mixtures", ["lot_id"], name: "index_mixtures_on_lot_id"
 
   create_table "recipe_ingredients", force: :cascade do |t|
     t.string   "consumable_type_id"
