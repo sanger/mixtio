@@ -21,3 +21,15 @@
   display: table-cell;
   vertical-align: middle;
 }
+
+.error {
+  @extend .alert-danger;
+}
+
+.warning {
+  @extend .alert-warning;
+}
+
+.notice {
+  @extend .alert-success;
+}
