@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       resources :consumable_types, only: [:show]
       resources :batches, only: [:show]
       resources :lots, only: [:show]
+      resources :suppliers, only: [:show]
     end
   end
 

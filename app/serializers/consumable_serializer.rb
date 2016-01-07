@@ -1,25 +1,39 @@
-require_relative "consumable/batch_serializer"
-require_relative "consumable/consumable_type_serializer"
-require_relative "consumable/lot_serializer"
-
 class ConsumableSerializer < ActiveModel::Serializer
 
   self.root = false
 
   attributes :id, :name, :depleted
 
-  has_one :batch, serializer: Consumable::BatchSerializer
+  has_one :batch
 
-  has_one :lot, serializer: Consumable::LotSerializer
+  has_one :lot
 
-  has_one :consumable_type, serializer: Consumable::ConsumableTypeSerializer
+  has_one :consumable_type
+
+  def batch
+    batch = object.batch
+    {
+      id: batch.id,
+      uri: scope.api_v1_batch_url(batch)
+    }
+  end
 
   def lot
-    object.batch.lot
+    lot = object.batch.lot
+    {
+      id: lot.id,
+      name: lot.name,
+      uri: scope.api_v1_lot_url(lot)
+    }
   end
 
   def consumable_type
-    lot.consumable_type
+    consumable_type = object.batch.lot.consumable_type
+    {
+      id: consumable_type.id,
+      name: consumable_type.name,
+      uri: scope.api_v1_consumable_type_url(consumable_type)
+    }
   end
 
 end

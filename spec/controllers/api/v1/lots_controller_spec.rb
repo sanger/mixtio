@@ -12,8 +12,14 @@ describe Api::V1::LotsController, type: :request do
 
       expect(lot_response[:id]).to eql(lot.id)
       expect(lot_response[:name]).to eql(lot.name)
-      expect(lot_response[:consumable_type_id]).to eql(lot.consumable_type_id)
-      expect(lot_response[:supplier_id]).to eql(lot.supplier_id)
+
+      consumable_type = lot_response[:consumable_type]
+      expect(consumable_type[:id]).to eql(lot.consumable_type_id)
+      expect(consumable_type[:uri]).to include(api_v1_consumable_type_path lot.consumable_type)
+
+      supplier = lot_response[:supplier]
+      expect(supplier[:id]).to eql(lot.supplier_id)
+      expect(supplier[:uri]).to include(api_v1_supplier_path lot.supplier)
     end
 
   end

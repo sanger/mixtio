@@ -16,17 +16,17 @@ describe Api::V1::ConsumablesController, type: :request do
 
       batch = consumable_response[:batch]
       expect(batch[:id]).to eql(consumable.batch.id)
-      expect(batch[:lot_id]).to eql(consumable.batch.lot_id)
-      expect(batch[:expiry_date]).to eql(consumable.batch.expiry_date.to_s)
-      expect(batch[:arrival_date]).to eql(consumable.batch.arrival_date.to_s)
+      expect(batch[:uri]).to include(api_v1_batch_path consumable.batch)
 
       lot = consumable_response[:lot]
       expect(lot[:id]).to eql(consumable.batch.lot.id)
       expect(lot[:name]).to eql(consumable.batch.lot.name)
+      expect(lot[:uri]).to include(api_v1_lot_path consumable.batch.lot)
 
       consumable_type = consumable_response[:consumable_type]
       expect(consumable_type[:id]).to eql(consumable.batch.lot.consumable_type.id)
       expect(consumable_type[:name]).to eql(consumable.batch.lot.consumable_type.name)
+      expect(consumable_type[:uri]).to include(api_v1_consumable_type_path consumable.batch.lot.consumable_type)
     end
 
   end
