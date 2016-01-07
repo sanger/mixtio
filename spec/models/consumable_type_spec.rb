@@ -40,26 +40,6 @@ RSpec.describe ConsumableType, type: :model do
     consumable_type.ingredients = ingredients
 
     expect(ingredients.all? {|ingredient| consumable_type.ingredients.include?(ingredient)}).to be_truthy
-    expect(ingredients.all? {|ingredient| ingredient.ingredient_of.include?(consumable_type) }).to be_truthy
-  end
-
-  it "should be able to have one consumable type it is an ingredient of" do
-    consumable_type         = create(:consumable_type)
-    another_consumable_type = create(:consumable_type)
-
-    consumable_type.ingredient_of << another_consumable_type
-
-    expect(consumable_type.ingredient_of.count).to eq(1)
-  end
-
-  it "should be able to have many consumable types it is an ingredient of" do
-    ingredient = create(:consumable_type)
-    consumable_types = create_list(:consumable_type, 3)
-
-    ingredient.ingredient_of << consumable_types
-
-    expect(consumable_types.all? {|consumable_type| consumable_type.ingredients.include?(ingredient)}).to be_truthy
-    expect(consumable_types.all? {|consumable_type| ingredient.ingredient_of.include?(consumable_type)}).to be_truthy
   end
 
   it "should return the latest lots attached to a particular type" do
@@ -69,7 +49,6 @@ RSpec.describe ConsumableType, type: :model do
     expect(parent_consumable_type.latest_ingredients).to be_empty
 
     expect(consumable_type.latest_ingredients.count).to eq(consumable_type.ingredients.count)
-
   end
 
   it "should be able to return a collection by name (ignoring case)" do

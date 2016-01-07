@@ -2,14 +2,10 @@ class ConsumableType < ActiveRecord::Base
 
   include HasOrderByName
 
-  has_many :consumables
   has_many :lots
 
-  has_many :recipes, :class_name => "Ingredient"
-  has_many :ingredients, :through => :recipes
-
-  has_many :inverse_recipe, :class_name => "Ingredient", :foreign_key => "ingredient_id"
-  has_many :ingredient_of, :through => :inverse_recipe, :source => :consumable_type
+  has_many :recipe_ingredients
+  has_many :ingredients, :through => :recipe_ingredients
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }

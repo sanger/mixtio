@@ -60,14 +60,9 @@ class BatchForm
 
   def save
     return false unless valid?
-    begin
-      ActiveRecord::Base.transaction do
-        batch.save!
-        batch.consumables.create!( (1..aliquots.to_i).map { { lots: ingredients } } )
-      end
-    rescue StandardError => e
-      errors[:save] << e.to_s
-      return false
+    ActiveRecord::Base.transaction do
+      batch.save!
+      batch.consumables.create!( (1..aliquots.to_i).map { {lots: ingredients} } )
     end
   end
 
