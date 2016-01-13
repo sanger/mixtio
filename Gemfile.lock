@@ -39,8 +39,14 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.2)
+    autoprefixer-rails (6.1.2)
+      execjs
+      json
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-sass (3.3.6)
+      autoprefixer-rails (>= 5.2.1)
+      sass (>= 3.3.4)
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
@@ -72,6 +78,8 @@ GEM
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
     ffi (1.9.8)
+    font-awesome-rails (4.5.0.0)
+      railties (>= 3.2, < 5.0)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     has_secure_token (1.0.0)
@@ -90,6 +98,9 @@ GEM
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
     json (1.8.3)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     libv8 (3.16.14.11)
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
@@ -220,16 +231,19 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  bootstrap-sass (~> 3.3.6)
   byebug
   capybara
   coffee-rails (~> 4.1.0)
   database_cleaner
   factory_girl_rails
+  font-awesome-rails
   has_secure_token
   jbuilder (~> 2.0)
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
+  kaminari
   mysql2 (= 0.3.20)
   net-ldap
   phantomjs
