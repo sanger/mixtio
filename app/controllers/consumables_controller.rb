@@ -45,7 +45,7 @@ class ConsumablesController < ApplicationController
   end
 
   def consumable_params
-    params.require(:consumable).permit(:name, :expiry_date, :lot_number, :arrival_date, :supplier, :consumable_type_id, :parent_ids, :aliquots)
+    params.require(:consumable).permit(:name, :expiry_date, :lot_number, :arrival_date, :supplier, :consumable_type_id, :aliquots, ingredients: [:name, :lot_number, :supplier])
   end
 
   helper_method :consumables

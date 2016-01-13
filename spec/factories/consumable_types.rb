@@ -3,21 +3,21 @@ FactoryGirl.define do
     sequence(:name) {|n| "consumable Type #{n}" }
     days_to_keep 33
 
-    factory :consumable_type_with_parents do
+    factory :consumable_type_with_ingredients do
 
       transient do
-        parents { FactoryGirl.create_list(:consumable_type, 3)}
+        ingredients { FactoryGirl.create_list(:consumable_type, 3)}
       end
 
       after(:create) do |consumable_type, evaluator|
-        consumable_type.add_parents(evaluator.parents)
+        consumable_type.ingredients = evaluator.ingredients
       end
 
-      factory :consumable_type_with_parents_and_consumables do
+      factory :consumable_type_with_ingredients_with_lots do
 
         after(:create) do |consumable_type, evaluator|
-          consumable_type.parents.each do |parent|
-            FactoryGirl.create_list(:consumable, 3, consumable_type: parent)
+          consumable_type.ingredients.each do |ingredient|
+            FactoryGirl.create_list(:lot, 3, consumable_type: ingredient)
           end
         end
       end

@@ -1,0 +1,16 @@
+<tr>
+  <td>
+    <%= lot_fields.select :consumable_type_id,
+      options_from_collection_for_select(ConsumableType.order_by_name, :id, :name),
+      { include_blank: true }, { class: 'form-control' }
+    %>
+  </td>
+  <td><%= lot_fields.text_field :name, { class: 'form-control' } %></td>
+  <td>
+    <%= lot_fields.select :supplier_id,
+      options_from_collection_for_select(Supplier.all, :id, :name),
+      { include_blank: true }, { class: 'form-control' }
+    %>
+  </td>
+  <td class="valign"><%= link_to '#', { "data-behavior": "remove_row" } do fa_icon 'times' end %></td>
+</tr>

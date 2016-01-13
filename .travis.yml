@@ -1,4 +1,6 @@
 language: ruby
 before_script:
   - cp config/secrets.yml.sample config/secrets.yml
+  - bundle exec rake db:reset
+  - bundle exec rake db:setup
 script: bundle exec rspec

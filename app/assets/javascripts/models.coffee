@@ -35,3 +35,7 @@ class @Consumable extends @Model
 class @ConsumableType extends @Model
 
   endpoint: 'consumable_types'
+
+class @Lot extends @Model
+
+  endpoint: 'lots'

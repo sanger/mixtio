@@ -1,0 +1,80 @@
+<%= form_for @batch_form, :url => batches_path do |f| %>
+
+    <div class="form-group">
+      <%= f.label :consumable_type_id, "Consumable Type*" %>
+
+      <%= f.select :consumable_type_id,
+            options_from_collection_for_select(ConsumableType.order_by_name, :id, :name),
+            { include_blank: true }, { class: 'form-control' }
+      %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :lots, 'Ingredients' %>
+      <%= f.fields_for "lots[]", Lot.new do |lot_fields| %>
+        <%= hidden_field_tag "batch_form[lots][]" %>
+        <script>
+          var ingredient_template="<%= escape_javascript(render(partial: 'ingredient', locals: {lot_fields: lot_fields})) %>"
+        </script>
+        <div class="row">
+          <div class="col-md-12">
+            <table data-behavior="batch-ingredients-table" class="table table-striped">
+              <tr>
+                <th>Consumable Type</th><th>Lot Name</th><th>Supplier</th><th></th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="input-group" data-toggle="tooltip" data-placement="bottom" title="Scan a consumable to add it as an ingredient">
+            <span class="input-group-addon" id="barcode-scanner">
+              <%= fa_icon "barcode" %>
+            </span>
+            <input id="consumable-barcode" type="text" class="form-control" aria-describedby="barcode-scanner"></input>
+          </div>
+        </div>
+
+        <div class="col-md-6 text-right">
+          <button id="add_ingredient_button" class="btn btn-primary">
+            <%= fa_icon "plus" %> Add Ingredient
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <%= f.label :supplier_id, 'Supplier*' %>
+      <%= f.select :supplier_id,
+                  options_from_collection_for_select(Supplier.all, :id, :name),
+                  { include_blank: true }, { class: 'form-control' }
+            %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :lot_name, "Lot Name*" %>
+      <%= f.text_field :lot_name, { class: 'form-control' } %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :expiry_date, "Expiry Date*" %>
+      <%= f.text_field :expiry_date, { class: 'form-control', data: { behavior: "datepicker" } } %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :arrival_date %>
+      <%= f.text_field :arrival_date, { class: 'form-control', data: { behavior: "datepicker" } } %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :aliquots, "Number of Aliquots*" %>
+      <%= f.text_field :aliquots, { class: 'form-control' } %>
+    </div>
+
+    <%= f.submit 'Create Batch', { class: 'btn btn-primary' } %>
+<% end %>
