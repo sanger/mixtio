@@ -1,0 +1,23 @@
+<%= form_for @user.becomes(User) do |f| %>
+  <fieldset>
+    <ul>
+      <li>
+        <%= f.label :username %>
+        <%= f.text_field :username %>
+      </li>
+      <li>
+        <%= f.label :type %>
+        <%= f.select :type, options_for_select(User.types, @user.type) %>
+      </li>
+      <li>
+        <%= f.label :team_id, "Team" %>
+        <%= f.select :team_id, options_from_collection_for_select(Team.all, :id, :name) %>
+      </li>
+      <li>
+        <%= f.label :status, "Active" %>
+        <%= f.check_box :status, {}, User.statuses.keys.first, User.statuses.keys.last %>
+      </li>
+    </ul>
+    <%= f.submit %>
+  </fieldset>
+<% end %>

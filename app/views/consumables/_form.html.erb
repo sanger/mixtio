@@ -2,13 +2,33 @@
   <fieldset>
     <legend></legend>
     <ul>
+       <li>
+        <ul>
+          <li>
+            <%= f.label :consumable_type_id %>
+            <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.order_by_name, :id, :name, @consumable.consumable_type_id), {include_blank: true}, data: { behavior: "consumable-type" } %>
+          </li>
+          <li>
+            <%= link_to 'Load ingredients', "#", data: { behavior: "load-ingredients"}, title: "Load ingredients" %>
+          </li>
+        </ul>
+      </li>
       <li>
         <%= f.label :name %>
         <%= f.text_field :name %>
       </li>
       <li>
+        <h4>Ingredients</h4>
+        <table>
+          <tr>
+            <th>Ingredient</th><th>Lot Number</th><th>Supplier</th><th></th>
+          </tr>
+          <%= render partial: 'ingredients', locals: { ingredients: @consumable.parents } %>
+        </table>
+      </li>
+      <li>
         <%= f.label :expiry_date %>
-        <%= f.date_field :expiry_date %>
+        <%= f.text_field :expiry_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :lot_number %>
@@ -16,25 +36,16 @@
       </li>
       <li>
         <%= f.label :arrival_date %>
-        <%= f.date_field :arrival_date %>
+        <%= f.text_field :arrival_date, data: { behavior: "datepicker"} %>
       </li>
       <li>
         <%= f.label :supplier %>
         <%= f.text_field :supplier %>
       </li>
       <li>
-        <%= f.label :consumable_type_id %>
-        <%= f.select :consumable_type_id, options_from_collection_for_select(ConsumableType.all, :id, :name, @consumable.consumable_type_id) %>
+        <%= f.label :aliquots %>
+        <%= f.text_field :aliquots %>
       </li>
-      <div data-behavior="parents">
-        <%= f.hidden_field :parent_ids, value: "", data: { id: "parent_ids" }%>
-        <li>
-          <%= label_tag(:parent) %>
-          <%= select_tag :parent, options_from_collection_for_select(Consumable.all, :id, :name), {include_blank: true} %>
-          <%= link_to '+', "#", data: { behavior: "add_parent"}, title: "Add Parent" %>
-          <%= link_to '-', "#", data: { behavior: "remove_parent"}, title: "Remove Parent" %>
-        </li>
-      </div>
       <li>
         <%= f.submit %>
       </li>

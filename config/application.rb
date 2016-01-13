@@ -22,6 +22,10 @@ module Mixtio
 
     config.autoload_paths += %W(#{config.root}/lib/validators)
 
+    config.autoload_paths += %W(#{config.root}/app/models/users/)
+
+    config.autoload_paths += %W(#{config.root}/app/forms)
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
@@ -34,8 +38,7 @@ module Mixtio
             controller_specs: false,
             request_specs: true
         g.fixture_replacement :factory_girl, dir: "spec/factories"
-      end
+    end
   end
-
-
 end
+

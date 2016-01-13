@@ -1,0 +1,9 @@
+<section>
+  <h1>
+    Users
+  </h1>
+  <div>
+      <%= link_to "Add new user", new_user_path %>
+  </div>
+  <%= render partial: 'user', collection: @users %>
+</section>

@@ -1,0 +1,35 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "sticky_footer";
+@import "font-awesome";
+
+.container {
+  width: auto;
+  max-width: 800px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+//Added because was sometimes being hidden under barcode scan input
+.ui-datepicker {
+  z-index: 2 !important;
+}
+
+.table > tbody > tr > td.valign {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.error {
+  @extend .alert-danger;
+}
+
+.warning {
+  @extend .alert-warning;
+}
+
+.notice {
+  @extend .alert-success;
+}
