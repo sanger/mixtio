@@ -66,6 +66,8 @@ group :development, :test do
 
   gem 'with_model'
 
+  gem 'raml_ruby', '~> 0.1.1'
+
 
   # Headless browser testing
   gem 'phantomjs'
