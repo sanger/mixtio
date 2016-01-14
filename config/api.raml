@@ -1,0 +1,198 @@
+#%RAML 0.8
+---
+title: Mixtio
+baseUri: http://localhost
+version: 1.0
+
+/batches:
+  /{batch_id}:
+    get:
+      description: Retrieve a specific batch
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": 7,
+                  "lot_id": 7,
+                  "expiry_date": "2017-12-18",
+                  "arrival_date": "2015-12-31",
+                  "ingredients": [],
+                  "consumables": [
+                    {
+                      "id": 7,
+                      "batch_id": 7,
+                      "created_at": "2016-01-14T10:10:56.897Z",
+                      "updated_at": "2016-01-14T10:10:56.897Z",
+                      "name": null,
+                      "barcode": "mx-7",
+                      "depleted": false
+                    }
+                  ]
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Couldn't find Batch with 'id'=123"
+                }
+
+/consumable_types:
+  /{consumable_type_id}:
+    get:
+      description: Retrieve a specific consumable type
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": 1,
+                  "name": "Cake",
+                  "days_to_keep": 10,
+                  "expiry_date_from_today": "11/01/2016",
+                  "ingredients": [
+                      {
+                        "id": 2,
+                        "name": "Eggs",
+                        "days_to_keep": 21,
+                        "created_at": "2016-01-14T10:10:55.679Z",
+                        "updated_at": "2016-01-14T10:10:55.679Z"
+                      },
+                      {
+                        "id": 3,
+                        "name": "Flour",
+                        "days_to_keep": 100,
+                        "created_at": "2016-01-14T10:10:55.657Z",
+                        "updated_at": "2016-01-14T10:10:55.657Z"
+                      },
+                      {
+                        "id": 4,
+                        "name": "Sugar",
+                        "days_to_keep": 231,
+                        "created_at": "2016-01-14T10:10:55.722Z",
+                        "updated_at": "2016-01-14T10:10:55.722Z"
+                      }
+                  ],
+                  "latest_ingredients": [
+                      {
+                        "id": 1,
+                        "consumable_type_id": 2,
+                        "supplier_id": 1,
+                        "name": "Egg Lot 1",
+                        "created_at": "2016-01-14T10:10:57.165Z",
+                        "updated_at": "2016-01-14T10:10:57.165Z"
+                      },
+                      {
+                        "id": 2,
+                        "consumable_type_id": 3,
+                        "supplier_id": 2,
+                        "name": "Flour Lot 1",
+                        "created_at": "2016-01-14T10:10:56.965Z",
+                        "updated_at": "2016-01-14T10:10:56.965Z"
+                      },
+                      {
+                        "id": 3,
+                        "consumable_type_id": 4,
+                        "supplier_id": 3,
+                        "name": "Sugar Lot 1",
+                        "created_at": "2016-01-14T10:10:56.965Z",
+                        "updated_at": "2016-01-14T10:10:56.965Z"
+                      }
+                  ]
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Couldn't find ConsumableType with 'id'=123"
+                }
+
+/consumables:
+  /{barcode}:
+    get:
+      description: Retrieve a specific consumable
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  id: 1,
+                  name: null,
+                  depleted: false,
+                  batch: {
+                    id: 1,
+                    uri: "http://localhost:3000/api/v1/batches/1"
+                  },
+                  lot: {
+                    id: 1,
+                    name: "1695234",
+                    uri: "http://localhost:3000/api/v1/lots/1"
+                  },
+                  consumable_type: {
+                    id: 1,
+                    name: "IMDM",
+                    uri: "http://localhost:3000/api/v1/consumable_types/1"
+                  }
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Couldn't find Consumable"
+                }
+
+/lots:
+  /{lot_id}:
+    get:
+      description: Retrieve a specific lot
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  id: 2,
+                  name: "1696982",
+                  consumable_type: {
+                    id: 2,
+                    uri: "http://localhost:3000/api/v1/consumable_types/2"
+                  },
+                  supplier: {
+                    id: 2,
+                    uri: "http://localhost:3000/api/v1/suppliers/2"
+                  }
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Couldn't find Lot with 'id'=123"
+                }
+
+/suppliers:
+  /{supplier_id}:
+    get:
+      description: Retrieve a specific supplier
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  id: 1,
+                  name: "Acme Ltd."
+                }
+        404:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Couldn't find Supplier with 'id'=123"
+                }
