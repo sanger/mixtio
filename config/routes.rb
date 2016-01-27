@@ -24,6 +24,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
 
+    # Redirect to the latest version of the docs... current (and probably forever) v1
+    get 'docs', to: redirect('api/v1/docs')
+
     namespace :v1 do
       get 'docs', to: 'docs#index', defaults: { format: :html }
       resources :consumables, param: :barcode, only: [:show]
