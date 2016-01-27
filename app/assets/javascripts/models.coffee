@@ -18,7 +18,10 @@ class @Model
 
   fetch: () ->
     url = [@base_uri, @endpoint, @id()].join('/')
-    $.get(url).then((response) => @parse(response))
+    $.get(url).then(
+      (response) => @parse(response)
+      (response) -> response.responseJSON
+    )
 
   parse: (response) ->
     @_set_attributes(response)
