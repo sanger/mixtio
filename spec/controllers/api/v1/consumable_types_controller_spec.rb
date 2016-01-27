@@ -19,5 +19,15 @@ describe Api::V1::ConsumableTypesController, type: :request do
       expect(json[:ingredients].length).to eq(consumable_type.ingredients.count)
     end
 
+    context "Consumable Type does not exist" do
+      it "should return a 404 with an error message" do
+        get api_v1_consumable_type_path(:id => 123)
+        expect(response.status).to be(404)
+        json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(json[:message]).to eq('Couldn\'t find ConsumableType with \'id\'=123')
+      end
+    end
+
   end
 end

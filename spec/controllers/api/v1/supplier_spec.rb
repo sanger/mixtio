@@ -14,5 +14,15 @@ describe Api::V1::SuppliersController, type: :request do
       expect(supplier_response[:name]).to eql(supplier.name)
     end
 
+    context "supplier does not exist" do
+      it "should return a 404 with an error message" do
+        get api_v1_supplier_path(:id => 123)
+        expect(response.status).to be(404)
+        supplier_response = JSON.parse(response.body, symbolize_names: true)
+
+        expect(lot_response[:message]).to eq('Couldn\'t find Supplier with \'id\'=123')
+      end
+    end
+
   end
 end

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
 
     namespace :v1 do
+      get 'docs', to: 'docs#index', defaults: { format: :html }
       resources :consumables, param: :barcode, only: [:show]
       resources :consumable_types, only: [:show]
       resources :batches, only: [:show]

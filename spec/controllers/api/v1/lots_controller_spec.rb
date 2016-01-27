@@ -22,5 +22,15 @@ describe Api::V1::LotsController, type: :request do
       expect(supplier[:uri]).to include(api_v1_supplier_path lot.supplier)
     end
 
+    context "lot does not exist" do
+      it "should return a 404 with an error message" do
+        get api_v1_lot_path(:id => 123)
+        expect(response.status).to be(404)
+        lot_response = JSON.parse(response.body, symbolize_names: true)
+
+        expect(lot_response[:message]).to eq('Couldn\'t find Lot with \'id\'=123')
+      end
+    end
+
   end
 end
