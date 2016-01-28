@@ -45,6 +45,10 @@ RSpec.describe "Batches", type: feature do
         expect { create_batch }.to change { Consumable.count }.by(3)
       end
 
+      it 'creates a new audit record' do
+        expect { create_batch }.to change{ Audit.count }.by(1)
+      end
+
     end
 
     context 'when fields are missing' do

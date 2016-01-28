@@ -8,6 +8,7 @@ class ConsumableTypesController < ApplicationController
   def create
     @consumable_type = ConsumableType.new(consumable_type_params.merge(ingredient_ids: ingredient_id_params))
     if @consumable_type.save
+      @consumable_type.create_audit(user: current_user, action: 'create')
       redirect_to consumable_types_path, notice: "Consumable type successfully created"
     else
       render :new
@@ -25,6 +26,7 @@ class ConsumableTypesController < ApplicationController
   def update
     @consumable_type = current_resource
     if @consumable_type.update_attributes(consumable_type_params.merge(ingredient_ids: ingredient_id_params))
+      @consumable_type.create_audit(user: current_user, action: 'update')
       redirect_to consumable_types_path, notice: "Consumable type successfully updated"
     else
       render :edit

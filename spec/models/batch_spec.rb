@@ -31,4 +31,8 @@ RSpec.describe Batch, type: :model do
     batch.ingredients = lots
     expect(batch.ingredients).to eq(lots)
   end
+
+  it "should be auditable" do
+    expect(build(:batch)).to respond_to(:audits)
+  end
 end
