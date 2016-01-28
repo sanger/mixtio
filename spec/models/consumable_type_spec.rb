@@ -55,4 +55,8 @@ RSpec.describe ConsumableType, type: :model do
     expect(ConsumableType).to respond_to(:order_by_name)
   end
 
+  it "should be auditable" do
+    expect(build(:consumable_type)).to respond_to(:audits)
+  end
+
 end

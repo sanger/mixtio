@@ -4,7 +4,7 @@ class BatchesController < ApplicationController
   end
 
   def create
-    @batch_form = BatchForm.new(batch_params)
+    @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
     if @batch_form.save
       redirect_to root_path, notice: "Reagent batch successfully created"
     else
