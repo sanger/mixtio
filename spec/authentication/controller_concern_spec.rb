@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Authentication::ControllerConcern, type: :controller do
 
+<<<<<<< HEAD
   test_routes = Proc.new do
     get '/anonymous' => 'anonymous#index'
 
@@ -45,7 +46,7 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
   end
 
   it "should be able to sign a user out" do
-    controller.authenticate?(user.username, "password")
+    controller.authenticate?("user1", "password")
     controller.sign_out!
     expect(controller.session[:username]).to be_nil
     expect(controller.current_user).to_not be_signed_in

@@ -1,5 +1,5 @@
 module AuthenticationHelper
-<<<<<<< HEAD
+
   def sign_in
     allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
     visit sign_in_path
