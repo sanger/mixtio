@@ -23,7 +23,7 @@ module Authentication
     end
 
     def authenticate?(username, password)
-      if User.exists?(username: username) && Authentication::Ldap.authenticate(username, password)
+      if Authentication::Ldap.authenticate(username, password)
         session[:username] = username
         true
       else
@@ -47,19 +47,18 @@ module Authentication
   end
 
   class CurrentUser
-    attr_reader :user
-    delegate :username, to: :user
+    attr_reader :name
 
-    def initialize(username)
-      @user = User.new(username: username)
+    def initialize(name)
+      @name = name
     end
 
     def signed_in?
-      user.username.present?
+      name.present?
     end
 
     def sign_out!
-      user.username = nil
+      @name = nil
     end
 
   end
