@@ -1,5 +1,6 @@
 class ConsumableType < ActiveRecord::Base
 
+  include Auditable
   include HasOrderByName
 
   has_many :lots

@@ -1,5 +1,7 @@
 class Batch < ActiveRecord::Base
 
+  include Auditable
+
   belongs_to :lot
 
   has_many :consumables
