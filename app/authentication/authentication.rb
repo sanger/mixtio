@@ -66,26 +66,13 @@ module Authentication
 
   class Ldap
 
-    cattr_accessor :port
-    self.port = 111
-
-    cattr_accessor :host
-    self.host = "host"
-
-    cattr_accessor :dn_attribute
-    self.dn_attribute = "dn"
-
-    cattr_accessor :prefix
-    self.prefix = "ou=abc"
-
-    cattr_accessor :dc 
-    self.dc = ["a","b","c"]
+    cattr_accessor :settings
+    self.settings ||= Rails.configuration.ldap
 
     attr_reader :username
 
-    def self.setup(options = {})
-      set_options(options) unless options.empty?
-      yield self if block_given?
+    def self.setup(settings)
+      self.settings = OpenStruct.new(settings)
     end
 
     def self.authenticate(username, password)
@@ -102,8 +89,8 @@ module Authentication
 
     def options(password)
       {
-        host: self.host,
-        port: self.port,
+        host: self.settings.host,
+        port: self.settings.port,
         encryption: :simple_tls,
         auth: { method: :simple, username: username, password: password }
       }
@@ -112,13 +99,7 @@ module Authentication
   private
 
     def set_username(username)
-      "#{self.dn_attribute}=#{username},#{self.prefix}" << self.dc.collect { |dc| ",dc=#{dc}"}.reduce(:<<)
-    end
-
-    def self.set_options(options)
-      options.each do |k,v|
-        class_variable_set("@@#{k.to_s}",v)
-      end
+      "#{self.settings.dn_attribute}=#{username},#{self.settings.prefix}" << self.settings.dc.collect { |dc| ",dc=#{dc}"}.reduce(:<<)
     end
     
   end
