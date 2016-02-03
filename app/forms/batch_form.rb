@@ -4,7 +4,7 @@ class BatchForm
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  ATTRIBUTES = [:lots, :consumable_type_id, :lot_name, :supplier_id, :expiry_date, :arrival_date, :aliquots]
+  ATTRIBUTES = [:lots, :consumable_type_id, :lot_name, :supplier_id, :expiry_date, :arrival_date, :aliquots, :current_user]
 
   attr_accessor *ATTRIBUTES
 
@@ -18,7 +18,7 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :lot_name, :expiry_date, :aliquots, :presence => true
+  validates :consumable_type_id, :lot_name, :expiry_date, :aliquots, :current_user, :presence => true
   validates :aliquots, numericality: { only_integer: true }
 
   validate do
@@ -63,6 +63,7 @@ class BatchForm
     ActiveRecord::Base.transaction do
       batch.save!
       batch.consumables.create!(Array.new(aliquots.to_i, {}))
+      batch.create_audit(user: current_user, action: 'create')
     end
   end
 
