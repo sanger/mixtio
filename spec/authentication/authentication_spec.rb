@@ -10,7 +10,7 @@ RSpec.describe "Authentication", type: :feature do
     fill_in "Password", with: "password"
     click_button "Sign In"
     expect(page).to have_content("Signed In Successfully")
-    expect(page).to have_content("You are signed in as user1")
+    expect(page).to have_content("Sign Out")
   end
 
   it "should not sign in a user without a valid password" do
@@ -21,7 +21,7 @@ RSpec.describe "Authentication", type: :feature do
     fill_in "Password", with: "badpassword"
     click_button "Sign In"
     expect(page).to have_content("Invalid username or password")
-    expect(page).to have_content("You are not currently signed in")
+    expect(page).to have_content("Sign In")
 
   end
 

@@ -1,7 +1,0 @@
-<% ingredients.each do |ingredient| %>
-  <tr>
-    <td><%= text_field_tag 'consumable[ingredients][][name]', ingredient.name %></td>
-    <td><%= text_field_tag 'consumable[ingredients][][lot_number]', ingredient.lot_number %></td>
-    <td><%= text_field_tag 'consumable[ingredients][][supplier]', ingredient.supplier %></td>
-  </tr>
-<% end %>

@@ -1,16 +1,18 @@
-<%= form_tag sessions_path, method: :post do %>
-  <fieldset>
-    <legend>Sign In</legend>
-    <ul>
-      <li>
-        <%= label_tag :username %> 
-        <%= text_field_tag :username %>
-      </li>
-      <li>
-        <%= label_tag :password %> 
-        <%= password_field_tag :password %>
-      </li>
-    </ul>
-    <%= submit_tag "Sign In" %>
-  </fieldset>
-<% end %>
+<section class="container">
+  <%= form_tag sessions_path, method: :post do %>
+    <fieldset>
+      <legend>Sign In</legend>
+      <ul class="list-unstyled">
+        <li class="form-group">
+            <%= label_tag :username %> 
+            <%= text_field_tag :username, nil, class: 'form-control'  %>
+        </li>
+        <li class="form-group">
+          <%= label_tag :password %> 
+          <%= password_field_tag :password, nil, class: 'form-control' %>
+        </li>
+      </ul>
+      <%= submit_tag "Sign In", { class: 'btn btn-primary' } %>
+    </fieldset>
+  <% end %>
+</section>
