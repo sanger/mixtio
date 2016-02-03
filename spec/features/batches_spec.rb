@@ -189,6 +189,18 @@ RSpec.describe "Batches", type: feature do
         end
       end
 
+      context 'when a scanned barcode can not be found', js: true do
+
+        it 'will display an error' do
+          visit new_batch_path
+          find("#consumable-barcode").set('fake barcode')
+          click_button("Add Ingredient")
+          wait_for_ajax
+
+          expect(page).to have_content("Couldn't find Consumable")
+        end
+      end
+
     end
 
   end
