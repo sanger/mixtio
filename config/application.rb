@@ -42,6 +42,8 @@ module Mixtio
 
     config.stub_ldap = false
 
+    config.ldap = OpenStruct.new(Rails.application.config_for(:ldap))
+
   end
 end
 
