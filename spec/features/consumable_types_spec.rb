@@ -6,6 +6,10 @@ RSpec.describe "ConsumableTypes", type: :feature do
   let! (:consumable_types) { create_list(:consumable_type, 3) }
   let! (:consumable_type_with_ingredients) { create(:consumable_type_with_ingredients) }
 
+  before(:each) do
+    sign_in
+  end
+
   describe '#new' do
     let(:create_a_consumable_type) do
       visit consumable_types_path
