@@ -1,0 +1,18 @@
+default: &default
+  port: 111
+  host: ldap.blah.example.org.uk
+  dn_attribute: dn
+  prefix: salt=pepper
+  dc:
+    - example
+    - org
+    - uk
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
