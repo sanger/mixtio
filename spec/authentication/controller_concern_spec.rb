@@ -4,6 +4,8 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
 
   let(:controller)  { AnonymousController.new }
 
+  before { test_user }
+
   before(:each) do
     allow(Authentication::Ldap).to receive(:authenticate).with("user1", "password").and_return(true)
     allow(Authentication::Ldap).to receive(:authenticate).with("user1", "badpassword").and_return(false)
@@ -17,7 +19,7 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
   it "should be able to check if the user is signed in" do
     controller.authenticate?("user1", "password")
     expect(controller.current_user).to be_signed_in
-    expect(controller.current_user.name).to eq("user1")
+    expect(controller.current_user.username).to eq("user1")
     expect(controller.signed_in?).to be_truthy
   end
 

@@ -22,7 +22,6 @@ RSpec.describe "Authentication", type: :feature do
     click_button "Sign In"
     expect(page).to have_content("Invalid username or password")
     expect(page).to have_content("Sign In")
-
   end
 
   it "should allow a user to sign out" do

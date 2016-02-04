@@ -8,6 +8,9 @@ class ConsumableType < ActiveRecord::Base
   has_many :recipe_ingredients
   has_many :ingredients, :through => :recipe_ingredients
 
+  has_many :favourites
+  has_many :users, :through => :favourites
+
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }
 
@@ -18,6 +21,10 @@ class ConsumableType < ActiveRecord::Base
   def latest_ingredients
     return unless ingredients
     ingredients.map{ |ingredient| Lot.where("consumable_type_id = ?", ingredient.id).order(:created_at).first }
+  end
+
+  def self.find_user_favourites(user)
+    ConsumableType.joins(:favourites).where(favourites: { user_id: user.id }).order(:name)
   end
 
 end

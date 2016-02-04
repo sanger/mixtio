@@ -1,12 +1,21 @@
 <%= form_for @batch_form, :url => batches_path do |f| %>
 
+    <script type="text/javascript">
+      var userFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe) %>
+      var consumableTypes = <%= json_escape(ConsumableType.order_by_name.to_json.html_safe) %>
+    </script>
+
     <div class="form-group">
       <%= f.label :consumable_type_id, "Consumable Type*" %>
 
-      <%= f.select :consumable_type_id,
-            options_from_collection_for_select(ConsumableType.order_by_name, :id, :name),
-            { include_blank: true }, { class: 'form-control' }
-      %>
+      <div class="row">
+        <div class="col-md-11">
+          <%= f.select :consumable_type_id, {}, { include_blank: true }, { class: 'form-control' } %>
+        </div>
+        <div class="col-md-1">
+          <%= fa_icon "star 3x", class: 'disabled' %>
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -29,7 +38,7 @@
 
       <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-9">
           <div class="input-group" data-toggle="tooltip" data-placement="bottom" title="Scan a consumable to add it as an ingredient">
             <span class="input-group-addon" id="barcode-scanner">
               <%= fa_icon "barcode" %>
@@ -38,8 +47,8 @@
           </div>
         </div>
 
-        <div class="col-md-6 text-right">
-          <button id="add_ingredient_button" class="btn btn-primary">
+        <div class="col-md-3 text-right">
+          <button id="add_ingredient_button" class="btn btn-primary btn-block">
             <%= fa_icon "plus" %> Add Ingredient
           </button>
         </div>
@@ -79,5 +88,5 @@
     <div class="form-group">
       <%= f.submit 'Create Batch', { class: 'btn btn-primary' } %>
     </div>
-    
+
 <% end %>

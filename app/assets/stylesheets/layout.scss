@@ -59,6 +59,30 @@
   z-index: 2 !important;
 }
 
+#new_batch_form {
+  i.fa-star {
+    position: relative;
+    top: -4px;
+  }
+
+  i.fa-star.disabled {
+    color: $favourites-star-disabled-color;
+  }
+
+  i.fa-star.unfavourite {
+    color: $favourites-star-unselected-color;
+  }
+
+  i.fa-star.favourite {
+    color: $favourites-star-selected-color;
+  }
+
+  i.fa-star.favourite:hover, .fa-star.unfavourite:hover {
+    color: $favourites-star-hover-color;
+    cursor: pointer
+  }
+}
+
 .table > tbody > tr > td.valign {
   display: table-cell;
   vertical-align: middle;
