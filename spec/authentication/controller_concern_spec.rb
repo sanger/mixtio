@@ -2,30 +2,6 @@ require "rails_helper"
 
 RSpec.describe Authentication::ControllerConcern, type: :controller do
 
-<<<<<<< HEAD
-  test_routes = Proc.new do
-    get '/anonymous' => 'anonymous#index'
-
-  end
-
-  Rails.application.routes.send(:eval_block, test_routes)
-
-  class AnonymousController < ActionController::Base
-
-   include Authentication::ControllerConcern
-
-   before_filter :authenticate!
-
-    def session
-      @session ||= {}
-    end
-
-    def index
-      render text: "success!"
-    end
-
-  end
-
   let(:controller)  { AnonymousController.new }
 
   before(:each) do
