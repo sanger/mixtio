@@ -1,6 +1,7 @@
 class SuppliersController < ApplicationController
 
   before_action :suppliers, only: [:index]
+  before_action :authenticate!, except: [:index]
 
   def index
   end
