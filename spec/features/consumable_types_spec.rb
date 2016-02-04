@@ -14,14 +14,6 @@ RSpec.describe "ConsumableTypes", type: :feature do
     let(:create_a_consumable_type) do
       visit consumable_types_path
       click_link "New Consumable Type"
-  
-
-  before(:each) do
-    sign_in
-  end
-
-  it "Allows a user to create a new consumable type with ingredients", js: true do
-    consumable_type = build(:consumable_type)
 
       fill_in "Name", with: consumable_type.name
       fill_in "Days to keep", with: consumable_type.days_to_keep
