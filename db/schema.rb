@@ -96,23 +96,4 @@ ActiveRecord::Schema.define(version: 20160128132715) do
     t.string "name"
   end
 
-  create_table "teams", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "number"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string   "username"
-    t.string   "type"
-    t.integer  "status",         default: 0
-    t.datetime "deactivated_at"
-    t.integer  "team_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "users", ["team_id"], name: "index_users_on_team_id"
-
 end

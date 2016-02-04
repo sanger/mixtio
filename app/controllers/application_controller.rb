@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
 
   serialization_scope :view_context
 
-  def current_user
-    'dummy'
-  end
-
+  include Authentication::ControllerConcern
+  
 end

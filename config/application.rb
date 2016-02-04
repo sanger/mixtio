@@ -20,11 +20,9 @@ module Mixtio
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.autoload_paths += %W(#{config.root}/lib/validators)
+    config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms)
 
-    config.autoload_paths += %W(#{config.root}/app/models/users/)
-
-    config.autoload_paths += %W(#{config.root}/app/forms)
+    config.filter_parameters += [:password]
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
@@ -39,6 +37,11 @@ module Mixtio
             request_specs: true
         g.fixture_replacement :factory_girl, dir: "spec/factories"
     end
+
+    config.stub_ldap = false
+
+    config.ldap = OpenStruct.new(Rails.application.config_for(:ldap))
+
   end
 end
 
