@@ -1,0 +1,16 @@
+$brand-primary: darken(#279097, 6.5%);
+$brand-secondary: #CA525F;
+
+$body-bg: #efefef;
+
+// Navbar
+$navbar-margin-bottom: 0;
+$navbar-height: 62px;
+$navbar-default-bg: #fff;
+
+// Navbar links
+$navbar-default-link-color:                #777;
+$navbar-default-link-hover-color:          #333;
+$navbar-default-link-hover-bg:             transparent;
+$navbar-default-link-active-color:         #555;
+$navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%);
