@@ -1,19 +1,23 @@
 <header>
   <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
+    <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <%= link_to "Mixtio", root_path, { class: "navbar-brand" } %>
+
+        <%= link_to image_tag("logo.png", { class: "navbar-brand" }), root_path %>
       </div>
       <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-left">
+          <li><%= link_to "Suppliers", suppliers_path, class: cp(suppliers_path) %></li>
+          <li><%= link_to "Types", consumable_types_path, class: cp(consumable_types_path) %></li>
+          <li><%= link_to "Batches", batches_path, class: cp(batches_path) %></li>
+        </ul>
+
         <ul class="nav navbar-nav navbar-right">
-          <li><%= link_to "Suppliers", suppliers_path %></li>
-          <li><%= link_to "Types", consumable_types_path %></li>
-          <li><%= link_to "Batches", batches_path %></li>
           <li><%= render "current_user" %></li>
         </ul>
       </div>
