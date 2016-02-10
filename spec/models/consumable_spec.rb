@@ -4,7 +4,7 @@ RSpec.describe Consumable, type: :model do
 
   it "should generate a barcode after creation" do
     consumable = create(:consumable, name: 'My consumable')
-    expect(consumable.barcode).to eq("mx-#{consumable.id}")
+    expect(consumable.barcode).to eq("RGNT-#{consumable.id}")
   end
 
   it "should not be valid without being part of a batch" do
