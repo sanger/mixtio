@@ -20,7 +20,7 @@ module Mixtio
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms)
+    config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
 
     config.filter_parameters += [:password]
 
@@ -41,6 +41,8 @@ module Mixtio
     config.stub_ldap = false
 
     config.ldap = OpenStruct.new(Rails.application.config_for(:ldap))
+
+    config.barcode_prefix = 'RGNT'
 
   end
 end
