@@ -11,7 +11,7 @@ class Consumable < ActiveRecord::Base
   private
 
   def generate_barcode
-    update_column(:barcode, "mx-#{self.id}")
+    update_column(:barcode, Barcode.create(self))
   end
 
 end
