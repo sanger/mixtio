@@ -1,15 +1,57 @@
+@import "colors";
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "sticky_footer";
 @import "font-awesome";
 
+.top {
+  @extend .nav;
+  background-color: #386164;
+  height: 300px;
+}
+
+.main {
+  bottom: 240px;
+  position: relative;
+  background-color: white;
+  min-height: 400px;
+}
+
+.navbar-brand {
+  padding: 17px 15px;
+}
+
+.nav > li:hover {
+  background-color: darken($navbar-default-bg, 6.5%);
+}
+
+.nav > li > a {
+  font-weight: bold;
+}
+
+.nav > li > a.current:after {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  right: 10px;
+  content: '';
+  display: block;
+  height: 4px;
+  background-color: $brand-secondary;
+}
+
 .container {
   width: auto;
-  max-width: 800px;
+  max-width: 920px;
   padding: 0 15px;
 }
+
 .container .text-muted {
   margin: 20px 0;
+}
+
+.title {
+  margin-bottom: 30px;
 }
 
 //Added because was sometimes being hidden under barcode scan input
@@ -32,8 +74,4 @@
 
 .notice {
   @extend .alert-success;
-}
-
-.current-user{
-  padding-top: 15px;
 }
