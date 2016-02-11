@@ -1,6 +1,10 @@
 require "rails_helper"
 
-RSpec.describe "Batches", type: feature do
+RSpec.describe "Batches", type: feature, js: true do
+
+  before(:each) do
+    sign_in
+  end
 
   describe '#index' do
     it 'displays them' do
@@ -110,7 +114,7 @@ RSpec.describe "Batches", type: feature do
 
     end
 
-    context 'when a selected consumable type has ingredients', js: true do
+    context 'when a selected consumable type has ingredients' do
 
       before do
         @consumable_type = create(:consumable_type_with_ingredients_with_lots)
@@ -176,7 +180,7 @@ RSpec.describe "Batches", type: feature do
           @consumable = create(:consumable)
         end
 
-        it 'can scan in an ingredient', js: true do
+        it 'can scan in an ingredient' do
           fill_out_form
           find("#consumable-barcode").set(@consumable.barcode)
           click_button("Add Ingredient")
@@ -193,7 +197,7 @@ RSpec.describe "Batches", type: feature do
         end
       end
 
-      context 'when a scanned barcode can not be found', js: true do
+      context 'when a scanned barcode can not be found' do
 
         it 'will display an error' do
           visit new_batch_path

@@ -29,7 +29,7 @@ module Authentication
     def get_location(default)
       session.delete(:return_to) || default
     end
-    
+
     ##
     # Check whether the user is signed in.
     # If not store the requested location and redirect them to the sign in path
@@ -55,7 +55,7 @@ module Authentication
     ##
     # Return the current user or create one using the session username
     def current_user
-      @current_user ||= Authentication::CurrentUser.new(session[:username])
+      @current_user ||= Authentication::CurrentUser.new(User.find_or_create_by(username: session[:username]))
     end
 
     ##
@@ -77,24 +77,28 @@ module Authentication
   ##
   # A simple class to contain details of the current user
   class CurrentUser
-    attr_reader :name
+    attr_reader :user
 
     ##
-    # Create a new current user with a name or not.
-    def initialize(name)
-      @name = name
+    # Create a new current user with a user or not.
+    def initialize(user)
+      @user = user
     end
 
     ##
-    # A user is signed in if the name exists
+    # A user is signed in if the user exists
     def signed_in?
-      name.present?
+      user.present? && user.valid?
     end
 
     ##
-    # To sign out set the name to nil
+    # To sign out set the user to nil
     def sign_out!
-      @name = nil
+      @user = nil
+    end
+
+    def method_missing(method, *args)
+      user.send(method, *args)
     end
 
   end
@@ -154,7 +158,7 @@ module Authentication
     def set_username(username)
       "#{self.settings.dn_attribute}=#{username},#{self.settings.prefix}" << self.settings.dc.collect { |dc| ",dc=#{dc}"}.reduce(:<<)
     end
-    
+
   end
 
   ##

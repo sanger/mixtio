@@ -13,6 +13,13 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
+//= require bootstrap-sprockets
 //= require turbolinks
 //= require jquery.turbolinks
+//= require underscore
+//= require backbone
+//= require mixtio
+//= require_tree ./models
+//= require_tree ./collections
+//= require_tree ./views
 //= require_tree .
