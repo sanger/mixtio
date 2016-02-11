@@ -34,7 +34,6 @@ class ConsumableTypesController < ApplicationController
     end
   end
 
-
 protected
 
   def consumable_types
