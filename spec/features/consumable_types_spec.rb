@@ -32,7 +32,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
 
     it "Allows a user to create a new consumable type with ingredients", js: true do
       expect { create_a_consumable_type }.to change(ConsumableType, :count).by(1)
-      expect(ConsumableType.find_by(name: consumable_type.name).ingredients.count).to eq(3)
+      expect(ConsumableType.find_by(name: consumable_type.name).recipe_ingredients.count).to eq(3)
       expect(page).to have_content("Consumable type successfully created")
     end
 

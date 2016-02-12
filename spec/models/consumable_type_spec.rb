@@ -17,38 +17,29 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type, days_to_keep: '')).to be_valid
   end
 
-  it "should give the expiry date from today" do
-    consumable_type = build(:consumable_type, days_to_keep: nil)
-    expect(consumable_type.expiry_date_from_today).to be_nil
-
-    consumable_type = build(:consumable_type)
-    expect(consumable_type.expiry_date_from_today).to eq((Date.today + consumable_type.days_to_keep).to_s(:uk))
-  end
-
-  it "should be able to have one ingredient" do
+  it "should be able to have one recipe ingredient" do
     consumable_type = create(:consumable_type)
     child      = create(:consumable_type)
-    consumable_type.ingredients << child
+    consumable_type.recipe_ingredients << child
 
-    expect(consumable_type.ingredients.count).to eq(1)
+    expect(consumable_type.recipe_ingredients.count).to eq(1)
   end
 
-  it "should be able to have many ingredients" do
+  it "should be able to have many recipe ingredients" do
     consumable_type = create(:consumable_type)
-    ingredients = create_list(:consumable_type, 3)
+    recipe_ingredients = create_list(:consumable_type, 3)
 
-    consumable_type.ingredients = ingredients
+    consumable_type.recipe_ingredients = recipe_ingredients
 
-    expect(ingredients.all? {|ingredient| consumable_type.ingredients.include?(ingredient)}).to be_truthy
+    expect(recipe_ingredients.all? {|ingredient| consumable_type.recipe_ingredients.include?(ingredient)}).to be_truthy
   end
 
-  it "should return the latest lots attached to a particular type" do
-    consumable_type = create(:consumable_type_with_ingredients_with_lots)
+  it "should return the latest ingredient for each item in its recipe" do
+    consumable_type = create(:consumable_type_with_ingredients)
     parent_consumable_type = create(:consumable_type)
 
     expect(parent_consumable_type.latest_ingredients).to be_empty
-
-    expect(consumable_type.latest_ingredients.count).to eq(consumable_type.ingredients.count)
+    expect(consumable_type.latest_ingredients.count).to eq(consumable_type.recipe_ingredients.count)
   end
 
   it "should be able to return a collection by name (ignoring case)" do

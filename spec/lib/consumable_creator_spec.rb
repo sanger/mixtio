@@ -11,11 +11,12 @@ RSpec.describe ConsumableCreator, type: :model do
     run_consumable_creator!
   end
 
-  it "should create Consumable Types" do
+  it "should create Consumable Types with Batches which have Consumables" do
     parameters["consumable_types"].each do |consumable_type|
       consumable_type = ConsumableType.find_by_name(consumable_type["name"])
       expect(consumable_type).to_not be_nil
       expect(consumable_type.days_to_keep).to be_present
+      expect(consumable_type.ingredients).to_not be_nil
     end
   end
 
@@ -27,16 +28,10 @@ RSpec.describe ConsumableCreator, type: :model do
     end
   end
 
-  it "should create Lots with Batches which have Consumables" do
+  it "should create Lots" do
     parameters["lots"].each do |lot|
-      lot = Lot.find_by_name(lot["name"])
+      lot = Lot.find_by(number: lot["number"])
       expect(lot).to_not be_nil
-      expect(lot.batches).to_not be_nil
-      expect(lot.batches.all? { |batch| batch.expiry_date.present? }).to be_truthy
-
-      lot.batches.each do |batch|
-        expect(batch.consumables.all? {|c| c.barcode.present?}).to be_truthy
-      end
     end
   end
 

@@ -11,9 +11,13 @@ describe Api::V1::BatchesController, type: :request do
       batch_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(batch_response[:id]).to eql(batch.id)
-      expect(batch_response[:lot_id]).to eql(batch.lot_id)
+
+      consumable_type = batch_response[:consumable_type]
+
+      expect(consumable_type[:id]).to eql(batch.consumable_type.id)
+      expect(consumable_type[:uri]).to include(api_v1_consumable_type_path batch.consumable_type)
+
       expect(batch_response[:expiry_date]).to eql(batch.expiry_date.to_s)
-      expect(batch_response[:arrival_date]).to eql(batch.arrival_date.to_s)
     end
 
     context "batch does not exist" do
@@ -22,7 +26,7 @@ describe Api::V1::BatchesController, type: :request do
         expect(response.status).to be(404)
         batch_response = JSON.parse(response.body, symbolize_names: true)
 
-        expect(batch_response[:message]).to eq('Couldn\'t find Batch with \'id\'=123')
+        expect(batch_response[:message]).to include('Couldn\'t find Batch with \'id\'=123')
       end
     end
 
