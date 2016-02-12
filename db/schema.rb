@@ -11,18 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204172621) do
-
-  create_table "ancestors", force: :cascade do |t|
-    t.string   "family_name"
-    t.integer  "family_id"
-    t.string   "relation_type"
-    t.integer  "relation_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-  end
-
-  add_index "ancestors", ["family_id", "relation_type", "relation_id"], name: "index_ancestors_on_family_id_and_relation_type_and_relation_id"
+ActiveRecord::Schema.define(version: 20160212151243) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -35,16 +24,6 @@ ActiveRecord::Schema.define(version: 20160204172621) do
   end
 
   add_index "audits", ["auditable_type", "auditable_id"], name: "index_audits_on_auditable_type_and_auditable_id"
-
-  create_table "batches", force: :cascade do |t|
-    t.integer  "lot_id"
-    t.date     "expiry_date"
-    t.date     "arrival_date"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
-  add_index "batches", ["lot_id"], name: "index_batches_on_lot_id"
 
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
@@ -74,42 +53,48 @@ ActiveRecord::Schema.define(version: 20160204172621) do
   add_index "favourites", ["consumable_type_id"], name: "index_favourites_on_consumable_type_id"
   add_index "favourites", ["user_id"], name: "index_favourites_on_user_id"
 
-  create_table "lots", force: :cascade do |t|
+  create_table "ingredients", force: :cascade do |t|
     t.integer  "consumable_type_id"
-    t.integer  "supplier_id"
-    t.string   "name"
+    t.integer  "kitchen_id"
+    t.string   "number"
+    t.string   "type"
+    t.date     "expiry_date"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
 
-  add_index "lots", ["consumable_type_id"], name: "index_lots_on_consumable_type_id"
-  add_index "lots", ["supplier_id"], name: "index_lots_on_supplier_id"
+  add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
+  add_index "ingredients", ["kitchen_id"], name: "index_ingredients_on_kitchen_id"
+
+  create_table "kitchens", force: :cascade do |t|
+    t.string "name"
+    t.string "type"
+  end
 
   create_table "mixtures", force: :cascade do |t|
-    t.integer  "lot_id"
     t.integer  "batch_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "ingredient_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   add_index "mixtures", ["batch_id"], name: "index_mixtures_on_batch_id"
-  add_index "mixtures", ["lot_id"], name: "index_mixtures_on_lot_id"
+  add_index "mixtures", ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
 
-  create_table "recipe_ingredients", force: :cascade do |t|
-    t.string   "consumable_type_id"
-    t.string   "ingredient_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  create_table "suppliers", force: :cascade do |t|
-    t.string "name"
+  create_table "recipes", force: :cascade do |t|
+    t.integer  "consumable_type_id"
+    t.integer  "recipe_ingredient_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
+    t.integer  "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "users", ["team_id"], name: "index_users_on_team_id"
 
 end

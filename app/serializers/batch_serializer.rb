@@ -2,6 +2,16 @@ class BatchSerializer < ActiveModel::Serializer
 
   self.root = false
 
-  attributes :id, :lot_id, :expiry_date, :arrival_date, :ingredients, :consumables
+  attributes :id, :number, :consumable_type, :kitchen, :expiry_date, :ingredients, :consumables
+
+  def consumable_type
+    consumable_type = object.consumable_type
+    { id: consumable_type.id, uri: scope.api_v1_consumable_type_url(consumable_type) }
+  end
+
+  def kitchen
+    kitchen = object.kitchen
+    { id: kitchen.id, type: kitchen.type, name: kitchen.name }
+  end
 
 end

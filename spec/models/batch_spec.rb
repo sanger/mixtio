@@ -12,8 +12,10 @@ RSpec.describe Batch, type: :model do
     expect(batch.errors.messages[:expiry_date]).to include(I18n.t('errors.future_date'))
   end
 
-  it "should not be valid without a lot" do
-    expect(build(:batch, lot: nil)).to_not be_valid
+  it "should create a batch number when created" do
+    batch = build(:batch, number: nil)
+    batch.save!
+    expect(batch.number).to eq("#{batch.kitchen.name.upcase.gsub(/\s/, '')}-#{batch.id}")
   end
 
   it "should be able to order by created at" do
@@ -24,12 +26,12 @@ RSpec.describe Batch, type: :model do
     expect(Batch.order_by_created_at).to eq([batch2, batch3, batch1])
   end
 
-  it "should assign lots as ingredients correctly" do
+  it "should assign ingredients correctly" do
     batch = create(:batch)
-    lots  = create_list(:lot, 3)
+    ingredients = create_list(:ingredient, 3)
 
-    batch.ingredients = lots
-    expect(batch.ingredients).to eq(lots)
+    batch.ingredients = ingredients
+    expect(batch.ingredients).to eq(ingredients)
   end
 
   it "should be auditable" do

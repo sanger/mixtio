@@ -11,15 +11,15 @@ describe Api::V1::LotsController, type: :request do
       lot_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(lot_response[:id]).to eql(lot.id)
-      expect(lot_response[:name]).to eql(lot.name)
+      expect(lot_response[:number]).to eql(lot.number)
 
       consumable_type = lot_response[:consumable_type]
       expect(consumable_type[:id]).to eql(lot.consumable_type_id)
       expect(consumable_type[:uri]).to include(api_v1_consumable_type_path lot.consumable_type)
 
-      supplier = lot_response[:supplier]
-      expect(supplier[:id]).to eql(lot.supplier_id)
-      expect(supplier[:uri]).to include(api_v1_supplier_path lot.supplier)
+      kitchen = lot_response[:kitchen]
+      expect(kitchen[:id]).to eql(lot.kitchen_id)
+      expect(kitchen[:name]).to eql(lot.kitchen.name)
     end
 
     context "lot does not exist" do
@@ -28,7 +28,7 @@ describe Api::V1::LotsController, type: :request do
         expect(response.status).to be(404)
         lot_response = JSON.parse(response.body, symbolize_names: true)
 
-        expect(lot_response[:message]).to eq('Couldn\'t find Lot with \'id\'=123')
+        expect(lot_response[:message]).to include('Couldn\'t find Lot with \'id\'=123')
       end
     end
 

@@ -55,7 +55,7 @@ module Authentication
     ##
     # Return the current user or create one using the session username
     def current_user
-      @current_user ||= Authentication::CurrentUser.new(User.find_or_create_by(username: session[:username]))
+      @current_user ||= Authentication::CurrentUser.new(User.find_or_create_by(username: session[:username], team: Team.first))
     end
 
     ##

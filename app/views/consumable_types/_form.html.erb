@@ -1,4 +1,9 @@
-<%= form_for @consumable_type do |f| %>
+<%= form_for @consumable_type, html: {"data-behavior": "consumable_type_form"} do |f| %>
+    <script type="text/javascript">
+      Mixtio.Bootstrap.ConsumableTypes   = <%= json_escape(ConsumableType.order_by_name.to_json.html_safe) %>
+      Mixtio.Bootstrap.RecipeIngredients = <%= json_escape(@consumable_type.recipe_ingredients.to_json.html_safe) %>
+    </script>
+
     <div class="form-group">
       <%= f.label :name %>
       <%= f.text_field :name, { class: 'form-control' } %>
@@ -10,23 +15,18 @@
     </div>
 
     <div class="form-group">
-    <%= f.label :ingredient_ids, 'Recipe' %>
-    <%= hidden_field_tag "ingredient_ids[]" %>
-    <script>
-      var ingredient_template="<%= escape_javascript(render(partial: 'ingredient', locals: {ingredient: ConsumableType.new})) %>"
-    </script>
-    <div class="row">
-      <div class="col-md-12">
-        <table data-behavior="ct-ingredients-table" class="table table-striped">
-          <tr>
-            <th>Consumable Type</th><th></th>
-            <% @consumable_type.ingredients.each do |ingredient| %>
-              <%= render partial: 'ingredient', locals: {ingredient: ingredient} %>
-            <% end %>
-          </tr>
-        </table>
+      <%= f.label :ingredient_ids, 'Recipe' %>
+      <%= hidden_field_tag "recipe_ingredient_ids[]" %>
+
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-striped">
+            <tr>
+              <th>Consumable Type</th><th></th>
+            </tr>
+          </table>
+        </div>
       </div>
-    </div>
 
       <div class="row">
         <div class="col-md-12 text-right">

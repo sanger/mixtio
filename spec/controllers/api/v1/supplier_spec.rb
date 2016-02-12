@@ -20,7 +20,7 @@ describe Api::V1::SuppliersController, type: :request do
         expect(response.status).to be(404)
         supplier_response = JSON.parse(response.body, symbolize_names: true)
 
-        expect(supplier_response[:message]).to eq('Couldn\'t find Supplier with \'id\'=123')
+        expect(supplier_response[:message]).to include('Couldn\'t find Supplier with \'id\'=123')
       end
     end
 
