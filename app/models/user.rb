@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :favourites
   has_many :consumable_types, :through => :favourites
+  has_many :audits
 
   belongs_to :team
 
