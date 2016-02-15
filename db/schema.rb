@@ -16,14 +16,15 @@ ActiveRecord::Schema.define(version: 20160212151243) do
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
     t.string   "auditable_type"
+    t.integer  "user_id"
     t.string   "action"
     t.string   "record_data"
-    t.string   "user"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
 
   add_index "audits", ["auditable_type", "auditable_id"], name: "index_audits_on_auditable_type_and_auditable_id"
+  add_index "audits", ["user_id"], name: "index_audits_on_user_id"
 
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
