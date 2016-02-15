@@ -6,7 +6,7 @@ class Mixtio.Collections.Ingredients extends Backbone.Collection
 
   findAndSetToLatest: (consumable_types) ->
     jqXHRs = consumable_types.map (consumable_type) =>
-      Backbone.sync('read', @, data: { consumable_type_id: consumable_type.id })
+      Backbone.sync('read', @, data: { consumable_type_id: consumable_type.id, sort: '-created_at' })
 
     $.when.apply($, jqXHRs).done(() =>
       @reset _.toArray(arguments).map((arg) ->

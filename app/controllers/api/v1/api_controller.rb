@@ -17,7 +17,8 @@ class Api::V1::ApiController < ApplicationController
                               .per(page_params[:page_size])
 
     instance_variable_set(plural_resource_name, resources)
-    render json: instance_variable_get(plural_resource_name)
+    resource = instance_variable_get(plural_resource_name)
+    render json: resource, meta: pagination_dict(resource)
   end
 
   # GET /api/{plural_resource_name}/1
@@ -26,6 +27,16 @@ class Api::V1::ApiController < ApplicationController
   end
 
   private
+
+  def pagination_dict(object)
+    {
+      current_page: object.current_page,
+      next_page: object.next_page,
+      prev_page: object.prev_page,
+      total_pages: object.total_pages,
+      total_count: object.total_count
+    }
+  end
 
   # Returns the resource from the created instance variable
   # @return [Object]
@@ -42,7 +53,23 @@ class Api::V1::ApiController < ApplicationController
   end
 
   def query_sort
-    {}
+    params.permit(:sort)
+    return {} if !params.has_key?(:sort)
+
+    orders = { "-": :desc, "+": :asc }
+    order  = "+"
+
+    if ( ["-", "+"].include?(params[:sort][0]) )
+      order = params[:sort].slice!(0)
+    end
+
+    return {} if !query_sort_params.include?(params[:sort])
+
+    { params[:sort] => orders[order.to_sym] }
+  end
+
+  def query_sort_params
+    ['created_at', 'updated_at']
   end
 
   # Returns the allowed parameters for pagination
