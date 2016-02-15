@@ -4,7 +4,9 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
 
   let(:controller)  { AnonymousController.new }
 
-  before { test_user }
+  before do
+    @test_user = create(:user, username: "user1")
+  end
 
   before(:each) do
     allow(Authentication::Ldap).to receive(:authenticate).with("user1", "password").and_return(true)
