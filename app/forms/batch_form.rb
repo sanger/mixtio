@@ -36,7 +36,7 @@ class BatchForm
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
 
       if Team.exists?(ingredient[:kitchen_id])
-        errors[:ingredient] << "batch with number #{ingredient[:number]} could not be found" if !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
+        errors[:ingredient] << "with number #{ingredient[:number]} could not be found" if !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
       end
 
     end

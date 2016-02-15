@@ -104,7 +104,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       it 'displays a validation error' do
         fill_out_form
-        expect(page).to have_content("batch with number 12345 could not be found")
+        expect(page).to have_content("with number 12345 could not be found")
       end
 
     end
