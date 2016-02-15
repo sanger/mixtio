@@ -33,6 +33,12 @@ class BatchForm
     selected_ingredients.each do |ingredient|
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
       errors[:ingredient] << "batch/lot number can't be empty" if ingredient[:number].empty?
+      errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
+
+      if Team.exists?(ingredient[:kitchen_id])
+        errors[:ingredient] << "batch with number #{ingredient[:number]} could not be found" if !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
+      end
+
     end
   end
 

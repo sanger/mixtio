@@ -83,6 +83,32 @@ RSpec.describe "Batches", type: feature, js: true do
       end
     end
 
+    context 'when trying to use a batch that does not exist as an ingredient' do
+
+      before do
+        @consumable_type = create(:consumable_type)
+        @team = create(:team)
+      end
+
+      let(:fill_out_form) {
+        visit new_batch_path
+        select @consumable_type.name, from: 'Consumable Type'
+        click_button("Add Ingredient")
+        all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@consumable_type.name)
+        all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set('12345')
+        all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@team.name)
+        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Number of Aliquots", with: 3
+        click_button "Create Batch"
+      }
+
+      it 'displays a validation error' do
+        fill_out_form
+        expect(page).to have_content("batch with number 12345 could not be found")
+      end
+
+    end
+
     context 'when a selected consumable type has ingredients' do
 
       before do
