@@ -4,7 +4,166 @@ title: Mixtio
 baseUri: http://localhost
 version: 1.0
 
+traits:
+  - pageable:
+      queryParameters:
+        page:
+          displayName: page
+          type: number
+          description: The page you want
+          example: page=1
+          required: false
+        page_size:
+          displayName: page_size
+          type: number
+          description: The number of results returned in a page
+          example: page_size=10
+          required: false
+  - sortable:
+      queryParameters:
+        sort:
+          displayName: sort
+          type: string
+          description: Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.
+          example: |
+            sort=created_at
+            sort=-updated_at
+          required: false
+
+resourceTypes:
+  - collection:
+      get:
+        is: [pageable, sortable]
+        description: Get a list of <<resourcePathName>>.
+        responses:
+          200:
+            body:
+              application/json:
+                example: |
+                  <<exampleCollection>>
 /batches:
+  type:
+    collection:
+      exampleCollection: |
+        {
+          "batches": [
+            {
+              "id": 57,
+              "number": "TESTTEAM-57",
+              "consumable_type": {
+                "id": 24,
+                "uri": "http://localhost:3000/api/v1/consumable_types/24"
+              },
+              "kitchen": {
+                "id": 25,
+                "type": "Team",
+                "name": "TEST TEAM"
+              },
+              "expiry_date": "2016-08-13",
+              "ingredients": [
+                {
+                  "id": 9,
+                  "consumable_type_id": 9,
+                  "kitchen_id": 9,
+                  "number": "1695274",
+                  "expiry_date": null,
+                  "created_at": "2016-02-15T13:39:49.770Z",
+                  "updated_at": "2016-02-15T13:39:49.770Z"
+                },
+                {
+                  "id": 10,
+                  "consumable_type_id": 10,
+                  "kitchen_id": 10,
+                  "number": "LIMSBATCH1005480",
+                  "expiry_date": null,
+                  "created_at": "2016-02-15T13:39:49.777Z",
+                  "updated_at": "2016-02-15T13:39:49.777Z"
+                }
+              ],
+              "consumables": [
+                {
+                  "id": 146,
+                  "batch_id": 57,
+                  "created_at": "2016-02-15T13:39:52.018Z",
+                  "updated_at": "2016-02-15T13:39:52.018Z",
+                  "name": null,
+                  "barcode": "RGNT-146",
+                  "depleted": false
+                },
+                {
+                  "id": 147,
+                  "batch_id": 57,
+                  "created_at": "2016-02-15T13:39:52.026Z",
+                  "updated_at": "2016-02-15T13:39:52.026Z",
+                  "name": null,
+                  "barcode": "RGNT-147",
+                  "depleted": false
+                }
+              ]
+            },
+            {
+              "id": 58,
+              "number": "TESTTEAM-58",
+              "consumable_type": {
+                "id": 25,
+                "uri": "http://localhost:3000/api/v1/consumable_types/25"
+              },
+              "kitchen": {
+                "id": 25,
+                "type": "Team",
+                "name": "TEST TEAM"
+              },
+              "expiry_date": "2016-05-15",
+              "ingredients": [
+                {
+                  "id": 13,
+                  "consumable_type_id": 13,
+                  "kitchen_id": 13,
+                  "number": "FZ1914061",
+                  "expiry_date": null,
+                  "created_at": "2016-02-15T13:39:49.794Z",
+                  "updated_at": "2016-02-15T13:39:49.794Z"
+                },
+                {
+                  "id": 14,
+                  "consumable_type_id": 14,
+                  "kitchen_id": 14,
+                  "number": "BATCH1007103",
+                  "expiry_date": null,
+                  "created_at": "2016-02-15T13:39:49.799Z",
+                  "updated_at": "2016-02-15T13:39:49.799Z"
+                }
+              ],
+              "consumables": [
+                {
+                  "id": 156,
+                  "batch_id": 58,
+                  "created_at": "2016-02-15T13:39:52.116Z",
+                  "updated_at": "2016-02-15T13:39:52.116Z",
+                  "name": null,
+                  "barcode": "RGNT-156",
+                  "depleted": false
+                },
+                {
+                  "id": 157,
+                  "batch_id": 58,
+                  "created_at": "2016-02-15T13:39:52.124Z",
+                  "updated_at": "2016-02-15T13:39:52.124Z",
+                  "name": null,
+                  "barcode": "RGNT-157",
+                  "depleted": false
+                },
+              ]
+            }
+          ],
+          "meta": {
+            "current_page": 1,
+            "next_page": 2,
+            "prev_page": null,
+            "total_pages": 2,
+            "total_count": 30
+          }
+        }
   /{batch_id}:
     get:
       description: Retrieve a specific batch
@@ -14,19 +173,62 @@ version: 1.0
             application/json:
               example: |
                 {
-                  "id": 7,
-                  "lot_id": 7,
-                  "expiry_date": "2017-12-18",
-                  "arrival_date": "2015-12-31",
-                  "ingredients": [],
+                  "id": 34,
+                  "number": "TESTTEAM-34",
+                  "consumable_type": {
+                    "id": 1,
+                    "uri": "http://localhost:3000/api/v1/consumable_types/1"
+                  },
+                  "kitchen": {
+                    "id": 25,
+                    "type": "Team",
+                    "name": "TEST TEAM"
+                  },
+                  "expiry_date": "2016-03-19",
+                  "ingredients": [{
+                      id: 15,
+                      consumable_type_id: 15,
+                      kitchen_id: 15,
+                      number: "1715661",
+                      expiry_date: null,
+                      created_at: "2016-02-15T13:39:49.805Z",
+                      updated_at: "2016-02-15T13:39:49.805Z"
+                    },
+                    {
+                      id: 16,
+                      consumable_type_id: 16,
+                      kitchen_id: 16,
+                      number: "1672599",
+                      expiry_date: null,
+                      created_at: "2016-02-15T13:39:49.812Z",
+                      updated_at: "2016-02-15T13:39:49.812Z"
+                    }],
                   "consumables": [
                     {
-                      "id": 7,
-                      "batch_id": 7,
-                      "created_at": "2016-01-14T10:10:56.897Z",
-                      "updated_at": "2016-01-14T10:10:56.897Z",
+                      "id": 1,
+                      "batch_id": 34,
+                      "created_at": "2016-02-15T13:39:49.973Z",
+                      "updated_at": "2016-02-15T13:39:49.973Z",
                       "name": null,
-                      "barcode": "mx-7",
+                      "barcode": "RGNT-1",
+                      "depleted": false
+                    },
+                    {
+                      "id": 2,
+                      "batch_id": 34,
+                      "created_at": "2016-02-15T13:39:49.981Z",
+                      "updated_at": "2016-02-15T13:39:49.981Z",
+                      "name": null,
+                      "barcode": "RGNT-2",
+                      "depleted": false
+                    },
+                    {
+                      "id": 3,
+                      "batch_id": 34,
+                      "created_at": "2016-02-15T13:39:49.987Z",
+                      "updated_at": "2016-02-15T13:39:49.987Z",
+                      "name": null,
+                      "barcode": "RGNT-3",
                       "depleted": false
                     }
                   ]
@@ -40,6 +242,48 @@ version: 1.0
                 }
 
 /consumable_types:
+  type:
+    collection:
+      exampleCollection: |
+        {
+          "consumable_types": [
+            {
+              "id": 1,
+              "name": "IMDM",
+              "days_to_keep": 33,
+              "recipe_ingredients": []
+            },
+            {
+              "id": 25,
+              "name": "EPO",
+              "days_to_keep": 90,
+              "recipe_ingredients": [
+                {
+                  "id": 13,
+                  "name": "Recombinant human EPO",
+                  "days_to_keep": 490,
+                  "created_at": "2016-02-15T13:39:49.328Z",
+                  "updated_at": "2016-02-15T13:39:49.328Z"
+                },
+                {
+                  "id": 14,
+                  "name": "0.1% HSA in PBS",
+                  "days_to_keep": 9,
+                  "created_at": "2016-02-15T13:39:49.333Z",
+                  "updated_at": "2016-02-15T13:39:49.333Z"
+                }
+              ]
+            }
+          ],
+          "meta": {
+            "current_page": 1,
+            "next_page": 2,
+            "prev_page": null,
+            "total_pages": 2,
+            "total_count": 30
+          }
+        }
+
   /{consumable_type_id}:
     get:
       description: Retrieve a specific consumable type
@@ -49,58 +293,24 @@ version: 1.0
             application/json:
               example: |
                 {
-                  "id": 1,
-                  "name": "Cake",
-                  "days_to_keep": 10,
-                  "expiry_date_from_today": "11/01/2016",
-                  "ingredients": [
-                      {
-                        "id": 2,
-                        "name": "Eggs",
-                        "days_to_keep": 21,
-                        "created_at": "2016-01-14T10:10:55.679Z",
-                        "updated_at": "2016-01-14T10:10:55.679Z"
-                      },
-                      {
-                        "id": 3,
-                        "name": "Flour",
-                        "days_to_keep": 100,
-                        "created_at": "2016-01-14T10:10:55.657Z",
-                        "updated_at": "2016-01-14T10:10:55.657Z"
-                      },
-                      {
-                        "id": 4,
-                        "name": "Sugar",
-                        "days_to_keep": 231,
-                        "created_at": "2016-01-14T10:10:55.722Z",
-                        "updated_at": "2016-01-14T10:10:55.722Z"
-                      }
-                  ],
-                  "latest_ingredients": [
-                      {
-                        "id": 1,
-                        "consumable_type_id": 2,
-                        "supplier_id": 1,
-                        "name": "Egg Lot 1",
-                        "created_at": "2016-01-14T10:10:57.165Z",
-                        "updated_at": "2016-01-14T10:10:57.165Z"
-                      },
-                      {
-                        "id": 2,
-                        "consumable_type_id": 3,
-                        "supplier_id": 2,
-                        "name": "Flour Lot 1",
-                        "created_at": "2016-01-14T10:10:56.965Z",
-                        "updated_at": "2016-01-14T10:10:56.965Z"
-                      },
-                      {
-                        "id": 3,
-                        "consumable_type_id": 4,
-                        "supplier_id": 3,
-                        "name": "Sugar Lot 1",
-                        "created_at": "2016-01-14T10:10:56.965Z",
-                        "updated_at": "2016-01-14T10:10:56.965Z"
-                      }
+                  "id": 25,
+                  "name": "EPO",
+                  "days_to_keep": 90,
+                  "recipe_ingredients": [
+                    {
+                      "id": 13,
+                      "name": "Recombinant human EPO",
+                      "days_to_keep": 490,
+                      "created_at": "2016-02-15T13:39:49.328Z",
+                      "updated_at": "2016-02-15T13:39:49.328Z"
+                    },
+                    {
+                      "id": 14,
+                      "name": "0.1% HSA in PBS",
+                      "days_to_keep": 9,
+                      "created_at": "2016-02-15T13:39:49.333Z",
+                      "updated_at": "2016-02-15T13:39:49.333Z"
+                    }
                   ]
                 }
         404:
@@ -112,7 +322,61 @@ version: 1.0
                 }
 
 /consumables:
-  /{barcode}:
+  get:
+    is: [pageable, sortable]
+    queryParameters:
+      barcode:
+        type: string
+        description: The barcode of a Consumable
+        example: MX-100
+        required: false
+    description: Get a list of Consumables.
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "consumables": [
+                  {
+                    "id": 1,
+                    "depleted": false,
+                    "barcode": "RGNT-1",
+                    "batch": {
+                      "id": 34,
+                      "uri": "http://localhost:3000/api/v1/batches/34"
+                    },
+                    "consumable_type": {
+                      "id": 1,
+                      "name": "IMDM",
+                      "uri": "http://localhost:3000/api/v1/consumable_types/1"
+                    }
+                  },
+                  {
+                    "id": 25,
+                    "depleted": false,
+                    "barcode": "RGNT-25",
+                    "batch": {
+                      "id": 38,
+                      "uri": "http://localhost:3000/api/v1/batches/38"
+                    },
+                    "consumable_type": {
+                      "id": 5,
+                      "name": "Insulin",
+                      "uri": "http://localhost:3000/api/v1/consumable_types/5"
+                    }
+                  }
+                ],
+                "meta": {
+                  "current_page": 1,
+                  "next_page": 2,
+                  "prev_page": null,
+                  "total_pages": 8,
+                  "total_count": 177
+                }
+              }
+
+  /{consumable_id}:
     get:
       description: Retrieve a specific consumable
       responses:
@@ -121,22 +385,17 @@ version: 1.0
             application/json:
               example: |
                 {
-                  id: 1,
-                  name: null,
-                  depleted: false,
-                  batch: {
-                    id: 1,
-                    uri: "http://localhost:3000/api/v1/batches/1"
+                  "id": 25,
+                  "depleted": false,
+                  "barcode": "RGNT-25",
+                  "batch": {
+                    "id": 38,
+                    "uri": "http://localhost:3000/api/v1/batches/38"
                   },
-                  lot: {
-                    id: 1,
-                    name: "1695234",
-                    uri: "http://localhost:3000/api/v1/lots/1"
-                  },
-                  consumable_type: {
-                    id: 1,
-                    name: "IMDM",
-                    uri: "http://localhost:3000/api/v1/consumable_types/1"
+                  "consumable_type": {
+                    "id": 5,
+                    "name": "Insulin",
+                    "uri": "http://localhost:3000/api/v1/consumable_types/5"
                   }
                 }
         404:
@@ -148,6 +407,46 @@ version: 1.0
                 }
 
 /lots:
+  type:
+    collection:
+      exampleCollection: |
+        {
+          "lots": [
+            {
+              "id": 1,
+              "number": "1695234",
+              "consumable_type": {
+                "id": 1,
+                "uri": "http://localhost:3000/api/v1/consumable_types/1"
+              },
+              "kitchen": {
+                "id": 1,
+                "type": "Supplier",
+                "name": "LIFE TECH 21980-032"
+              }
+            },
+            {
+              "id": 25,
+              "number": "STBD6281V",
+              "consumable_type": {
+                "id": 17,
+                "uri": "http://localhost:3000/api/v1/consumable_types/17"
+              },
+              "kitchen": {
+                "id": 17,
+                "type": "Supplier",
+                "name": "SIGMA M6250-100ML"
+              }
+            }
+          ],
+          "meta": {
+            "current_page": 1,
+            "next_page": 2,
+            "prev_page": null,
+            "total_pages": 2,
+            "total_count": 34
+          }
+        }
   /{lot_id}:
     get:
       description: Retrieve a specific lot
@@ -157,15 +456,16 @@ version: 1.0
             application/json:
               example: |
                 {
-                  id: 2,
-                  name: "1696982",
-                  consumable_type: {
-                    id: 2,
-                    uri: "http://localhost:3000/api/v1/consumable_types/2"
+                  "id": 25,
+                  "number": "STBD6281V",
+                  "consumable_type": {
+                    "id": 17,
+                    "uri": "http://localhost:3000/api/v1/consumable_types/17"
                   },
-                  supplier: {
-                    id: 2,
-                    uri: "http://localhost:3000/api/v1/suppliers/2"
+                  "kitchen": {
+                    "id": 17,
+                    "type": "Supplier",
+                    "name": "SIGMA M6250-100ML"
                   }
                 }
         404:
@@ -177,6 +477,28 @@ version: 1.0
                 }
 
 /suppliers:
+  type:
+    collection:
+      exampleCollection: |
+        {
+          "suppliers": [
+            {
+              "id": 1,
+              "name": "LIFE TECH 21980-032"
+            },
+            {
+              "id": 24,
+              "name": "CAMBRIDGE UNIVERSITY"
+            }
+          ],
+          "meta": {
+            "current_page": 1,
+            "next_page": null,
+            "prev_page": null,
+            "total_pages": 1,
+            "total_count": 24
+          }
+        }
   /{supplier_id}:
     get:
       description: Retrieve a specific supplier
