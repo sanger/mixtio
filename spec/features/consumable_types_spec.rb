@@ -15,8 +15,9 @@ RSpec.describe "ConsumableTypes", type: :feature do
       visit consumable_types_path
       click_link "New Consumable Type"
 
-      fill_in "Name", with: consumable_type.name
-      fill_in "Days to keep", with: consumable_type.days_to_keep
+      fill_in "Name*", with: consumable_type.name
+      fill_in "Days to Keep*", with: consumable_type.days_to_keep
+      select consumable_type.freezer_temperature, from: "Freezer temperature"
 
       click_button "Add Ingredient"
       all("select").last.select(consumable_types.first.name)
@@ -57,14 +58,16 @@ RSpec.describe "ConsumableTypes", type: :feature do
 
     let(:edit_a_consumable_type) do
       visit edit_consumable_type_path(consumable_type_with_ingredients)
-      fill_in "Name", with: consumable_type.name
-      fill_in "Days to keep", with: 9
+      fill_in "Name*", with: consumable_type.name
+      fill_in "Days to Keep*", with: 9
+      select "RT", from: "Freezer temperature"
       click_button "Update Consumable type"
     end
 
     it "Allows a user to edit an existing consumable type", js: true do
       expect { edit_a_consumable_type }.to change{ consumable_type_with_ingredients.reload.name }.to(consumable_type.name)
       expect(consumable_type_with_ingredients.days_to_keep).to eq(9)
+      expect(consumable_type_with_ingredients.freezer_temperature).to eq("RT")
       expect(page).to have_content("Consumable type successfully updated")
     end
 

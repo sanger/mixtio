@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :consumable_type do
     sequence(:name) {|n| "Consumable Type #{n}" }
     days_to_keep 33
+    freezer_temperature "LN2"
 
     factory :consumable_type_with_recipe_ingredients do
 
