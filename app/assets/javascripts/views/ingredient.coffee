@@ -34,6 +34,6 @@ class Mixtio.Views.Ingredient extends Backbone.View
   close: (e) ->
     e.preventDefault()
     @$el.fadeOut(400, () =>
-      @el.remove()
+      @$el.remove()
       @collection.remove(@model)
     )
