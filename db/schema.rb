@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160212151243) do
+ActiveRecord::Schema.define(version: 20160218152344) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -82,6 +82,10 @@ ActiveRecord::Schema.define(version: 20160212151243) do
 
   add_index "mixtures", ["batch_id"], name: "index_mixtures_on_batch_id"
   add_index "mixtures", ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
+
+  create_table "printers", force: :cascade do |t|
+    t.string "name"
+  end
 
   create_table "recipes", force: :cascade do |t|
     t.integer  "consumable_type_id"

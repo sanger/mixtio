@@ -6,6 +6,37 @@ RSpec.describe "Batches", type: feature, js: true do
     sign_in
   end
 
+  describe '#show' do
+
+    before :each do
+      @batch = create(:batch)
+      @printer = create(:printer)
+    end
+
+    it 'displays the batch' do
+      visit batch_path(@batch)
+
+      expect(page).to have_content(@batch.number)
+      expect(page).to have_content(@batch.kitchen.name)
+      expect(page).to have_content(@batch.consumable_type.name)
+      expect(page).to have_content(@batch.expiry_date)
+      expect(page).to have_content(@batch.consumables.length)
+    end
+
+    it 'prints labels for the batch' do
+      allow(RestClient).to receive(:post).and_return(OpenStruct.new(:code => 200))
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+      select @printer.name, from: "Printer"
+      click_button "Print"
+
+      expect(page).to have_content("Your labels have been printed")
+    end
+
+  end
+
   describe '#index' do
     it 'displays them' do
       batch = create(:batch)

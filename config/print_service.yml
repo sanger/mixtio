@@ -1,0 +1,11 @@
+default: &default
+  host: http://dev.psd.sanger.ac.uk:7462/v1/print_jobs
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
