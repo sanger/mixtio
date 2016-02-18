@@ -1,0 +1,1 @@
+class Mixtio.Models.Kitchen extends Backbone.Model

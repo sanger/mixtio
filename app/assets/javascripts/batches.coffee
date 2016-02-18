@@ -1,38 +1,62 @@
 $ ->
-  for item in $("[data-behavior~=batch-ingredients-table]")
-    ingredients_table = new @IngredientsTable($(item))
-    batch_form = new @BatchForm($("#new_batch_form"), ingredients_table)
-    scan_input = new @ScanConsumableInput($("#consumable-barcode"), ingredients_table)
-    ingredient_button = new @AddIngredientButton($("#add_ingredient_button"), ingredients_table, scan_input)
+  for item in $("#batch-ingredients-table")
 
-    userFavouritesCollection  = new Mixtio.Collections.UserFavourites(userFavourites)
-    consumableTypesCollection = new Mixtio.Collections.ConsumableTypes(consumableTypes, favourites: userFavouritesCollection)
+    # Create the Collections
+    userFavouritesCollection  = new Mixtio.Collections.UserFavourites(Mixtio.Bootstrap.UserFavourites)
+    consumableTypesCollection = new Mixtio.Collections.ConsumableTypes(Mixtio.Bootstrap.ConsumableTypes)
+    kitchensCollection        = new Mixtio.Collections.Kitchens(Mixtio.Bootstrap.Kitchens)
+    ingredientsCollection     = new Mixtio.Collections.Ingredients()
 
-    consumable_type_view = new Mixtio.Views.ConsumableTypes(
+    # Create the Views
+    consumableTypeView = new Mixtio.Views.ConsumableTypes(
       el: $('#batch_form_consumable_type_id')
       collection: consumableTypesCollection
+      favourites: userFavouritesCollection
     )
 
-    consumable_type_view.listenTo(userFavouritesCollection, 'add remove', () ->
-      consumable_type_view.render()
+    favouritesStarView = new Mixtio.Views.FavouritesStar(el: $('i.fa-star'))
+
+    ingredientsView = new Mixtio.Views.Ingredients(
+      el: item,
+      collection: ingredientsCollection
+      consumableTypes: consumableTypesCollection
+      kitchens: kitchensCollection
     )
 
-    favourites_star = new Mixtio.Views.FavouritesStar(
-      el: $('i.fa-star')
+    scanConsumableView = new Mixtio.Views.ScanConsumable(
+      el: $('#consumable-barcode')
+      collection: ingredientsCollection
     )
 
-    favourites_star.listenTo(consumable_type_view, 'change:selected', favourites_star.update)
-
-    userFavouritesCollection.listenTo(favourites_star, 'favourite', (model) ->
-      userFavouritesCollection.add(model)
+    addIngredientView = new Mixtio.Views.AddIngredient(
+      el: $('#add_ingredient_button')
+      collection: ingredientsCollection
     )
 
-    userFavouritesCollection.listenTo(favourites_star, 'unfavourite', (model) ->
-      userFavouritesCollection.remove(model)
+    expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#batch_form_expiry_date'))
+
+    # Wire everything together
+
+    ## When a favourite is added/removed to/from the User Favourites, update the Consumable Types view
+    consumableTypeView.listenTo(userFavouritesCollection, 'add remove', consumableTypeView.render)
+
+    ## When the Consumable Type is changed, update the Favourites Star, the Expiry Date, and set
+    ## the Ingredients
+    consumableTypeView.on("change:selected", (model, options) ->
+      favouritesStarView.update(model, options)
+      expiryDateView.update(model)
+
+      if model.get('recipe_ingredients').length is 0
+        ingredientsCollection.reset()
+      else
+        ingredientsCollection.findAndSetToLatest(model.get('recipe_ingredients'))
     )
 
-    consumable_type_view.render()
+    ## When the user favourites/unfavourites a Consumable Type, add/remove it to/from the collection
+    userFavouritesCollection.listenTo(favouritesStarView, 'favourite', userFavouritesCollection.add)
+    userFavouritesCollection.listenTo(favouritesStarView, 'unfavourite', userFavouritesCollection.remove)
 
-
+    # And finally render
+    consumableTypeView.render()
 
   $('[data-toggle="tooltip"]').tooltip()

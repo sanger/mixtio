@@ -7,33 +7,51 @@ class ConsumableCreator
   end
 
   def run!
-    params["consumable_types"].each{ |consumable_type| create_consumable_type(consumable_type) }
+    cts = params["consumable_types"].map{ |consumable_type| create_consumable_type(consumable_type) }
 
     params["suppliers"].each{ |supplier| create_supplier(supplier) }
 
     params["lots"].each do |lot|
       lot = create_lot(lot)
-      batch = lot.batches.create!(expiry_date: rand(1..999).days.from_now, arrival_date: rand(1..30).days.ago)
-      batch.consumables.create!()
     end
+
+    Team.create!(name: "TEST TEAM")
+
+    cts.each{ |consumable_type| create_batch(consumable_type) }
   end
 
 private
 
   def create_consumable_type(consumable_type)
     ct = ConsumableType.create(name: consumable_type["name"], days_to_keep: consumable_type["days_to_keep"])
-    if consumable_type["ingredients"]
-      ct.ingredients = consumable_type["ingredients"].map{ |ingredient| ConsumableType.find_by!(name: ingredient) }
+    if consumable_type["recipe_ingredients"]
+      ct.recipe_ingredients = consumable_type["recipe_ingredients"].map{ |ingredient| ConsumableType.find_by!(name: ingredient) }
+      ct.save
     end
+    ct
   end
 
   def create_supplier(supplier)
-    Supplier.create(name: supplier["name"])
+    Supplier.create!(name: supplier["name"])
   end
 
   def create_lot(lot)
-    Lot.create(name: lot["name"],
+    Lot.create(number: lot["number"],
                consumable_type: ConsumableType.find_by!(name: lot["consumable_type"]),
-               supplier: Supplier.find_by!(name: lot["supplier"]))
+               kitchen: Supplier.find_by!(name: lot["supplier"]))
   end
+
+  def create_batch(consumable_type)
+    batch = consumable_type.ingredients.create!(
+      expiry_date: Date.today.advance(days: consumable_type.days_to_keep).to_s(:uk),
+      type: 'Batch',
+      kitchen: Team.find_by!(name: "TEST TEAM")
+    )
+    consumable_type.recipe_ingredients.each do |recipe_ingredient|
+      batch.ingredients << Lot.find_by(consumable_type: recipe_ingredient)
+    end
+
+    batch.consumables.create!(Array.new(rand(1..10), {}))
+  end
+
 end

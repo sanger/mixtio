@@ -18,5 +18,5 @@ $navbar-default-link-active-bg:            darken($navbar-default-bg, 6.5%);
 // Favourites Star
 $favourites-star-disabled-color: lightgrey;
 $favourites-star-selected-color: gold;
-$favourites-star-unselected-color: lighten($favourites-star-selected-color, 33.3%);
+$favourites-star-unselected-color: lighten($favourites-star-selected-color, 35%);
 $favourites-star-hover-color: darken($favourites-star-selected-color, 6.5%);

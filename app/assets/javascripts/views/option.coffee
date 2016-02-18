@@ -1,4 +1,4 @@
-class Mixtio.Views.ConsumableTypeOption extends Backbone.View
+class Mixtio.Views.Option extends Backbone.View
 
   tagName: 'option'
 

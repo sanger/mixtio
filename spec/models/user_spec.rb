@@ -14,4 +14,8 @@ RSpec.describe User, type: :model do
 
     expect(user.consumable_types).to eq(consumable_types)
   end
+
+  it "should not be valid without belonging to a team" do
+    expect(build(:user, team: nil)).to_not be_valid
+  end
 end

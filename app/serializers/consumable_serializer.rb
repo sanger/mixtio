@@ -2,11 +2,9 @@ class ConsumableSerializer < ActiveModel::Serializer
 
   self.root = false
 
-  attributes :id, :depleted
+  attributes :id, :depleted, :barcode
 
   has_one :batch
-
-  has_one :lot
 
   has_one :consumable_type
 
@@ -18,17 +16,8 @@ class ConsumableSerializer < ActiveModel::Serializer
     }
   end
 
-  def lot
-    lot = object.batch.lot
-    {
-      id: lot.id,
-      name: lot.name,
-      uri: scope.api_v1_lot_url(lot)
-    }
-  end
-
   def consumable_type
-    consumable_type = object.batch.lot.consumable_type
+    consumable_type = object.batch.consumable_type
     {
       id: consumable_type.id,
       name: consumable_type.name,
