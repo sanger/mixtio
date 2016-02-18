@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   resources :teams
   resources :suppliers
 
+  post 'batches/:id/print', to: 'batches#print', as: 'print'
+
   post 'favourites/:consumable_type_id', to: 'favourites#create', as: 'favourite'
   delete 'favourites/:consumable_type_id', to: 'favourites#destroy', as: 'unfavourite'
 
