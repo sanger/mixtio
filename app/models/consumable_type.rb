@@ -14,6 +14,15 @@ class ConsumableType < ActiveRecord::Base
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }
 
+  enum freezer_temperature: {
+    "37°C": 0,
+    "RT": 1,
+    "+4°C": 2,
+    "-20°C": 3,
+    "-80°C": 4,
+    "LN2": 5
+  }
+
   # TODO: Remove this
   def latest_ingredients
     return unless recipe_ingredients

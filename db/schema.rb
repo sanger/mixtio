@@ -29,8 +29,9 @@ ActiveRecord::Schema.define(version: 20160212151243) do
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
     t.integer  "days_to_keep"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "freezer_temperature", default: 0
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "consumables", force: :cascade do |t|
