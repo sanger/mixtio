@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :consumables
   resources :batches
   resources :users
+  resources :kitchens
   resources :teams
   resources :suppliers
 
@@ -24,11 +25,12 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       get 'docs', to: 'docs#index', defaults: { format: :html }
-      resources :consumables, param: :barcode, only: [:show]
-      resources :consumable_types, only: [:show]
-      resources :batches, only: [:show]
-      resources :lots, only: [:show]
-      resources :suppliers, only: [:show]
+      resources :consumables, only: [:show, :index]
+      resources :consumable_types, only: [:show, :index]
+      resources :ingredients, only: [:show, :index]
+      resources :batches, only: [:show, :index]
+      resources :lots, only: [:show, :index]
+      resources :suppliers, only: [:show, :index]
     end
   end
 

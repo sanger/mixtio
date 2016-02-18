@@ -7,9 +7,9 @@ module Auditable
   end
 
   def create_audit(params)
-    user = params.fetch(:user, 'unknown')
+    user = params.fetch(:user, nil)
     action = params.fetch(:action, nil)
-    audits.create(user: user, action: action, record_data: self)
+    audits.create(user_id: user.id, action: action, record_data: self)
   end
 
 end

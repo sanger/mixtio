@@ -45,7 +45,7 @@ consumable_types:
     days_to_keep: 9
   - name: CDM-BSA
     days_to_keep: 14
-    ingredients:
+    recipe_ingredients:
       - IMDM
       - F12 Nut Mix
       - BSA
@@ -56,31 +56,31 @@ consumable_types:
       - Transferrin
   - name: Trypsin (mesc - Pathogens)
     days_to_keep: 180
-    ingredients:
+    recipe_ingredients:
       - DPBS
       - Chicken Serum
       - EDTA (mesc - Pathogens)
       - 2.5% Trypsin
   - name: EPO
     days_to_keep: 90
-    ingredients:
+    recipe_ingredients:
       - Recombinant human EPO
       - 0.1% HSA in PBS
   - name: M(minus)
     days_to_keep: 30
-    ingredients:
+    recipe_ingredients:
       - AdvDMEM F12
       - L-Glutamine
       - 2-Mercaptoethanol
       - FBS
   - name: E8
     days_to_keep: 14
-    ingredients:
+    recipe_ingredients:
       - E8 Supplement
       - Pen Strep
   - name: K (plus) without FGF2
     days_to_keep: 14
-    ingredients:
+    recipe_ingredients:
       - AdvDMEM F12
       - Pen Strep
       - L-Glutamine
@@ -88,12 +88,12 @@ consumable_types:
       - KSR
   - name: K (plus) with FGF2
     days_to_keep: 3
-    ingredients:
+    recipe_ingredients:
       - FGF
       - K plus without FGF
   - name: M (plus)
     days_to_keep: 14
-    ingredients:
+    recipe_ingredients:
       - AdvDMEM F12
       - Pen Strep
       - L-Glutamine
@@ -106,7 +106,7 @@ suppliers:
   - name: PAA
   - name: LIFE TECH 11905-031
   - name: ROCHE 11376497001
-  - name: LIFE-TECH 15140-122
+  - name: LIFE TECH 15140-122
   - name: SIGMA M6145-25ML
   - name: ROCHE 10652202001
   - name: LIFE TECH 14190-094
@@ -120,118 +120,109 @@ suppliers:
   - name: SIGMA M6250-100ML
   - name: LAB TECH FCS-SA
   - name: LIFE TECH A15171-01
-  - name: LIFE-TECH 15140-122
-  - name: LIFE-TECH A15169-01
+  - name: LIFE TECH A15169-01
   - name: GIBCO 12634-010
-  - name: LIFE TECH 15140-122
   - name: SIGMA G7513
-  - name: SIGMA M6250-100ML
   - name: LIFE TECH
   - name: CAMBRIDGE UNIVERSITY
-  - name: CGAP
-  - name: GIBCO 12634-010
-  - name: LIFE TECH 15140-122
-  - name: SIGMA G7513
-  - name: SIGMA M6250-100ML
-  - name: LAB TECH FCS-SA
 
 lots:
-  - name: 1695234
+  - number: 1695234
     consumable_type: IMDM
     supplier: LIFE TECH 21980-032
-  - name: 1696982
+  - number: 1696982
     consumable_type: F12 Nut Mix
     supplier: LIFE TECH 31765-027
-  - name: K00113-2235
+  - number: K00113-2235
     consumable_type: BSA
     supplier: PAA
-  - name: 1698721
+  - number: 1698721
     consumable_type: CD Lipid Concentrate
     supplier: LIFE TECH 11905-031
-  - name: 10372900
+  - number: 10372900
     consumable_type: Insulin
     supplier: ROCHE 11376497001
-  - name: 1712151
+  - number: 1712151
     consumable_type: Pen Strep
-    supplier: LIFE-TECH 15140-122
-  - name: 120M16962V
+    supplier: LIFE TECH 15140-122
+  - number: 120M16962V
     consumable_type: 1-Thiogilyclcerol
     supplier: SIGMA M6145-25ML
-  - name: 10204500
+  - number: 10204500
     consumable_type: Transferrin
     supplier: ROCHE 10652202001
-  - name: 1695274
+  - number: 1695274
     consumable_type: DPBS
     supplier: LIFE TECH 14190-094
-  - name: LIMSBATCH1005480
+  - number: LIMSBATCH1005480
     consumable_type: Chicken Serum
     supplier: GIBCO 16110-082
-  - name: BCBM5781V
+  - number: BCBM5781V
     consumable_type: EDTA (mesc - Pathogens)
     supplier: SIGMA E6511
-  - name: 1695978
+  - number: 1695978
     consumable_type: 2.5% Trypsin
     supplier: GIBCO 15090-046
-  - name: FZ1914061
+  - number: FZ1914061
     consumable_type: Recombinant human EPO
     supplier: R AND D SYSTEMS
-  - name: BATCH1007103
+  - number: BATCH1007103
     consumable_type: 0.1% HSA in PBS
     supplier: CGAP
-  - name: 1715661
+  - number: 1715661
     consumable_type: AdvDMEM F12
     supplier: LIFE TECH 12634-010
-  - name: 1672599
+  - number: 1672599
     consumable_type: L-Glutamine
     supplier: SIGMA
-  - name: STBD6281V
+  - number: STBD6281V
     consumable_type: 2-Mercaptoethanol
     supplier: SIGMA M6250-100ML
-  - name: 40508
+  - number: 40508
     consumable_type: FBS
     supplier: LAB TECH FCS-SA
-  - name: 1732952
+  - number: 1732952
     consumable_type: E8 Supplement
     supplier: LIFE TECH A15171-01
-  - name: 1705702
-    consumable_type: Pen Strep
-    supplier: LIFE-TECH 15140-122
-  - name: 1744347
-    consumable_type: E8
-    supplier: LIFE-TECH A15169-01
-  - name: 1723941
-    consumable_type: AdvDMEM F12
-    supplier: GIBCO 12634-010
-  - name: 1705702
+  - number: 1705702
     consumable_type: Pen Strep
     supplier: LIFE TECH 15140-122
-  - name: RNBD9302
+  - number: 1744347
+    consumable_type: E8
+    supplier: LIFE TECH A15169-01
+  - number: 1723941
+    consumable_type: AdvDMEM F12
+    supplier: GIBCO 12634-010
+  - number: 1705702
+    consumable_type: Pen Strep
+    supplier: LIFE TECH 15140-122
+  - number: RNBD9302
     consumable_type: L-Glutamine
     supplier: SIGMA G7513
-  - name: STBD6281V
+  - number: STBD6281V
     consumable_type: 2-Mercaptoethanol
     supplier: SIGMA M6250-100ML
-  - name: 1681765
+  - number: 1681765
     consumable_type: KSR
     supplier: LIFE TECH
-  - name: 8397
+  - number: 8397
     consumable_type: FGF
     supplier: CAMBRIDGE UNIVERSITY
-  - name: 1007089
+  - number: 1007089
     consumable_type: K plus without FGF
     supplier: CGAP
-  - name: 1723941
+  - number: 1723941
     consumable_type: AdvDMEM F12
     supplier: GIBCO 12634-010
-  - name: 1705702
+  - number: 1705702
     consumable_type: Pen Strep
     supplier: LIFE TECH 15140-122
-  - name: RNBD9302
+  - number: RNBD9302
     consumable_type: L-Glutamine
     supplier: SIGMA G7513
-  - name: STBD6281V
+  - number: STBD6281V
     consumable_type: 2-Mercaptoethanol
     supplier: SIGMA M6250-100ML
-  - name: 40508
+  - number: 40508
     consumable_type: FBS
     supplier: LAB TECH FCS-SA

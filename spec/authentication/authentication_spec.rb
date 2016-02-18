@@ -2,11 +2,15 @@ require "rails_helper"
 
 RSpec.describe "Authentication", type: :feature do
 
+  before(:each) do
+    @user = create(:user)
+  end
+
   it "should sign in a user with a valid username and password" do
     allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
     visit root_path
     click_link "Sign In"
-    fill_in "Username", with: "user1"
+    fill_in "Username", with: @user.username
     fill_in "Password", with: "password"
     click_button "Sign In"
     expect(page).to have_content("Signed In Successfully")
@@ -17,7 +21,7 @@ RSpec.describe "Authentication", type: :feature do
     allow(Authentication::Ldap).to receive(:authenticate).and_return(false)
     visit root_path
     click_link "Sign In"
-    fill_in "Username", with: "user1"
+    fill_in "Username", with: @user.username
     fill_in "Password", with: "badpassword"
     click_button "Sign In"
     expect(page).to have_content("Invalid username or password")
@@ -33,7 +37,7 @@ RSpec.describe "Authentication", type: :feature do
   it "should redirect user back to referrer after signing in" do
     allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
     visit "/anonymous"
-    fill_in "Username", with: "user1"
+    fill_in "Username", with: @user.username
     fill_in "Password", with: "password"
     click_button "Sign In"
     expect(current_path).to eq("/anonymous")

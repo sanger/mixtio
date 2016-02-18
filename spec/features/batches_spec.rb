@@ -12,8 +12,9 @@ RSpec.describe "Batches", type: feature, js: true do
 
       visit batches_path
 
-      expect(page).to have_content(batch.lot.name)
-      expect(page).to have_content(batch.lot.consumable_type.name)
+      expect(page).to have_content(batch.consumable_type.name)
+      expect(page).to have_content(batch.number)
+      expect(page).to have_content(batch.expiry_date)
     end
   end
 
@@ -27,13 +28,10 @@ RSpec.describe "Batches", type: feature, js: true do
 
       let(:create_batch) {
         visit new_batch_path
-        select @batch.lot.consumable_type.name, from: 'Consumable Type'
-        select @batch.lot.supplier.name, from: 'Supplier'
-        fill_in "Lot Name", with: @batch.lot.name
+        select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
-
-        click_button "Create Batch"
+        click_button('Create Batch')
       }
 
       it 'displays a success message' do
@@ -42,7 +40,7 @@ RSpec.describe "Batches", type: feature, js: true do
       end
 
       it 'creates a new batch' do
-        expect{ create_batch }.to change{ Batch.count }.by(1)
+        expect { create_batch }.to change{ Batch.count }.by(1)
       end
 
       it 'creates a new consumable' do
@@ -79,37 +77,34 @@ RSpec.describe "Batches", type: feature, js: true do
         wait_for_ajax
       }
 
-      it 'sets the exiry date', js: true do
+      it 'sets the expiry date', js: true do
         select_a_consumable_type
-        expect(find_field("Expiry Date").value).to eq(@consumable_type.expiry_date_from_today)
+        expect(find_field("Expiry Date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_s(:uk))
       end
     end
 
-    context 'when the lot name does not exist' do
+    context 'when trying to use a batch that does not exist as an ingredient' do
 
       before do
-        @batch = build(:batch, lot: nil)
-        @lot = build(:lot)
         @consumable_type = create(:consumable_type)
-        @supplier = create(:supplier)
+        @team = create(:team)
       end
 
-      let(:create_batch) {
+      let(:fill_out_form) {
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
-        select @supplier.name, from: 'Supplier'
-        fill_in "Lot Name", with: @lot.name
+        click_button("Add Ingredient")
+        all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@consumable_type.name)
+        all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set('12345')
+        all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@team.name)
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
-
         click_button "Create Batch"
       }
 
-      it 'creates a new lot' do
-        expect{ create_batch }.to change{ Lot.count }.by(1)
-        expect(page).to have_content("Reagent batch successfully created")
-        # How else can I find the batch??
-        expect(Batch.last.lot.name).to eq(@lot.name)
+      it 'displays a validation error' do
+        fill_out_form
+        expect(page).to have_content("with number 12345 could not be found")
       end
 
     end
@@ -117,7 +112,7 @@ RSpec.describe "Batches", type: feature, js: true do
     context 'when a selected consumable type has ingredients' do
 
       before do
-        @consumable_type = create(:consumable_type_with_ingredients_with_lots)
+        @consumable_type = create(:consumable_type_with_ingredients)
         @lot = create(:lot)
       end
 
@@ -125,13 +120,11 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
         wait_for_ajax
-        select @batch.lot.supplier.name, from: 'Supplier'
-        fill_in "Lot Name", with: @batch.lot.name
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
       }
 
-      it 'saves each consumable with the consumable type\'s latest ingredients' do
+      it 'saves the batch with the consumable type\'s latest ingredients' do
         fill_out_form
         click_button "Create Batch"
         expect(page).to have_content("Reagent batch successfully created")
@@ -158,9 +151,9 @@ RSpec.describe "Batches", type: feature, js: true do
           fill_out_form
           click_button("Add Ingredient")
 
-          all(:xpath, '//select[@name="batch_form[lots][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
-          all(:xpath, '//input[@name="batch_form[lots][][name]"]').last.set(@lot.name)
-          all(:xpath, '//select[@name="batch_form[lots][][supplier_id]"]').last.select(@lot.supplier.name)
+          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
 
           click_button "Create Batch"
 
@@ -182,8 +175,11 @@ RSpec.describe "Batches", type: feature, js: true do
 
         it 'can scan in an ingredient' do
           fill_out_form
-          find("#consumable-barcode").set(@consumable.barcode)
-          click_button("Add Ingredient")
+
+          consumable_barcode = find("#consumable-barcode input")
+          consumable_barcode.set(@consumable.barcode)
+          consumable_barcode.native.send_key(:Enter)
+
           wait_for_ajax
 
           click_button "Create Batch"
@@ -192,7 +188,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
           batch = Batch.last
           expect(batch.ingredients.size).to eq(4)
-          expect(batch.ingredients.include?(@consumable.batch.lot)).to be_truthy
+          expect(batch.ingredients.include?(@consumable.batch)).to be_truthy
 
         end
       end
@@ -201,11 +197,13 @@ RSpec.describe "Batches", type: feature, js: true do
 
         it 'will display an error' do
           visit new_batch_path
-          find("#consumable-barcode").set('fake barcode')
-          click_button("Add Ingredient")
+          consumable_barcode = find("#consumable-barcode input")
+          consumable_barcode.set('fake barcode')
+          consumable_barcode.native.send_key(:Enter)
+
           wait_for_ajax
 
-          expect(page).to have_content("Couldn't find Consumable")
+          expect(page).to have_content("Unable to find Consumable with barcode fake barcode")
         end
       end
 

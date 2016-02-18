@@ -9,7 +9,7 @@ FactoryGirl.define do
     auditable_type { consumable_type.class }
     action "create"
     record_data { consumable_type }
-    user 'dummy'
+    user
 
   end
 

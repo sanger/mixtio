@@ -22,9 +22,8 @@ protected
 
   def batch_params
     params.require(:batch_form)
-          .permit(:consumable_type_id, :consumable_name,
-                  :lot_name, :supplier_id, :expiry_date, :arrival_date,
-                  :aliquots, :lots => [:consumable_type_id, :name, :supplier_id])
+          .permit(:consumable_type_id, :consumable_name, :expiry_date,
+                  :aliquots, :ingredients => [:consumable_type_id, :number, :kitchen_id])
   end
 
   def batches

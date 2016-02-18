@@ -3,3 +3,5 @@ window.Mixtio =
   Collections: {}
   Views: {}
   Routers: {}
+  Bootstrap: {}
+  BaseURL: '/api/v1'

@@ -3,27 +3,30 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
   events:
     change: 'setSelected'
 
+  initialize: (options) ->
+    @favourites_collection = options.favourites
+
   empty: () ->
     @$el.html('')
 
   render: () ->
     @empty()
-    @renderSpacer()
-    @renderOptions(@collection.favourites())
+    @renderEmpty()
+    @renderOptions(@collection.filter(@isFavourite))
     @renderDisabled()
-    @renderOptions(@collection.nonFavourites())
+    @renderOptions(@collection.reject(@isFavourite))
     @$el.val(@selected.id) if @selected?
     this
 
-  renderSpacer: (spacer = '') ->
-    @$el.append($("<option value=''>#{spacer}</option>"))
+  renderEmpty: (spacer = '') ->
+    @$el.append(JST["empty_option"]())
 
   renderDisabled: () ->
-    @$el.append($("<option>#{new Array(20).join('&#9472')}</option>").attr("disabled", "disabled"))
+    @$el.append(JST["disabled_option"]())
 
   renderOptions: (collection) ->
     collection.forEach((consumable_type) =>
-      view = new Mixtio.Views.ConsumableTypeOption(model: consumable_type).render().el
+      view = new Mixtio.Views.Option(model: consumable_type).render().el
       @$el.append(view)
     )
 
@@ -35,6 +38,9 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
       isFavourite = false
     else
       @selected = @collection.findWhere({id: parseInt(id)})
-      isFavourite = @collection.isFavourite(@selected)
+      isFavourite = @isFavourite(@selected)
 
     @trigger('change:selected', @selected, isFavourite: isFavourite)
+
+  isFavourite: (consumableType) =>
+    @favourites_collection.where(id: consumableType.id).length is 1
