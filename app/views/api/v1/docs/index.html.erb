@@ -142,20 +142,185 @@
       .list-group-item:hover {
         background-color: #f5f5f5;
       }
-    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>Mixtio API documentation <small>version 1.0</small></h1><p>http://localhost</p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="batches" class="panel-title">/batches</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_batches__batch_id_"><span class="parent">/batches</span>/{batch_id}</a> <span class="methods"><a href="#batches__batch_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_batches__batch_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#batches__batch_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific batch</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="batches__batch_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/batches</span>/{batch_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific batch</p></div><ul class="nav nav-tabs"><li class="active"><a href="#batches__batch_id__get_request" data-toggle="tab">Request</a></li><li><a href="#batches__batch_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="batches__batch_id__get_request"><h3>URI Parameters</h3><ul><li><strong>batch_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="batches__batch_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-  "id": 7,
-  "lot_id": 7,
-  "expiry_date": "2017-12-18",
-  "arrival_date": "2015-12-31",
-  "ingredients": [],
+    </style></head><body data-spy="scroll" data-target="#sidebar"><div class="container"><div class="row"><div class="col-md-9" role="main"><div class="page-header"><h1>Mixtio API documentation <small>version 1.0</small></h1><p>http://localhost</p></div><div class="panel panel-default"><div class="panel-heading"><h3 id="batches" class="panel-title">/batches</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_batches"><span class="parent"></span>/batches</a> <span class="methods"><a href="#batches_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_batches" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#batches_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get a list of batches.</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="batches_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/batches</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get a list of batches.</p></div><ul class="nav nav-tabs"><li class="active"><a href="#batches_get_request" data-toggle="tab">Request</a></li><li><a href="#batches_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="batches_get_request"><h3>Query Parameters</h3><ul><li><strong>sort</strong>: <em>(string)</em><p>Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.</p><p><strong>Example</strong>:</p><pre>sort=created_at
+sort=-updated_at
+</pre></li><li><strong>page</strong>: <em>(number)</em><p>The page you want</p><p><strong>Example</strong>:</p><pre><code>page=1</code></pre></li><li><strong>page_size</strong>: <em>(number)</em><p>The number of results returned in a page</p><p><strong>Example</strong>:</p><pre><code>page_size=10</code></pre></li></ul></div><div class="tab-pane" id="batches_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "batches": [
+    {
+      "id": 57,
+      "number": "TESTTEAM-57",
+      "consumable_type": {
+        "id": 24,
+        "uri": "http://localhost:3000/api/v1/consumable_types/24"
+      },
+      "kitchen": {
+        "id": 25,
+        "type": "Team",
+        "name": "TEST TEAM"
+      },
+      "expiry_date": "2016-08-13",
+      "ingredients": [
+        {
+          "id": 9,
+          "consumable_type_id": 9,
+          "kitchen_id": 9,
+          "number": "1695274",
+          "expiry_date": null,
+          "created_at": "2016-02-15T13:39:49.770Z",
+          "updated_at": "2016-02-15T13:39:49.770Z"
+        },
+        {
+          "id": 10,
+          "consumable_type_id": 10,
+          "kitchen_id": 10,
+          "number": "LIMSBATCH1005480",
+          "expiry_date": null,
+          "created_at": "2016-02-15T13:39:49.777Z",
+          "updated_at": "2016-02-15T13:39:49.777Z"
+        }
+      ],
+      "consumables": [
+        {
+          "id": 146,
+          "batch_id": 57,
+          "created_at": "2016-02-15T13:39:52.018Z",
+          "updated_at": "2016-02-15T13:39:52.018Z",
+          "name": null,
+          "barcode": "RGNT-146",
+          "depleted": false
+        },
+        {
+          "id": 147,
+          "batch_id": 57,
+          "created_at": "2016-02-15T13:39:52.026Z",
+          "updated_at": "2016-02-15T13:39:52.026Z",
+          "name": null,
+          "barcode": "RGNT-147",
+          "depleted": false
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "number": "TESTTEAM-58",
+      "consumable_type": {
+        "id": 25,
+        "uri": "http://localhost:3000/api/v1/consumable_types/25"
+      },
+      "kitchen": {
+        "id": 25,
+        "type": "Team",
+        "name": "TEST TEAM"
+      },
+      "expiry_date": "2016-05-15",
+      "ingredients": [
+        {
+          "id": 13,
+          "consumable_type_id": 13,
+          "kitchen_id": 13,
+          "number": "FZ1914061",
+          "expiry_date": null,
+          "created_at": "2016-02-15T13:39:49.794Z",
+          "updated_at": "2016-02-15T13:39:49.794Z"
+        },
+        {
+          "id": 14,
+          "consumable_type_id": 14,
+          "kitchen_id": 14,
+          "number": "BATCH1007103",
+          "expiry_date": null,
+          "created_at": "2016-02-15T13:39:49.799Z",
+          "updated_at": "2016-02-15T13:39:49.799Z"
+        }
+      ],
+      "consumables": [
+        {
+          "id": 156,
+          "batch_id": 58,
+          "created_at": "2016-02-15T13:39:52.116Z",
+          "updated_at": "2016-02-15T13:39:52.116Z",
+          "name": null,
+          "barcode": "RGNT-156",
+          "depleted": false
+        },
+        {
+          "id": 157,
+          "batch_id": 58,
+          "created_at": "2016-02-15T13:39:52.124Z",
+          "updated_at": "2016-02-15T13:39:52.124Z",
+          "name": null,
+          "barcode": "RGNT-157",
+          "depleted": false
+        },
+      ]
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null,
+    "total_pages": 2,
+    "total_count": 30
+  }
+}
+
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_batches__batch_id_"><span class="parent">/batches</span>/{batch_id}</a> <span class="methods"><a href="#batches__batch_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_batches__batch_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#batches__batch_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific batch</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="batches__batch_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/batches</span>/{batch_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific batch</p></div><ul class="nav nav-tabs"><li class="active"><a href="#batches__batch_id__get_request" data-toggle="tab">Request</a></li><li><a href="#batches__batch_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="batches__batch_id__get_request"><h3>URI Parameters</h3><ul><li><strong>batch_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="batches__batch_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "id": 34,
+  "number": "TESTTEAM-34",
+  "consumable_type": {
+    "id": 1,
+    "uri": "http://localhost:3000/api/v1/consumable_types/1"
+  },
+  "kitchen": {
+    "id": 25,
+    "type": "Team",
+    "name": "TEST TEAM"
+  },
+  "expiry_date": "2016-03-19",
+  "ingredients": [{
+      id: 15,
+      consumable_type_id: 15,
+      kitchen_id: 15,
+      number: "1715661",
+      expiry_date: null,
+      created_at: "2016-02-15T13:39:49.805Z",
+      updated_at: "2016-02-15T13:39:49.805Z"
+    },
+    {
+      id: 16,
+      consumable_type_id: 16,
+      kitchen_id: 16,
+      number: "1672599",
+      expiry_date: null,
+      created_at: "2016-02-15T13:39:49.812Z",
+      updated_at: "2016-02-15T13:39:49.812Z"
+    }],
   "consumables": [
     {
-      "id": 7,
-      "batch_id": 7,
-      "created_at": "2016-01-14T10:10:56.897Z",
-      "updated_at": "2016-01-14T10:10:56.897Z",
+      "id": 1,
+      "batch_id": 34,
+      "created_at": "2016-02-15T13:39:49.973Z",
+      "updated_at": "2016-02-15T13:39:49.973Z",
       "name": null,
-      "barcode": "mx-7",
+      "barcode": "RGNT-1",
+      "depleted": false
+    },
+    {
+      "id": 2,
+      "batch_id": 34,
+      "created_at": "2016-02-15T13:39:49.981Z",
+      "updated_at": "2016-02-15T13:39:49.981Z",
+      "name": null,
+      "barcode": "RGNT-2",
+      "depleted": false
+    },
+    {
+      "id": 3,
+      "batch_id": 34,
+      "created_at": "2016-02-15T13:39:49.987Z",
+      "updated_at": "2016-02-15T13:39:49.987Z",
+      "name": null,
+      "barcode": "RGNT-3",
       "depleted": false
     }
   ]
@@ -163,102 +328,208 @@
 </code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
   "message": "Couldn&#39;t find Batch with &#39;id&#39;=123"
 }
-</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="consumable_types" class="panel-title">/consumable_types</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumable_types__consumable_type_id_"><span class="parent">/consumable_types</span>/{consumable_type_id}</a> <span class="methods"><a href="#consumable_types__consumable_type_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumable_types__consumable_type_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumable_types__consumable_type_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific consumable type</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumable_types__consumable_type_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/consumable_types</span>/{consumable_type_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific consumable type</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumable_types__consumable_type_id__get_request" data-toggle="tab">Request</a></li><li><a href="#consumable_types__consumable_type_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumable_types__consumable_type_id__get_request"><h3>URI Parameters</h3><ul><li><strong>consumable_type_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="consumable_types__consumable_type_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-  "id": 1,
-  "name": "Cake",
-  "days_to_keep": 10,
-  "expiry_date_from_today": "11/01/2016",
-  "ingredients": [
-      {
-        "id": 2,
-        "name": "Eggs",
-        "days_to_keep": 21,
-        "created_at": "2016-01-14T10:10:55.679Z",
-        "updated_at": "2016-01-14T10:10:55.679Z"
-      },
-      {
-        "id": 3,
-        "name": "Flour",
-        "days_to_keep": 100,
-        "created_at": "2016-01-14T10:10:55.657Z",
-        "updated_at": "2016-01-14T10:10:55.657Z"
-      },
-      {
-        "id": 4,
-        "name": "Sugar",
-        "days_to_keep": 231,
-        "created_at": "2016-01-14T10:10:55.722Z",
-        "updated_at": "2016-01-14T10:10:55.722Z"
-      }
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="consumable_types" class="panel-title">/consumable_types</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumable_types"><span class="parent"></span>/consumable_types</a> <span class="methods"><a href="#consumable_types_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumable_types" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumable_types_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get a list of consumable_types.</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumable_types_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/consumable_types</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get a list of consumable_types.</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumable_types_get_request" data-toggle="tab">Request</a></li><li><a href="#consumable_types_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumable_types_get_request"><h3>Query Parameters</h3><ul><li><strong>sort</strong>: <em>(string)</em><p>Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.</p><p><strong>Example</strong>:</p><pre>sort=created_at
+sort=-updated_at
+</pre></li><li><strong>page</strong>: <em>(number)</em><p>The page you want</p><p><strong>Example</strong>:</p><pre><code>page=1</code></pre></li><li><strong>page_size</strong>: <em>(number)</em><p>The number of results returned in a page</p><p><strong>Example</strong>:</p><pre><code>page_size=10</code></pre></li></ul></div><div class="tab-pane" id="consumable_types_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "consumable_types": [
+    {
+      "id": 1,
+      "name": "IMDM",
+      "days_to_keep": 33,
+      "recipe_ingredients": []
+    },
+    {
+      "id": 25,
+      "name": "EPO",
+      "days_to_keep": 90,
+      "recipe_ingredients": [
+        {
+          "id": 13,
+          "name": "Recombinant human EPO",
+          "days_to_keep": 490,
+          "created_at": "2016-02-15T13:39:49.328Z",
+          "updated_at": "2016-02-15T13:39:49.328Z"
+        },
+        {
+          "id": 14,
+          "name": "0.1% HSA in PBS",
+          "days_to_keep": 9,
+          "created_at": "2016-02-15T13:39:49.333Z",
+          "updated_at": "2016-02-15T13:39:49.333Z"
+        }
+      ]
+    }
   ],
-  "latest_ingredients": [
-      {
-        "id": 1,
-        "consumable_type_id": 2,
-        "supplier_id": 1,
-        "name": "Egg Lot 1",
-        "created_at": "2016-01-14T10:10:57.165Z",
-        "updated_at": "2016-01-14T10:10:57.165Z"
-      },
-      {
-        "id": 2,
-        "consumable_type_id": 3,
-        "supplier_id": 2,
-        "name": "Flour Lot 1",
-        "created_at": "2016-01-14T10:10:56.965Z",
-        "updated_at": "2016-01-14T10:10:56.965Z"
-      },
-      {
-        "id": 3,
-        "consumable_type_id": 4,
-        "supplier_id": 3,
-        "name": "Sugar Lot 1",
-        "created_at": "2016-01-14T10:10:56.965Z",
-        "updated_at": "2016-01-14T10:10:56.965Z"
-      }
+  "meta": {
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null,
+    "total_pages": 2,
+    "total_count": 30
+  }
+}
+
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumable_types__consumable_type_id_"><span class="parent">/consumable_types</span>/{consumable_type_id}</a> <span class="methods"><a href="#consumable_types__consumable_type_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumable_types__consumable_type_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumable_types__consumable_type_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific consumable type</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumable_types__consumable_type_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/consumable_types</span>/{consumable_type_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific consumable type</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumable_types__consumable_type_id__get_request" data-toggle="tab">Request</a></li><li><a href="#consumable_types__consumable_type_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumable_types__consumable_type_id__get_request"><h3>URI Parameters</h3><ul><li><strong>consumable_type_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="consumable_types__consumable_type_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "id": 25,
+  "name": "EPO",
+  "days_to_keep": 90,
+  "recipe_ingredients": [
+    {
+      "id": 13,
+      "name": "Recombinant human EPO",
+      "days_to_keep": 490,
+      "created_at": "2016-02-15T13:39:49.328Z",
+      "updated_at": "2016-02-15T13:39:49.328Z"
+    },
+    {
+      "id": 14,
+      "name": "0.1% HSA in PBS",
+      "days_to_keep": 9,
+      "created_at": "2016-02-15T13:39:49.333Z",
+      "updated_at": "2016-02-15T13:39:49.333Z"
+    }
   ]
 }
 </code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
   "message": "Couldn&#39;t find ConsumableType with &#39;id&#39;=123"
 }
-</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="consumables" class="panel-title">/consumables</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumables__barcode_"><span class="parent">/consumables</span>/{barcode}</a> <span class="methods"><a href="#consumables__barcode__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumables__barcode_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumables__barcode__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific consumable</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumables__barcode__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/consumables</span>/{barcode}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific consumable</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumables__barcode__get_request" data-toggle="tab">Request</a></li><li><a href="#consumables__barcode__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumables__barcode__get_request"><h3>URI Parameters</h3><ul><li><strong>barcode</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="consumables__barcode__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-  id: 1,
-  name: null,
-  depleted: false,
-  batch: {
-    id: 1,
-    uri: "http://localhost:3000/api/v1/batches/1"
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="consumables" class="panel-title">/consumables</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumables"><span class="parent"></span>/consumables</a> <span class="methods"><a href="#consumables_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumables" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumables_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get a list of Consumables.</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumables_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/consumables</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get a list of Consumables.</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumables_get_request" data-toggle="tab">Request</a></li><li><a href="#consumables_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumables_get_request"><h3>Query Parameters</h3><ul><li><strong>sort</strong>: <em>(string)</em><p>Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.</p><p><strong>Example</strong>:</p><pre>sort=created_at
+sort=-updated_at
+</pre></li><li><strong>page</strong>: <em>(number)</em><p>The page you want</p><p><strong>Example</strong>:</p><pre><code>page=1</code></pre></li><li><strong>page_size</strong>: <em>(number)</em><p>The number of results returned in a page</p><p><strong>Example</strong>:</p><pre><code>page_size=10</code></pre></li><li><strong>barcode</strong>: <em>(string)</em><p>The barcode of a Consumable</p><p><strong>Example</strong>:</p><pre>MX-100</pre></li></ul></div><div class="tab-pane" id="consumables_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "consumables": [
+    {
+      "id": 1,
+      "depleted": false,
+      "barcode": "RGNT-1",
+      "batch": {
+        "id": 34,
+        "uri": "http://localhost:3000/api/v1/batches/34"
+      },
+      "consumable_type": {
+        "id": 1,
+        "name": "IMDM",
+        "uri": "http://localhost:3000/api/v1/consumable_types/1"
+      }
+    },
+    {
+      "id": 25,
+      "depleted": false,
+      "barcode": "RGNT-25",
+      "batch": {
+        "id": 38,
+        "uri": "http://localhost:3000/api/v1/batches/38"
+      },
+      "consumable_type": {
+        "id": 5,
+        "name": "Insulin",
+        "uri": "http://localhost:3000/api/v1/consumable_types/5"
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null,
+    "total_pages": 8,
+    "total_count": 177
+  }
+}
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_consumables__consumable_id_"><span class="parent">/consumables</span>/{consumable_id}</a> <span class="methods"><a href="#consumables__consumable_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_consumables__consumable_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#consumables__consumable_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific consumable</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="consumables__consumable_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/consumables</span>/{consumable_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific consumable</p></div><ul class="nav nav-tabs"><li class="active"><a href="#consumables__consumable_id__get_request" data-toggle="tab">Request</a></li><li><a href="#consumables__consumable_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="consumables__consumable_id__get_request"><h3>URI Parameters</h3><ul><li><strong>consumable_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="consumables__consumable_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "id": 25,
+  "depleted": false,
+  "barcode": "RGNT-25",
+  "batch": {
+    "id": 38,
+    "uri": "http://localhost:3000/api/v1/batches/38"
   },
-  lot: {
-    id: 1,
-    name: "1695234",
-    uri: "http://localhost:3000/api/v1/lots/1"
-  },
-  consumable_type: {
-    id: 1,
-    name: "IMDM",
-    uri: "http://localhost:3000/api/v1/consumable_types/1"
+  "consumable_type": {
+    "id": 5,
+    "name": "Insulin",
+    "uri": "http://localhost:3000/api/v1/consumable_types/5"
   }
 }
 </code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
   "message": "Couldn&#39;t find Consumable"
 }
-</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="lots" class="panel-title">/lots</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_lots__lot_id_"><span class="parent">/lots</span>/{lot_id}</a> <span class="methods"><a href="#lots__lot_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_lots__lot_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#lots__lot_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific lot</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="lots__lot_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/lots</span>/{lot_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific lot</p></div><ul class="nav nav-tabs"><li class="active"><a href="#lots__lot_id__get_request" data-toggle="tab">Request</a></li><li><a href="#lots__lot_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="lots__lot_id__get_request"><h3>URI Parameters</h3><ul><li><strong>lot_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="lots__lot_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
-  id: 2,
-  name: "1696982",
-  consumable_type: {
-    id: 2,
-    uri: "http://localhost:3000/api/v1/consumable_types/2"
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="lots" class="panel-title">/lots</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_lots"><span class="parent"></span>/lots</a> <span class="methods"><a href="#lots_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_lots" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#lots_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get a list of lots.</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="lots_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/lots</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get a list of lots.</p></div><ul class="nav nav-tabs"><li class="active"><a href="#lots_get_request" data-toggle="tab">Request</a></li><li><a href="#lots_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="lots_get_request"><h3>Query Parameters</h3><ul><li><strong>sort</strong>: <em>(string)</em><p>Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.</p><p><strong>Example</strong>:</p><pre>sort=created_at
+sort=-updated_at
+</pre></li><li><strong>page</strong>: <em>(number)</em><p>The page you want</p><p><strong>Example</strong>:</p><pre><code>page=1</code></pre></li><li><strong>page_size</strong>: <em>(number)</em><p>The number of results returned in a page</p><p><strong>Example</strong>:</p><pre><code>page_size=10</code></pre></li></ul></div><div class="tab-pane" id="lots_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "lots": [
+    {
+      "id": 1,
+      "number": "1695234",
+      "consumable_type": {
+        "id": 1,
+        "uri": "http://localhost:3000/api/v1/consumable_types/1"
+      },
+      "kitchen": {
+        "id": 1,
+        "type": "Supplier",
+        "name": "LIFE TECH 21980-032"
+      }
+    },
+    {
+      "id": 25,
+      "number": "STBD6281V",
+      "consumable_type": {
+        "id": 17,
+        "uri": "http://localhost:3000/api/v1/consumable_types/17"
+      },
+      "kitchen": {
+        "id": 17,
+        "type": "Supplier",
+        "name": "SIGMA M6250-100ML"
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "next_page": 2,
+    "prev_page": null,
+    "total_pages": 2,
+    "total_count": 34
+  }
+}
+
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_lots__lot_id_"><span class="parent">/lots</span>/{lot_id}</a> <span class="methods"><a href="#lots__lot_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_lots__lot_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#lots__lot_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific lot</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="lots__lot_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/lots</span>/{lot_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific lot</p></div><ul class="nav nav-tabs"><li class="active"><a href="#lots__lot_id__get_request" data-toggle="tab">Request</a></li><li><a href="#lots__lot_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="lots__lot_id__get_request"><h3>URI Parameters</h3><ul><li><strong>lot_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="lots__lot_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "id": 25,
+  "number": "STBD6281V",
+  "consumable_type": {
+    "id": 17,
+    "uri": "http://localhost:3000/api/v1/consumable_types/17"
   },
-  supplier: {
-    id: 2,
-    uri: "http://localhost:3000/api/v1/suppliers/2"
+  "kitchen": {
+    "id": 17,
+    "type": "Supplier",
+    "name": "SIGMA M6250-100ML"
   }
 }
 </code></pre><h2>HTTP status code <a href="http://httpstatus.es/404" target="_blank">404</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
   "message": "Couldn&#39;t find Lot with &#39;id&#39;=123"
 }
-</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="suppliers" class="panel-title">/suppliers</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_suppliers__supplier_id_"><span class="parent">/suppliers</span>/{supplier_id}</a> <span class="methods"><a href="#suppliers__supplier_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_suppliers__supplier_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#suppliers__supplier_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific supplier</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="suppliers__supplier_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/suppliers</span>/{supplier_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific supplier</p></div><ul class="nav nav-tabs"><li class="active"><a href="#suppliers__supplier_id__get_request" data-toggle="tab">Request</a></li><li><a href="#suppliers__supplier_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="suppliers__supplier_id__get_request"><h3>URI Parameters</h3><ul><li><strong>supplier_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="suppliers__supplier_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+</code></pre></div></div></div></div></div></div></div></div></div></div><div class="panel panel-default"><div class="panel-heading"><h3 id="suppliers" class="panel-title">/suppliers</h3></div><div class="panel-body"><div class="panel-group"><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_suppliers"><span class="parent"></span>/suppliers</a> <span class="methods"><a href="#suppliers_get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_suppliers" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#suppliers_get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Get a list of suppliers.</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="suppliers_get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent"></span>/suppliers</h4></div><div class="modal-body"><div class="alert alert-info"><p>Get a list of suppliers.</p></div><ul class="nav nav-tabs"><li class="active"><a href="#suppliers_get_request" data-toggle="tab">Request</a></li><li><a href="#suppliers_get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="suppliers_get_request"><h3>Query Parameters</h3><ul><li><strong>sort</strong>: <em>(string)</em><p>Orders the collection by the field given (either created_at or updated_at). Default is ascending. Put a minus before the value for descending.</p><p><strong>Example</strong>:</p><pre>sort=created_at
+sort=-updated_at
+</pre></li><li><strong>page</strong>: <em>(number)</em><p>The page you want</p><p><strong>Example</strong>:</p><pre><code>page=1</code></pre></li><li><strong>page_size</strong>: <em>(number)</em><p>The number of results returned in a page</p><p><strong>Example</strong>:</p><pre><code>page_size=10</code></pre></li></ul></div><div class="tab-pane" id="suppliers_get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "LIFE TECH 21980-032"
+    },
+    {
+      "id": 24,
+      "name": "CAMBRIDGE UNIVERSITY"
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "next_page": null,
+    "prev_page": null,
+    "total_pages": 1,
+    "total_count": 24
+  }
+}
+
+</code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class="panel-heading"><h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#panel_suppliers__supplier_id_"><span class="parent">/suppliers</span>/{supplier_id}</a> <span class="methods"><a href="#suppliers__supplier_id__get"><span class="badge badge_get">get</span></a></span></h4></div><div id="panel_suppliers__supplier_id_" class="panel-collapse collapse"><div class="panel-body"><div class="list-group"><div onclick="window.location.href = '#suppliers__supplier_id__get'" class="list-group-item"><span class="badge badge_get">get</span><div class="method_description"><p>Retrieve a specific supplier</p></div><div class="clearfix"></div></div></div></div></div><div class="modal fade" tabindex="0" id="suppliers__supplier_id__get"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title" id="myModalLabel"><span class="badge badge_get">get</span> <span class="parent">/suppliers</span>/{supplier_id}</h4></div><div class="modal-body"><div class="alert alert-info"><p>Retrieve a specific supplier</p></div><ul class="nav nav-tabs"><li class="active"><a href="#suppliers__supplier_id__get_request" data-toggle="tab">Request</a></li><li><a href="#suppliers__supplier_id__get_response" data-toggle="tab">Response</a></li></ul><div class="tab-content"><div class="tab-pane active" id="suppliers__supplier_id__get_request"><h3>URI Parameters</h3><ul><li><strong>supplier_id</strong>: <em>required (string)</em></li></ul></div><div class="tab-pane" id="suppliers__supplier_id__get_response"><h2>HTTP status code <a href="http://httpstatus.es/200" target="_blank">200</a></h2><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
   id: 1,
   name: "Acme Ltd."
 }
