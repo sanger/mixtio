@@ -138,7 +138,7 @@ RSpec.describe "Batches", type: feature, js: true do
         it 'can remove an ingredient' do
           fill_out_form
           all(:data_behavior, "remove_row").last.click
-          sleep 2 # Allow the animation to finish...
+          sleep 1 # Allow the animation to finish...
           click_button "Create Batch"
           expect(page).to have_content("Reagent batch successfully created")
 
