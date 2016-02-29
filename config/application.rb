@@ -44,7 +44,7 @@ module Mixtio
 
     config.print_service = config_for(:print_service)
 
-    config.barcode_prefix = 'RGNT'
+    config.barcode_prefix = 'RGNT_'
 
   end
 end
