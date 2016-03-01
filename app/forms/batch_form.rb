@@ -32,7 +32,6 @@ class BatchForm
   validate do
     selected_ingredients.each do |ingredient|
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
-      errors[:ingredient] << "batch/lot number can't be empty" if ingredient[:number].empty?
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
 
       if Team.exists?(ingredient[:kitchen_id])
