@@ -2,13 +2,13 @@ class CreateConsumables < ActiveRecord::Migration
   def change
     create_table :consumables do |t|
       t.belongs_to :batch, index: true, foreign_key: true
-      t.belongs_to :unit, foreign_key: true
 
       t.timestamps null: false
       t.string :name
       t.string :barcode
       t.boolean :depleted, default: false
       t.decimal :volume
+      t.integer :unit
     end
   end
 end
