@@ -5,8 +5,3 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-
-Unit.create([
-                {display_name: 'μl', simple_name: 'ul'},
-                {display_name: 'ml', simple_name: 'ml'}
-            ])

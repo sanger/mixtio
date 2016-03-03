@@ -74,7 +74,7 @@
           <%= f.text_field :volume, { class: 'form-control' } %>
         </div>
         <div class="col-md-3">
-          <%= f.select :unit, Unit.all.map { |u| u.display_name }, {}, { class: 'form-control' } %>
+          <%= f.select :unit, Consumable.units, {}, { class: 'form-control' } %>
         </div>
       </div>
     </div>

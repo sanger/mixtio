@@ -67,7 +67,7 @@ class BatchForm
       ActiveRecord::Base.transaction do
         batch.save!
 
-        attributes = volume.to_f > 0 ? {volume: volume, unit: (Unit.find_by_simple_name(unit) or Unit.find_by_display_name(unit))} : {}
+        attributes = volume.to_f > 0 ? {volume: volume, unit: unit.to_i} : {}
         batch.consumables.create!(Array.new(aliquots.to_i, attributes))
 
         batch.create_audit(user: current_user, action: 'create')
