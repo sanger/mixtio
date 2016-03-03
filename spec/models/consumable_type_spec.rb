@@ -50,4 +50,8 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type)).to respond_to(:audits)
   end
 
+  it "should simplify freezer temperature" do
+    expect(build(:consumable_type, freezer_temperature: 0).simple_freezer_temperature).to eql('37C')
+  end
+
 end

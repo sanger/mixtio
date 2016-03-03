@@ -9,6 +9,7 @@ class ConsumableLabelSerializer < ActiveModel::Serializer
       batch_no: object.batch.number,
       date: "Created: #{object.batch.created_at.to_date.to_s(:uk)}",
       barcode: object.barcode,
+      freezer_temperature: object.batch.consumable_type.simple_freezer_temperature,
     }
   end
 
