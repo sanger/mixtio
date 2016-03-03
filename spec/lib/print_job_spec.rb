@@ -29,6 +29,21 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
     expect(first_label[:label_1][:date]).to eql("Created: #{@batch.created_at.to_date.to_s(:uk)}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
+    expect(first_label[:label_1][:volume]).to eql('') or be_nil
+  end
+
+  it "should serialize a volume if given one" do
+    batch = create(:batch_with_consumables)
+    batch.consumables.first.volume = 100
+    unit = Unit.new(display_name: 'μl', simple_name: 'ul')
+    batch.consumables.first.unit = unit
+    print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
+    json = JSON.parse(print_job.to_json, symbolize_names: true)
+    labels = json[:print_job][:labels]
+    expect(labels[:body]).to be_kind_of(Array)
+
+    first_label = labels[:body].first
+    expect(first_label[:label_1][:volume]).to eql("Volume: 100#{unit.simple_name}")
   end
 
   it "should return true when a print job executes successfully" do

@@ -4,7 +4,7 @@ class BatchForm
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots, :current_user]
+  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots, :volume, :unit, :current_user]
 
   attr_accessor *ATTRIBUTES
 
@@ -19,7 +19,8 @@ class BatchForm
   end
 
   validates :consumable_type_id, :expiry_date, :aliquots, :current_user, :presence => true
-  validates :aliquots, numericality: { only_integer: true }
+  validates :aliquots, numericality: {only_integer: true}
+  validates :volume, numericality: {allow_blank: true, greater_than: 0}
 
   validate do
     unless batch.valid?
@@ -65,7 +66,10 @@ class BatchForm
     begin
       ActiveRecord::Base.transaction do
         batch.save!
-        batch.consumables.create!(Array.new(aliquots.to_i, {}))
+
+        attributes = volume.to_f > 0 ? {volume: volume, unit: (Unit.find_by_simple_name(unit) or Unit.find_by_display_name(unit))} : {}
+        batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+
         batch.create_audit(user: current_user, action: 'create')
       end
     rescue
