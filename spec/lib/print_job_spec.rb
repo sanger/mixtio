@@ -29,7 +29,7 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
     expect(first_label[:label_1][:date]).to eql("Created: #{@batch.created_at.to_date.to_s(:uk)}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
-    expect(first_label[:label_1][:volume]).to eql('') or be_nil
+    expect(first_label[:label_1][:volume]).to be_nil
   end
 
   it "should serialize a volume if given one" do
@@ -42,7 +42,7 @@ RSpec.describe PrintJob, type: :model do
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
-    expect(first_label[:label_1][:volume]).to eql("Volume: 100ul")
+    expect(first_label[:label_1][:volume]).to eql("100ul")
   end
 
   it "should return true when a print job executes successfully" do
