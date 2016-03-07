@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 20160218152344) do
     t.string   "name"
     t.string   "barcode"
     t.boolean  "depleted",   default: false
+    t.decimal  "volume"
+    t.integer  "unit"
   end
 
   add_index "consumables", ["batch_id"], name: "index_consumables_on_batch_id"
