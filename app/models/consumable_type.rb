@@ -23,6 +23,10 @@ class ConsumableType < ActiveRecord::Base
     "LN2": 5
   }
 
+  def simple_freezer_temperature
+    freezer_temperature.gsub('°', '')
+  end
+
   # TODO: Remove this
   def latest_ingredients
     return unless recipe_ingredients
