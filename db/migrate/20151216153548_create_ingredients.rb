@@ -6,6 +6,8 @@ class CreateIngredients < ActiveRecord::Migration
       t.string :number
       t.string :type
       t.date :expiry_date
+      t.decimal :volume
+      t.integer :unit
       t.timestamps null: false
     end
   end
