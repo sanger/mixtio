@@ -63,6 +63,8 @@ ActiveRecord::Schema.define(version: 20160218152344) do
     t.string   "number"
     t.string   "type"
     t.date     "expiry_date"
+    t.decimal  "volume"
+    t.integer  "unit"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end

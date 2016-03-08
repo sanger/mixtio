@@ -2,7 +2,7 @@ class BatchSerializer < ActiveModel::Serializer
 
   self.root = false
 
-  attributes :id, :number, :consumable_type, :kitchen, :expiry_date, :ingredients, :consumables
+  attributes :id, :number, :consumable_type, :kitchen, :expiry_date, :ingredients, :consumables, :volume
 
   def consumable_type
     consumable_type = object.consumable_type

@@ -21,6 +21,18 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content(@batch.consumable_type.name)
       expect(page).to have_content(@batch.expiry_date)
       expect(page).to have_content(@batch.consumables.length)
+      expect(page).to have_content(@batch.display_volume)
+      expect(page).to_not have_content("Aliquot Volume")
+    end
+
+    it 'displays volume when aliquot has volume' do
+      batch = create(:batch)
+      batch.consumables.create!(Array.new(1, {volume: 4, unit: 'mL'}))
+
+      visit batch_path(batch)
+
+      expect(page).to have_content(batch.consumables.first.display_volume)
+      expect(page).to have_content("Aliquot Volume")
     end
 
     it 'prints labels for the batch' do
@@ -62,6 +74,7 @@ RSpec.describe "Batches", type: feature, js: true do
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
+        fill_in "Batch Volume", with: 2.5
         click_button('Create Batch')
       }
 
@@ -153,6 +166,7 @@ RSpec.describe "Batches", type: feature, js: true do
         wait_for_ajax
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
+        fill_in "Batch Volume", with: 3.3
       }
 
       it 'saves the batch with the consumable type\'s latest ingredients' do
@@ -237,8 +251,40 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(page).to have_content("Unable to find Consumable with barcode fake barcode")
         end
       end
-
     end
 
+    describe 'when an aliquot volume' do
+      let(:fill_in_required) {
+        visit new_batch_path
+        select @batch.consumable_type.name, from: 'Consumable Type'
+        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Number of Aliquots", with: 3
+        fill_in "Batch Volume", with: 2.5
+      }
+      let("submit") {
+        click_button('Create Batch')
+      }
+
+      context 'is not given' do
+        it 'will not create volume or units' do
+          fill_in_required
+          submit
+
+          expect(Batch.last.consumables.first.volume).to be_nil
+          expect(Batch.last.consumables.first.unit).to be_nil
+        end
+      end
+
+      context 'is given' do
+        it 'will create volume and units' do
+          fill_in_required
+          fill_in "Aliquot volume", with: 2
+          submit
+
+          expect(Batch.last.consumables.first.volume).to eql(2)
+          expect(Batch.last.consumables.first.unit).to eql(Consumable.units.keys.first)
+        end
+      end
+    end
   end
 end
