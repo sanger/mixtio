@@ -37,4 +37,11 @@ RSpec.describe Batch, type: :model do
   it "should be auditable" do
     expect(build(:batch)).to respond_to(:audits)
   end
+
+  it "should require volume" do
+    expect(build(:batch, volume: nil)).to_not be_valid
+  end
+  it "should require volume" do
+    expect(build(:batch, unit: nil)).to_not be_valid
+  end
 end

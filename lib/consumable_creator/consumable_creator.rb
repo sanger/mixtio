@@ -7,9 +7,9 @@ class ConsumableCreator
   end
 
   def run!
-    cts = params["consumable_types"].map{ |consumable_type| create_consumable_type(consumable_type) }
+    cts = params["consumable_types"].map { |consumable_type| create_consumable_type(consumable_type) }
 
-    params["suppliers"].each{ |supplier| create_supplier(supplier) }
+    params["suppliers"].each { |supplier| create_supplier(supplier) }
 
     params["lots"].each do |lot|
       lot = create_lot(lot)
@@ -17,15 +17,15 @@ class ConsumableCreator
 
     Team.create!(name: "TEST TEAM")
 
-    cts.each{ |consumable_type| create_batch(consumable_type) }
+    cts.each { |consumable_type| create_batch(consumable_type) }
   end
 
-private
+  private
 
   def create_consumable_type(consumable_type)
     ct = ConsumableType.create(name: consumable_type["name"], days_to_keep: consumable_type["days_to_keep"])
     if consumable_type["recipe_ingredients"]
-      ct.recipe_ingredients = consumable_type["recipe_ingredients"].map{ |ingredient| ConsumableType.find_by!(name: ingredient) }
+      ct.recipe_ingredients = consumable_type["recipe_ingredients"].map { |ingredient| ConsumableType.find_by!(name: ingredient) }
       ct.save
     end
     ct
@@ -43,9 +43,11 @@ private
 
   def create_batch(consumable_type)
     batch = consumable_type.ingredients.create!(
-      expiry_date: Date.today.advance(days: consumable_type.days_to_keep).to_s(:uk),
-      type: 'Batch',
-      kitchen: Team.find_by!(name: "TEST TEAM")
+        expiry_date: Date.today.advance(days: consumable_type.days_to_keep).to_s(:uk),
+        type: 'Batch',
+        kitchen: Team.find_by!(name: "TEST TEAM"),
+        volume: 1,
+        unit: 'L',
     )
     consumable_type.recipe_ingredients.each do |recipe_ingredient|
       batch.ingredients << Lot.find_by(consumable_type: recipe_ingredient)
