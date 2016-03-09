@@ -1,0 +1,14 @@
+default: &default
+  host: http://hostname/path/to/print
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+
+staging:
+  <<: *default
