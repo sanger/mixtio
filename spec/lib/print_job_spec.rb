@@ -27,7 +27,7 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:barcode_text]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:reagent_name]).to eql(@batch.consumable_type.name)
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
-    expect(first_label[:label_1][:date]).to eql("Created: #{@batch.created_at.to_date.to_s(:uk)}")
+    expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date.to_s(:uk)}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:volume]).to be_nil
     expect(first_label[:label_1][:freezer_temperature]).to eql('LN2')
