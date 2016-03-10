@@ -36,12 +36,12 @@ ActiveRecord::Schema.define(version: 20160218152344) do
 
   create_table "consumables", force: :cascade do |t|
     t.integer  "batch_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "name"
     t.string   "barcode"
-    t.boolean  "depleted",   default: false
-    t.decimal  "volume"
+    t.boolean  "depleted",                            default: false
+    t.decimal  "volume",     precision: 10, scale: 3
     t.integer  "unit"
   end
 
@@ -63,10 +63,10 @@ ActiveRecord::Schema.define(version: 20160218152344) do
     t.string   "number"
     t.string   "type"
     t.date     "expiry_date"
-    t.decimal  "volume"
+    t.decimal  "volume",             precision: 10, scale: 3
     t.integer  "unit"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
   add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
