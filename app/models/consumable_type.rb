@@ -14,7 +14,7 @@ class ConsumableType < ActiveRecord::Base
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }
 
-  enum freezer_temperature: {
+  enum storage_condition: {
     "37°C": 0,
     "RT": 1,
     "+4°C": 2,
@@ -23,8 +23,8 @@ class ConsumableType < ActiveRecord::Base
     "LN2": 5
   }
 
-  def simple_freezer_temperature
-    freezer_temperature.gsub('°', '')
+  def simple_storage_condition
+    storage_condition.gsub('°', '')
   end
 
   # TODO: Remove this

@@ -41,7 +41,7 @@ protected
   end
 
   def consumable_type_params
-    params.require(:consumable_type).permit(:name, :days_to_keep, :freezer_temperature)
+    params.require(:consumable_type).permit(:name, :days_to_keep, :storage_condition)
   end
 
   def recipe_ingredient_id_params

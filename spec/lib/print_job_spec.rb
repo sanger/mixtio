@@ -30,7 +30,7 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date.to_s(:uk)}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:volume]).to be_nil
-    expect(first_label[:label_1][:freezer_temperature]).to eql('LN2')
+    expect(first_label[:label_1][:storage_condition]).to eql('LN2')
   end
 
   it "should serialize a volume if given one" do
@@ -46,9 +46,9 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:volume]).to eql("100uL")
   end
 
-  it "should serialize a batch with special symbols in freezer type" do
+  it "should serialize a batch with special symbols in storage condition" do
     batch = create(:batch_with_consumables)
-    batch.consumable_type.freezer_temperature = 0
+    batch.consumable_type.storage_condition = 0
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
@@ -56,12 +56,12 @@ RSpec.describe PrintJob, type: :model do
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
-    expect(first_label[:label_1][:freezer_temperature]).to eql('37C')
+    expect(first_label[:label_1][:storage_condition]).to eql('37C')
   end
 
-  it "should serialize a batch with special symbols in freezer type" do
+  it "should serialize a batch with special symbols in storage condition" do
     batch = create(:batch_with_consumables)
-    batch.consumable_type.freezer_temperature = 0
+    batch.consumable_type.storage_condition = 0
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
@@ -69,7 +69,7 @@ RSpec.describe PrintJob, type: :model do
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
-    expect(first_label[:label_1][:freezer_temperature]).to eql('37C')
+    expect(first_label[:label_1][:storage_condition]).to eql('37C')
   end
 
   it "should return true when a print job executes successfully" do
