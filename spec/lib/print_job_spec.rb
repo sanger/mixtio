@@ -78,7 +78,15 @@ RSpec.describe PrintJob, type: :model do
   end
 
   it "should return false when a print job fails" do
-    allow(RestClient).to receive(:post).and_throw(:an_error)
+    exception = RestClient::Exception.new(OpenStruct.new(code: 500))
+    allow(RestClient).to receive(:post).and_raise(exception)
     expect(@print_job.execute!).to eq(false)
+  end
+
+  it 'should populate errors when a 422 is thrown' do
+    exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
+    allow(RestClient).to receive(:post).and_raise(exception)
+    expect(@print_job.execute!).to eq(false)
+    expect(@print_job.errors).to eq(["Printer does not exist"])
   end
 end

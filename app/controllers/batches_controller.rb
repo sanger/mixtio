@@ -26,9 +26,12 @@ class BatchesController < ApplicationController
     print_job = PrintJob.new(print_params.merge(:batch => current_resource))
 
     if print_job.execute!
-      flash[:notice] = "Your labels have been printed"
+      flash[:notice] = ["Your labels have been printed"]
     else
-      flash[:error] = "Your labels could not be printed"
+      flash[:error] = ["Your labels could not be printed"]
+      print_job.errors.each do |error|
+          flash[:error] << error
+      end
     end
 
     redirect_to batch_path(@batch)

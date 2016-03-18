@@ -3,12 +3,13 @@ class PrintJob
 
   delegate :as_json, :to_json, to: :serializer
 
-  attr_reader :batch, :printer, :label_template_id
+  attr_reader :batch, :printer, :label_template_id, :errors
 
   def initialize(args)
     @batch = args[:batch]
     @printer = args[:printer]
     @label_template_id = args[:label_template_id]
+    @errors = []
   end
 
   def config
@@ -20,6 +21,10 @@ class PrintJob
       @response = RestClient.post config["host"], to_json, :content_type => :json
       response_successful?
     rescue => e
+      if e.http_code == 422
+        @errors = JSON.parse(e.response)['errors'].values.flat_map { |i| i }
+      end
+
       return false
     end
   end

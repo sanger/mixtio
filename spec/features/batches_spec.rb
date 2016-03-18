@@ -47,6 +47,33 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content("Your labels have been printed")
     end
 
+    it 'tells the user if there\'s and error' do
+      exception = RestClient::Exception.new(OpenStruct.new(code: 500))
+      allow(RestClient).to receive(:post).and_raise(exception)
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+      select @printer.name, from: "Printer"
+      click_button "Print"
+
+      expect(page).to have_content("Your labels could not be printed")
+    end
+
+    it 'tells the user the error if known' do
+      exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
+      allow(RestClient).to receive(:post).and_raise(exception)
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+      select @printer.name, from: "Printer"
+      click_button "Print"
+
+      expect(page).to have_content("Your labels could not be printed")
+      expect(page).to have_content("Printer does not exist")
+    end
+
   end
 
   describe '#index' do
