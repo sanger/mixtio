@@ -10,7 +10,7 @@
   </head>
   <body>
     <%= render "header" %>
-    <div class="top"></div>
+    <div class="top <%= ENV['RAILS_ENV'] %>"></div>
     <div class="main container">
       <%= render "flashes" %>
       <%= yield %>

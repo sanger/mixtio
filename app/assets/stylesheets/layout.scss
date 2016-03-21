@@ -6,8 +6,20 @@
 
 .top {
   @extend .nav;
-  background-color: #386164;
   height: 300px;
+
+  &.production {
+    background-color: #386164;
+  }
+  &.staging {
+    background-color: lightgreen;
+  }
+  &.development {
+    background-color: paleturquoise;
+  }
+  &.test {
+    background-color: red;
+  }
 }
 
 .main {
