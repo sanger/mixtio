@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :label_type do
-    name "MyString"
-external_id 1
+    sequence(:name) { |i| "Label Type #{i}"}
+    sequence(:external_id) { |n| n }
   end
 
 end

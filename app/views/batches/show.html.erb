@@ -1,4 +1,8 @@
 <section class="container">
+  <script type="text/javascript">
+    Mixtio.Bootstrap.Printers  = <%= json_escape(LabelType.all.map { |l| [l.external_id, l.printers.map { |p| p.name }]}.to_h.to_json.html_safe) %>
+  </script>
+
   <%= render "error_messages", target: @batch %>
   <h2>Batch <%= @batch.number %></h2>
 
@@ -47,7 +51,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Print labels for Batch <%= @batch.number %></h4>
         </div>
-        <%= form_tag(print_path(@batch), method: "post") do %>
+        <%= form_tag(print_path(@batch), method: "post", "data-behavior": "print_form") do %>
         <div class="modal-body">
 
           <div class="form-group">

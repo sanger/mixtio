@@ -6,10 +6,10 @@ class PrintJob
   attr_reader :batch, :printer, :label_template_id, :errors
 
   def initialize(args)
-    @batch = args[:batch]
-    @printer = args[:printer]
+    @batch             = args[:batch]
+    @printer           = args[:printer]
     @label_template_id = args[:label_template_id]
-    @errors = []
+    @errors            = []
   end
 
   def config
@@ -18,6 +18,14 @@ class PrintJob
 
   def execute!
     begin
+      label_type = LabelType.find_by(external_id: @label_template_id)
+      printer    = Printer.find_by(name: @printer)
+      @errors << 'No label type selected' if label_type.nil?
+      @errors << 'No printer selected' if printer.nil?
+      return false unless @errors.empty?
+      @errors << 'Printer does not support that label type' unless printer.in? label_type.printers
+      return false unless @errors.empty?
+
       @response = RestClient.post config["host"], to_json, :content_type => :json
       response_successful?
     rescue => e
@@ -29,7 +37,7 @@ class PrintJob
     end
   end
 
-private
+  private
 
   def serializer
     PrintJobSerializer.new(self)

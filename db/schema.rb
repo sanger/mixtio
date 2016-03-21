@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160316142810) do
+ActiveRecord::Schema.define(version: 20160321092209) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 20160316142810) do
     t.string   "name"
     t.integer  "days_to_keep"
     t.integer  "storage_condition", default: 0
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "consumables", force: :cascade do |t|
@@ -95,8 +95,11 @@ ActiveRecord::Schema.define(version: 20160316142810) do
   add_index "mixtures", ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
 
   create_table "printers", force: :cascade do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "label_type_id"
   end
+
+  add_index "printers", ["label_type_id"], name: "index_printers_on_label_type_id"
 
   create_table "recipes", force: :cascade do |t|
     t.integer  "consumable_type_id"
