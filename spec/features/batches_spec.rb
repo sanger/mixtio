@@ -262,6 +262,31 @@ RSpec.describe "Batches", type: feature, js: true do
 
         end
 
+        it 'adding new ingredient doesnt reset other ingredients' do
+          fill_out_form
+          click_button("Add Ingredient")
+
+          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
+
+          click_button("Add Ingredient")
+          all(:data_behavior, "remove_row").last.click
+          sleep 1
+
+          click_button "Create Batch"
+
+          expect(page).to have_content("Reagent batch successfully created")
+
+          batch = Batch.last
+
+          expect(batch.ingredients.size).to eq(4)
+
+          all_ingredients = @consumable_type.latest_ingredients << @lot
+
+          expect(batch.ingredients).to eq(all_ingredients)
+        end
+
         before do
           @consumable = create(:consumable)
         end

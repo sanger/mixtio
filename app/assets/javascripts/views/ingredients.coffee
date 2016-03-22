@@ -4,7 +4,8 @@ class Mixtio.Views.Ingredients extends Backbone.View
     @consumableTypes = options.consumableTypes
     @kitchens        = options.kitchens
 
-    @collection.on('reset update', () => @render())
+    @collection.on('reset', () => @render())
+    @collection.on('add', () => @add())
 
   render: () ->
     # Remove all the rows except the header
@@ -21,3 +22,13 @@ class Mixtio.Views.Ingredients extends Backbone.View
       @$el.append(ingredientView.render().el)
 
     this
+
+  add: () ->
+    ingredientView = new Mixtio.Views.Ingredient(
+      collection: @collection
+      model: @collection.models[@collection.length - 1]
+      consumableTypes: @consumableTypes
+      kitchens: @kitchens
+    )
+
+    @$el.append(ingredientView.render().el)
