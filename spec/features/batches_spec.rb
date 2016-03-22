@@ -9,7 +9,7 @@ RSpec.describe "Batches", type: feature, js: true do
   describe '#show' do
 
     before :each do
-      @batch = create(:batch)
+      @batch   = create(:batch)
       @printer = create(:printer)
     end
 
@@ -45,6 +45,54 @@ RSpec.describe "Batches", type: feature, js: true do
       click_button "Print"
 
       expect(page).to have_content("Your labels have been printed")
+    end
+
+    it 'tells the user if there\'s and error' do
+      exception = RestClient::Exception.new(OpenStruct.new(code: 500))
+      allow(RestClient).to receive(:post).and_raise(exception)
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+      select @printer.name, from: "Printer"
+      click_button "Print"
+
+      expect(page).to have_content("Your labels could not be printed")
+    end
+
+    it 'tells the user the error if known' do
+      exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
+      allow(RestClient).to receive(:post).and_raise(exception)
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+      select @printer.name, from: "Printer"
+      click_button "Print"
+
+      expect(page).to have_content("Your labels could not be printed")
+      expect(page).to have_content("Printer does not exist")
+    end
+
+    it 'should show the relevant printers to the selected label type' do
+      type_1    = create(:label_type)
+      type_2    = create(:label_type)
+      printer_1 = create(:printer, label_type: type_1)
+      printer_2 = create(:printer, label_type: type_1)
+      printer_3 = create(:printer, label_type: type_2)
+      printer_4 = create(:printer, label_type: type_2)
+
+      visit batch_path(@batch)
+      click_button "Print Labels"
+      sleep 1
+
+      select type_1.name, from: 'Label template'
+      expect(find('#printer').all('option').collect(&:text)).to include(printer_1.name)
+      expect(find('#printer').all('option').collect(&:text)).to include(printer_2.name)
+
+      select type_2.name, from: 'Label template'
+      expect(find('#printer').all('option').collect(&:text)).to include(printer_3.name)
+      expect(find('#printer').all('option').collect(&:text)).to include(printer_4.name)
     end
 
   end
@@ -84,7 +132,7 @@ RSpec.describe "Batches", type: feature, js: true do
       end
 
       it 'creates a new batch' do
-        expect { create_batch }.to change{ Batch.count }.by(1)
+        expect { create_batch }.to change { Batch.count }.by(1)
       end
 
       it 'creates a new consumable' do
@@ -92,7 +140,7 @@ RSpec.describe "Batches", type: feature, js: true do
       end
 
       it 'creates a new audit record' do
-        expect { create_batch }.to change{ Audit.count }.by(1)
+        expect { create_batch }.to change { Audit.count }.by(1)
       end
 
     end
@@ -131,7 +179,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       before do
         @consumable_type = create(:consumable_type)
-        @team = create(:team)
+        @team            = create(:team)
       end
 
       let(:fill_out_form) {
@@ -157,7 +205,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       before do
         @consumable_type = create(:consumable_type_with_ingredients)
-        @lot = create(:lot)
+        @lot             = create(:lot)
       end
 
       let(:fill_out_form) {

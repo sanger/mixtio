@@ -1,9 +1,15 @@
 <div class="flash">
   <% flash.each do |key, value| %>
-    <div class="<%= key %> alert alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-       <%= value %>
-    </div>
+      <div class="<%= key %> alert alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <% if value.kind_of? Array %>
+            <% value.each do |message| %>
+                <p><%= message %></p>
+            <% end %>
+        <% else %>
+            <p><%= value %></p>
+        <% end %>
+      </div>
   <% end %>
 </div>
