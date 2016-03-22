@@ -29,7 +29,7 @@ class BatchesController < ApplicationController
       flash[:notice] = ["Your labels have been printed"]
     else
       flash[:error] = ["Your labels could not be printed"]
-      print_job.errors.each do |error|
+      print_job.errors.to_a.each do |error|
           flash[:error] << error
       end
     end
