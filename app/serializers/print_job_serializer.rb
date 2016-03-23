@@ -1,9 +1,18 @@
 class PrintJobSerializer < ActiveModel::Serializer
 
-  attributes :label_template_id, :printer_name, :labels
+  # interim fix for json api integration
+  self.root = "data"
 
-  def printer_name
-    object.printer
+  attributes :attributes
+
+  def attributes
+    {
+      attributes: {
+        label_template_id: object.label_template_id,
+        printer_name: object.printer,
+        labels: labels
+      }
+    }
   end
 
   def labels
