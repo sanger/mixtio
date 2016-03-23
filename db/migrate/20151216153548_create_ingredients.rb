@@ -6,7 +6,7 @@ class CreateIngredients < ActiveRecord::Migration
       t.string :number
       t.string :type
       t.date :expiry_date
-      t.decimal :volume
+      t.decimal :volume, precision: 10, scale: 3
       t.integer :unit
       t.timestamps null: false
     end

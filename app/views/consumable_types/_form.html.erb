@@ -15,8 +15,8 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :freezer_temperature %>
-      <%= f.select :freezer_temperature, ConsumableType.freezer_temperatures.keys, { include_blank: true }, { class: 'form-control' } %>
+      <%= f.label :storage_condition %>
+      <%= f.select :storage_condition, ConsumableType.storage_conditions.keys, { include_blank: true }, { class: 'form-control' } %>
     </div>
 
     <div class="form-group">

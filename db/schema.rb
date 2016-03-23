@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218152344) do
+ActiveRecord::Schema.define(version: 20160321092209) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -29,19 +29,19 @@ ActiveRecord::Schema.define(version: 20160218152344) do
   create_table "consumable_types", force: :cascade do |t|
     t.string   "name"
     t.integer  "days_to_keep"
-    t.integer  "freezer_temperature", default: 0
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.integer  "storage_condition", default: 0
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "consumables", force: :cascade do |t|
     t.integer  "batch_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "name"
     t.string   "barcode"
-    t.boolean  "depleted",   default: false
-    t.decimal  "volume"
+    t.boolean  "depleted",                            default: false
+    t.decimal  "volume",     precision: 10, scale: 3
     t.integer  "unit"
   end
 
@@ -63,10 +63,10 @@ ActiveRecord::Schema.define(version: 20160218152344) do
     t.string   "number"
     t.string   "type"
     t.date     "expiry_date"
-    t.decimal  "volume"
+    t.decimal  "volume",             precision: 10, scale: 3
     t.integer  "unit"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
   add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
@@ -75,6 +75,13 @@ ActiveRecord::Schema.define(version: 20160218152344) do
   create_table "kitchens", force: :cascade do |t|
     t.string "name"
     t.string "type"
+  end
+
+  create_table "label_types", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "external_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "mixtures", force: :cascade do |t|
@@ -88,8 +95,11 @@ ActiveRecord::Schema.define(version: 20160218152344) do
   add_index "mixtures", ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
 
   create_table "printers", force: :cascade do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "label_type_id"
   end
+
+  add_index "printers", ["label_type_id"], name: "index_printers_on_label_type_id"
 
   create_table "recipes", force: :cascade do |t|
     t.integer  "consumable_type_id"

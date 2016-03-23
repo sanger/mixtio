@@ -1,5 +1,5 @@
 default: &default
-  host: http://dev.psd.sanger.ac.uk:7462/v1/print_jobs
+  host: http://hostname/path/to/print
 
 development:
   <<: *default

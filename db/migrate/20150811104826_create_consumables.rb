@@ -7,7 +7,7 @@ class CreateConsumables < ActiveRecord::Migration
       t.string :name
       t.string :barcode
       t.boolean :depleted, default: false
-      t.decimal :volume
+      t.decimal :volume, precision: 10, scale: 3
       t.integer :unit
     end
   end
