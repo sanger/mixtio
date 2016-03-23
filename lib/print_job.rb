@@ -31,7 +31,7 @@ class PrintJob
   def execute!
     begin
       if valid?
-        @response = RestClient.post config["host"], to_json, :content_type => :json
+        @response = RestClient.post config["host"], to_json, content_type: "application/vnd.api+json"
         response_successful?
       else
         return false
