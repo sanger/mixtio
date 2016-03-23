@@ -18,11 +18,11 @@ RSpec.describe PrintJob, type: :model do
   it "should serialize a batch into a label" do
     json = JSON.parse(@print_job.to_json, symbolize_names: true)
 
-    expect(json[:print_job]).to be_truthy
-    expect(json[:print_job][:printer_name]).to eql('ABC123')
-    expect(json[:print_job][:label_template_id]).to eql(1)
+    expect(json[:data]).to be_truthy
+    expect(json[:data][:attributes][:printer_name]).to eql('ABC123')
+    expect(json[:data][:attributes][:label_template_id]).to eql(1)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
@@ -42,7 +42,7 @@ RSpec.describe PrintJob, type: :model do
     batch.consumables.first.unit = 'μL'
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
@@ -55,7 +55,7 @@ RSpec.describe PrintJob, type: :model do
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
@@ -68,7 +68,7 @@ RSpec.describe PrintJob, type: :model do
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
