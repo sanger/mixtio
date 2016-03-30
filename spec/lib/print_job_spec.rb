@@ -32,21 +32,8 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
     expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date.to_s(:uk)}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
-    expect(first_label[:label_1][:volume]).to be_nil
+    expect(first_label[:label_1][:volume]).to eq("1.1mL")
     expect(first_label[:label_1][:storage_condition]).to eql('LN2')
-  end
-
-  it "should serialize a volume if given one" do
-    batch = create(:batch_with_consumables)
-    batch.consumables.first.volume = 100
-    batch.consumables.first.unit = 'μL'
-    print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
-    json = JSON.parse(print_job.to_json, symbolize_names: true)
-    labels = json[:data][:attributes][:labels]
-    expect(labels[:body]).to be_kind_of(Array)
-
-    first_label = labels[:body].first
-    expect(first_label[:label_1][:volume]).to eql("100uL")
   end
 
   it "should serialize a batch with special symbols in storage condition" do

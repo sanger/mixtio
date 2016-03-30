@@ -122,6 +122,7 @@ RSpec.describe "Batches", type: feature, js: true do
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
+        fill_in "Aliquot volume", with: 2.2
         fill_in "Batch Volume", with: 2.5
         click_button('Create Batch')
       }
@@ -214,6 +215,7 @@ RSpec.describe "Batches", type: feature, js: true do
         select @consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
+        fill_in "Aliquot volume", with: 1.1
         fill_in "Batch Volume", with: 3.3
       }
 
@@ -332,21 +334,12 @@ RSpec.describe "Batches", type: feature, js: true do
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
+        fill_in "Aliquot volume", with: 100
         fill_in "Batch Volume", with: 2.5
       }
       let("submit") {
         click_button('Create Batch')
       }
-
-      context 'is not given' do
-        it 'will not create volume or units' do
-          fill_in_required
-          submit
-
-          expect(Batch.last.consumables.first.volume).to be_nil
-          expect(Batch.last.consumables.first.unit).to be_nil
-        end
-      end
 
       context 'is given' do
         it 'will create volume and units' do

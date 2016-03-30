@@ -50,7 +50,7 @@ class ConsumableCreator
       end
     end
 
-    batch.consumables.create!(Array.new(rand(1..10), {}))
+    batch.consumables.create!(Array.new(rand(1..10), {volume: (1..100).step(0.1).to_a.sample, unit: Consumable.units.to_a.sample[0]}))
   end
 
 end

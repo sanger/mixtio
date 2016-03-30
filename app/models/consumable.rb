@@ -6,8 +6,8 @@ class Consumable < ActiveRecord::Base
   belongs_to :batch
   belongs_to :consumable_type
 
-  validates :batch, presence: true
-  validates :volume, allow_nil: true,  numericality: {greater_than: 0}
+  validates :batch, :volume, :unit, presence: true
+  validates :volume, numericality: {greater_than: 0}
 
   after_create :generate_barcode
 

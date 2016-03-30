@@ -21,7 +21,7 @@ class BatchForm
 
   validates :consumable_type_id, :expiry_date, :aliquots, :current_user, :batch_volume, presence: true
   validates :aliquots, numericality: {only_integer: true}
-  validates :aliquot_volume, numericality: {allow_blank: true, greater_than: 0}
+  validates :aliquot_volume, numericality: {greater_than: 0}
   validates :batch_volume, numericality: {greater_than: 0}
 
   validate do
@@ -71,7 +71,7 @@ class BatchForm
       ActiveRecord::Base.transaction do
         batch.save!
 
-        attributes = aliquot_volume.to_f > 0 ? {volume: aliquot_volume, unit: aliquot_unit.to_i} : {}
+        attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
         batch.consumables.create!(Array.new(aliquots.to_i, attributes))
 
         batch.create_audit(user: current_user, action: 'create')
