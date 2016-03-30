@@ -7,7 +7,7 @@ class ConsumableTypesController < ApplicationController
   end
 
   def create
-    @consumable_type = ConsumableType.new(consumable_type_params.merge(recipe_ingredient_ids: recipe_ingredient_id_params))
+    @consumable_type = ConsumableType.new(consumable_type_params)
     if @consumable_type.save
       @consumable_type.create_audit(user: current_user, action: 'create')
       redirect_to consumable_types_path, notice: "Consumable type successfully created"
@@ -26,7 +26,7 @@ class ConsumableTypesController < ApplicationController
 
   def update
     @consumable_type = current_resource
-    if @consumable_type.update_attributes(consumable_type_params.merge(recipe_ingredient_ids: recipe_ingredient_id_params))
+    if @consumable_type.update_attributes(consumable_type_params)
       @consumable_type.create_audit(user: current_user, action: 'update')
       redirect_to consumable_types_path, notice: "Consumable type successfully updated"
     else
@@ -42,10 +42,6 @@ protected
 
   def consumable_type_params
     params.require(:consumable_type).permit(:name, :days_to_keep, :storage_condition)
-  end
-
-  def recipe_ingredient_id_params
-    params.require(:recipe_ingredient_ids)
   end
 
   def current_resource

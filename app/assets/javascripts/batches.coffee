@@ -46,10 +46,15 @@ $ ->
       favouritesStarView.update(model, options)
       expiryDateView.update(model)
 
-      if model.get('recipe_ingredients').length is 0
-        ingredientsCollection.reset()
-      else
-        ingredientsCollection.findAndSetToLatest(model.get('recipe_ingredients'))
+      ingredients = model.get('latest_ingredients')?.map (ingredient) ->
+        type = Mixtio.Bootstrap.ConsumableTypes.filter((type) -> type.id == ingredient.consumable_type_id)[0]
+        {
+          consumable_type_id: type.id
+          number: type.latest_lot?.number
+          kitchen_id: type.latest_lot?.kitchen_id
+        }
+
+      ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
     )
 
     ## When the user favourites/unfavourites a Consumable Type, add/remove it to/from the collection

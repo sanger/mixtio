@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Consumable, type: :model do
 
   it "should generate a barcode after creation" do
-    consumable = create(:consumable, name: 'My consumable')
+    consumable = create(:consumable)
     expect(consumable.barcode).to eq("RGNT_#{consumable.id}")
   end
 

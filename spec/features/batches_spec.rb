@@ -204,14 +204,14 @@ RSpec.describe "Batches", type: feature, js: true do
     context 'when a selected consumable type has ingredients' do
 
       before do
-        @consumable_type = create(:consumable_type_with_ingredients)
-        @lot             = create(:lot)
+        @consumable_type = create(:consumable_type)
+        @lot             = create(:lot, consumable_type: @consumable_type)
+        @previous_batch  = create(:batch_with_ingredients, consumable_type: @consumable_type)
       end
 
       let(:fill_out_form) {
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
-        wait_for_ajax
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Batch Volume", with: 3.3
@@ -224,7 +224,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
         batch = Batch.last
         expect(batch.ingredients.size).to eq(3)
-        expect(batch.ingredients).to eq(@consumable_type.latest_ingredients)
+        expect(batch.ingredients).to eq(@previous_batch.ingredients)
       end
 
       describe 'editing ingredients' do

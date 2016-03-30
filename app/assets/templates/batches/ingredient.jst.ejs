@@ -3,7 +3,7 @@
           id="batch_form_ingredients__consumable_type_id">
     <option value=""></option>
     <% consumableTypes.each(function(consumableType) { %>
-      <option <%= (ingredient.get("consumable_type") && ingredient.get("consumable_type").id == consumableType.id) ? "selected" : "" %>
+      <option <%= ((ingredient.get("consumable_type") ? ingredient.get("consumable_type").id : ingredient.get('consumable_type_id')) == consumableType.id) ? "selected" : "" %>
         value="<%= consumableType.id %>"><%= consumableType.get("name") %></option>
     <% }) %>
   </select>
@@ -17,7 +17,7 @@
     <option value=""></option>
     <% kitchens.each(function(kitchen) { %>
       <option
-        <%= (ingredient.get("kitchen") && ingredient.get("kitchen").id == kitchen.id) ? "selected" : "" %>
+        <%= ((ingredient.get("kitchen") ? ingredient.get("kitchen").id : ingredient.get("kitchen_id")) == kitchen.id) ? "selected" : "" %>
         value="<%= kitchen.id %>"><%= kitchen.get("name") %></option>
     <% }) %>
   </select>

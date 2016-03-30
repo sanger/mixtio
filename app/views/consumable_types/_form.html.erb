@@ -1,7 +1,6 @@
 <%= form_for @consumable_type, html: {"data-behavior": "consumable_type_form"} do |f| %>
     <script type="text/javascript">
       Mixtio.Bootstrap.ConsumableTypes   = <%= json_escape(ConsumableType.order_by_name.to_json.html_safe) %>
-      Mixtio.Bootstrap.RecipeIngredients = <%= json_escape(@consumable_type.recipe_ingredients.to_json.html_safe) %>
     </script>
 
     <div class="form-group">
@@ -17,30 +16,6 @@
     <div class="form-group">
       <%= f.label :storage_condition %>
       <%= f.select :storage_condition, ConsumableType.storage_conditions.keys, { include_blank: true }, { class: 'form-control' } %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :ingredient_ids, 'Recipe' %>
-      <%= hidden_field_tag "recipe_ingredient_ids[]" %>
-
-      <div class="row">
-        <div class="col-md-12">
-          <table class="table table-striped">
-            <tr>
-              <th>Consumable Type</th><th></th>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12 text-right">
-          <button id="add_ingredient_button" class="btn btn-primary">
-            <%= fa_icon "plus" %> Add Ingredient
-          </button>
-        </div>
-
-      </div>
     </div>
 
     <div class="form-group">

@@ -37,8 +37,8 @@ class BatchForm
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
 
-      if Team.exists?(ingredient[:kitchen_id])
-        errors[:ingredient] << "with number #{ingredient[:number]} could not be found" if !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
+      if Team.exists?(ingredient[:kitchen_id]) and !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
+        errors[:ingredient] << "with number #{ingredient[:number]} could not be found"
       end
 
     end

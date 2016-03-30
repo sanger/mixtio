@@ -14,6 +14,10 @@ FactoryGirl.define do
       consumables { build_list :consumable, 3 }
     end
 
+    factory :batch_with_ingredients, parent: :batch do
+      mixtures { build_list :mixture, 3 }
+    end
+
     factory :lot, class: 'Lot' do
     end
   end
