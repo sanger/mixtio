@@ -5,7 +5,7 @@ describe Api::V1::ConsumableTypesController, type: :request do
   describe "GET #show" do
 
     it "should return a serialized consumable by barcode" do
-      consumable_type = create(:consumable_type_with_ingredients)
+      consumable_type = create(:consumable_type)
 
       get api_v1_consumable_type_path(consumable_type)
       expect(response).to be_success
@@ -15,7 +15,6 @@ describe Api::V1::ConsumableTypesController, type: :request do
       expect(json[:id]).to eq(consumable_type.id)
       expect(json[:name]).to eq(consumable_type.name)
       expect(json[:days_to_keep]).to eq(consumable_type.days_to_keep)
-      expect(json[:recipe_ingredients].length).to eq(consumable_type.recipe_ingredients.count)
     end
 
     context "Consumable Type does not exist" do

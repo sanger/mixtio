@@ -23,12 +23,7 @@ class ConsumableCreator
   private
 
   def create_consumable_type(consumable_type)
-    ct = ConsumableType.create(name: consumable_type["name"], days_to_keep: consumable_type["days_to_keep"])
-    if consumable_type["recipe_ingredients"]
-      ct.recipe_ingredients = consumable_type["recipe_ingredients"].map { |ingredient| ConsumableType.find_by!(name: ingredient) }
-      ct.save
-    end
-    ct
+    ConsumableType.create(name: consumable_type["name"], days_to_keep: consumable_type["days_to_keep"])
   end
 
   def create_supplier(supplier)
@@ -42,15 +37,17 @@ class ConsumableCreator
   end
 
   def create_batch(consumable_type)
-    batch = consumable_type.ingredients.create!(
+    batch = consumable_type.batches.create!(
         expiry_date: Date.today.advance(days: consumable_type.days_to_keep).to_s(:uk),
-        type: 'Batch',
         kitchen: Team.find_by!(name: "TEST TEAM"),
         volume: 1,
         unit: 'L',
     )
-    consumable_type.recipe_ingredients.each do |recipe_ingredient|
-      batch.ingredients << Lot.find_by(consumable_type: recipe_ingredient)
+    recipe_ingredients = params["consumable_types"].select { |item| item['name'] == consumable_type.name }[0]["recipe_ingredients"]
+    if recipe_ingredients
+      recipe_ingredients.each do |recipe_ingredient|
+        batch.ingredients << Lot.find_by(consumable_type: ConsumableType.find_by(name: recipe_ingredient))
+      end
     end
 
     batch.consumables.create!(Array.new(rand(1..10), {}))

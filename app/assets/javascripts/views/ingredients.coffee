@@ -32,3 +32,9 @@ class Mixtio.Views.Ingredients extends Backbone.View
     )
 
     @$el.append(ingredientView.render().el)
+
+  update: (ingredients) ->
+    @collection.reset()
+
+    ingredients.each (ingredient) =>
+      @collection.add(ingredient)

@@ -3,42 +3,37 @@ class ConsumableType < ActiveRecord::Base
   include Auditable
   include HasOrderByName
 
-  has_many :ingredients
-
-  has_many :recipes
-  has_many :recipe_ingredients, :through => :recipes
-
+  has_many :batches
+  has_many :lots
   has_many :favourites
-  has_many :users, :through => :favourites
+  has_many :users, through: :favourites
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true, uniqueness: {case_sensitive: false}
   validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }
 
   enum storage_condition: {
-    "37°C": 0,
-    "RT": 1,
-    "+4°C": 2,
-    "-20°C": 3,
-    "-80°C": 4,
-    "LN2": 5
+      "37°C":  0,
+      "RT":    1,
+      "+4°C":  2,
+      "-20°C": 3,
+      "-80°C": 4,
+      "LN2":   5
   }
 
   def simple_storage_condition
     storage_condition.gsub('°', '')
   end
 
-  # TODO: Remove this
   def latest_ingredients
-    return unless recipe_ingredients
-    recipe_ingredients.map do |recipe_ingredient|
-      Ingredient.where("consumable_type_id = ?", recipe_ingredient.id)
-        .order(created_at: :desc)
-        .first
-    end
+    batches.last ? batches.last.ingredients : []
+  end
+
+  def latest_lot
+    lots.last
   end
 
   def self.find_user_favourites(user)
-    ConsumableType.joins(:favourites).where(favourites: { user_id: user.id }).order(:name)
+    ConsumableType.joins(:favourites).where(favourites: {user_id: user.id}).order(:name)
   end
 
 end

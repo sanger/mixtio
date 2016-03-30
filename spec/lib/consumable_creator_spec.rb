@@ -16,7 +16,6 @@ RSpec.describe ConsumableCreator, type: :model do
       consumable_type = ConsumableType.find_by_name(consumable_type["name"])
       expect(consumable_type).to_not be_nil
       expect(consumable_type.days_to_keep).to be_present
-      expect(consumable_type.ingredients).to_not be_nil
     end
   end
 

@@ -4,7 +4,6 @@ class CreateConsumables < ActiveRecord::Migration
       t.belongs_to :batch, index: true, foreign_key: true
 
       t.timestamps null: false
-      t.string :name
       t.string :barcode
       t.boolean :depleted, default: false
       t.decimal :volume, precision: 10, scale: 3
