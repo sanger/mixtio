@@ -24,6 +24,10 @@ class ConsumableType < ActiveRecord::Base
     storage_condition.gsub('°', '')
   end
 
+  def latest_batch
+    batches.last
+  end
+
   def latest_ingredients
     batches.last ? batches.last.ingredients : []
   end

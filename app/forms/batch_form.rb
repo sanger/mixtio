@@ -5,7 +5,7 @@ class BatchForm
   include ActiveModel::Validations
 
   ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :batch_volume, :current_user]
+                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode]
 
   attr_accessor *ATTRIBUTES
 
@@ -19,10 +19,9 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, :batch_volume, presence: true
+  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
   validates :aliquots, numericality: {only_integer: true}
-  validates :aliquot_volume, numericality: {allow_blank: true, greater_than: 0}
-  validates :batch_volume, numericality: {greater_than: 0}
+  validates :aliquot_volume, numericality: {greater_than: 0}
 
   validate do
     unless batch.valid?
@@ -60,8 +59,7 @@ class BatchForm
 
   def batch
     @batch ||= Batch.new(consumable_type_id: consumable_type_id, expiry_date: expiry_date,
-                         ingredients: find_ingredients, kitchen: current_user.team,
-                         volume: batch_volume, unit: 'L')
+                         ingredients: find_ingredients, kitchen: current_user.team)
   end
 
   def save
@@ -71,8 +69,16 @@ class BatchForm
       ActiveRecord::Base.transaction do
         batch.save!
 
-        attributes = aliquot_volume.to_f > 0 ? {volume: aliquot_volume, unit: aliquot_unit.to_i} : {}
+        attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
         batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+
+        if single_barcode == '1'
+          barcode = batch.consumables.first.barcode
+          batch.consumables.each do |consumable|
+            consumable.barcode = barcode
+            consumable.save!
+          end
+        end
 
         batch.create_audit(user: current_user, action: 'create')
       end

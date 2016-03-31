@@ -6,8 +6,6 @@ FactoryGirl.define do
 
     factory :batch, parent: :ingredient, class: 'Batch' do
       expiry_date { 33.days.from_now }
-      volume { 1 }
-      unit { 'L' }
     end
 
     factory :batch_with_consumables, parent: :batch do

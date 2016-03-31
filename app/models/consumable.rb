@@ -6,15 +6,17 @@ class Consumable < ActiveRecord::Base
   belongs_to :batch
   belongs_to :consumable_type
 
-  validates :batch, presence: true
-  validates :volume, allow_nil: true,  numericality: {greater_than: 0}
+  validates :batch, :volume, :unit, presence: true
+  validates :volume, numericality: {greater_than: 0}
 
   after_create :generate_barcode
 
   private
 
   def generate_barcode
-    update_column(:barcode, Barcode.create(self))
+    if barcode.nil?
+      update_column(:barcode, "#{Rails.configuration.barcode_prefix}#{id}")
+    end
   end
 
 end

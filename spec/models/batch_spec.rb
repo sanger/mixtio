@@ -38,10 +38,26 @@ RSpec.describe Batch, type: :model do
     expect(build(:batch)).to respond_to(:audits)
   end
 
-  it "should require volume" do
-    expect(build(:batch, volume: nil)).to_not be_valid
+  it "should say single barcode is false if consumable barcodes differ" do
+    batch = create(:batch_with_consumables)
+
+    expect(batch.single_barcode?).to eq(false)
   end
-  it "should require volume" do
-    expect(build(:batch, unit: nil)).to_not be_valid
+
+  it "should say single barcode is true if consumable barcodes are all the same" do
+    batch = create(:batch)
+    consumable = create(:consumable)
+    batch.consumables = (1..3).map { |n| consumable.dup }
+
+    expect(batch.single_barcode?).to eq(true)
+  end
+
+  it 'should total the volumes of the consumables' do
+    batch = create(:batch)
+    batch.consumables << create(:consumable, volume: 5, unit: 'mL')
+    batch.consumables << create(:consumable, volume: 2, unit: 'mL')
+    batch.consumables << create(:consumable, volume: 1, unit: 'L')
+
+    expect(batch.display_volume).to eq('1.007L')
   end
 end

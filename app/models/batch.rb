@@ -9,12 +9,22 @@ class Batch < Ingredient
   has_many :ingredients, through: :mixtures
 
   validates :expiry_date, presence: true, expiry_date: true
-  validates :volume, presence: true, numericality: {greater_than: 0}
-  validates :unit, presence: true
 
   after_create :generate_batch_number
 
   scope :order_by_created_at, -> { order('created_at desc') }
+
+  def single_barcode?
+    consumables.all? {|x| x.barcode == consumables.first.barcode}
+  end
+
+  def volume
+    consumables.map{ |c| c.volume * (10 ** Consumable.units[c.unit]) }.reduce(0, :+)
+  end
+
+  def unit
+    'L'
+  end
 
   private
 
