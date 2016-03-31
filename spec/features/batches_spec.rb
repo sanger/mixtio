@@ -395,7 +395,46 @@ RSpec.describe "Batches", type: feature, js: true do
       fill_in "Aliquot volume", with: 5
       select "mL", from: "Aliquot unit"
 
-      expect(page.find('#calculated-batch-volume').value).to eq('0.015')
+      expect(page.find('#calculated_batch_volume').value).to eq('0.015')
+    end
+
+    context 'when the selected consumable type has been made before' do
+
+      before :each do
+        @consumable_type = create(:consumable_type)
+        @lot             = create(:lot, consumable_type: @consumable_type)
+        @previous_batch  = create(:batch_with_consumables, consumable_type: @consumable_type)
+      end
+
+      let(:fill_out_form) {
+        visit new_batch_path
+        select @consumable_type.name, from: 'Consumable Type'
+      }
+
+      it 'should populate the previous aliquot values' do
+        fill_out_form
+        click_button "Create Batch"
+        expect(page).to have_content("Reagent batch successfully created")
+
+        batch = Batch.last
+        expect(batch.consumables.count).to eq(@previous_batch.consumables.count)
+        expect(batch.consumables.first.volume).to eq(@previous_batch.consumables.first.volume)
+        expect(batch.consumables.first.unit).to eq(@previous_batch.consumables.first.unit)
+      end
+
+      it 'should update the batch volume' do
+        fill_out_form
+
+        expect(page.find('#calculated_batch_volume').value.to_f).to_not eq(0)
+      end
+    end
+
+    it 'shouldn\'t cause errors when setting consumable type to blank' do
+      consumable_type = create(:consumable_type)
+      visit new_batch_path
+
+      select consumable_type.name, from: 'Consumable Type'
+      select '', from: 'Consumable Type'
     end
   end
 end
