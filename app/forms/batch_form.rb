@@ -5,7 +5,8 @@ class BatchForm
   include ActiveModel::Validations
 
   ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :batch_volume, :current_user]
+                :aliquot_volume, :aliquot_unit, :batch_volume, :current_user,
+                :single_barcode]
 
   attr_accessor *ATTRIBUTES
 
@@ -73,6 +74,14 @@ class BatchForm
 
         attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
         batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+
+        if single_barcode == '1'
+          barcode = batch.consumables.first.barcode
+          batch.consumables.each do |consumable|
+            consumable.barcode = barcode
+            consumable.save!
+          end
+        end
 
         batch.create_audit(user: current_user, action: 'create')
       end

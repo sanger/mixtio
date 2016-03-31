@@ -352,5 +352,44 @@ RSpec.describe "Batches", type: feature, js: true do
         end
       end
     end
+
+    describe 'when generate single barcode checkbox' do
+      let(:fill_in_required) {
+        visit new_batch_path
+        select @batch.consumable_type.name, from: 'Consumable Type'
+        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Number of Aliquots", with: 3
+        fill_in "Aliquot volume", with: 100
+        fill_in "Batch Volume", with: 2.5
+      }
+      let("submit") {
+        click_button('Create Batch')
+      }
+
+      context 'is unchecked' do
+        it 'will make three different barcodes' do
+          fill_in_required
+          submit
+
+          expect(Batch.last.consumables.count).to eq(3)
+          expect(Batch.last.consumables[0].barcode).to_not eq(Batch.last.consumables[1].barcode)
+          expect(Batch.last.consumables[0].barcode).to_not eq(Batch.last.consumables[2].barcode)
+          expect(Batch.last.consumables[1].barcode).to_not eq(Batch.last.consumables[2].barcode)
+        end
+      end
+
+      context 'is checked' do
+        it 'will make a single barcode' do
+          fill_in_required
+          check 'All aliquots share one barcode'
+          submit
+
+          expect(Batch.last.consumables.count).to eq(3)
+          expect(Batch.last.consumables[0].barcode).to eq(Batch.last.consumables[1].barcode)
+          expect(Batch.last.consumables[0].barcode).to eq(Batch.last.consumables[2].barcode)
+          expect(Batch.last.consumables[1].barcode).to eq(Batch.last.consumables[2].barcode)
+        end
+      end
+    end
   end
 end

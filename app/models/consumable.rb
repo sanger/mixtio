@@ -14,7 +14,9 @@ class Consumable < ActiveRecord::Base
   private
 
   def generate_barcode
-    update_column(:barcode, Barcode.create(self))
+    if barcode.nil?
+      update_column(:barcode, "#{Rails.configuration.barcode_prefix}#{id}")
+    end
   end
 
 end

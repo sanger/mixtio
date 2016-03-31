@@ -87,6 +87,12 @@
       </div>
     </div>
 
+    <div class="checkbox">
+      <%= f.label :single_barcode do %>
+        <%= f.check_box :single_barcode %> All aliquots share one barcode
+      <% end %>
+    </div>
+
     <div class="form-group">
       <%= f.submit 'Create Batch', { class: 'btn btn-primary pull-right' } %>
     </div>

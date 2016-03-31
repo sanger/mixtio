@@ -16,7 +16,12 @@ class PrintJobSerializer < ActiveModel::Serializer
   end
 
   def labels
-    { body: ActiveModel::ArraySerializer.new(object.batch.consumables, each_serializer: ConsumableLabelSerializer) }
+
+    if object.batch.single_barcode?
+      { body: ActiveModel::ArraySerializer.new([object.batch.consumables.first], each_serializer: ConsumableLabelSerializer) }
+    else
+      { body: ActiveModel::ArraySerializer.new(object.batch.consumables, each_serializer: ConsumableLabelSerializer) }
+    end
   end
 
 end

@@ -16,6 +16,10 @@ class Batch < Ingredient
 
   scope :order_by_created_at, -> { order('created_at desc') }
 
+  def single_barcode?
+    consumables.all? {|x| x.barcode == consumables.first.barcode}
+  end
+
   private
 
   def generate_batch_number
