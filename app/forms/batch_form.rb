@@ -5,8 +5,7 @@ class BatchForm
   include ActiveModel::Validations
 
   ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :batch_volume, :current_user,
-                :single_barcode]
+                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode]
 
   attr_accessor *ATTRIBUTES
 
@@ -20,10 +19,9 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, :batch_volume, presence: true
+  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
   validates :aliquots, numericality: {only_integer: true}
   validates :aliquot_volume, numericality: {greater_than: 0}
-  validates :batch_volume, numericality: {greater_than: 0}
 
   validate do
     unless batch.valid?
@@ -61,8 +59,7 @@ class BatchForm
 
   def batch
     @batch ||= Batch.new(consumable_type_id: consumable_type_id, expiry_date: expiry_date,
-                         ingredients: find_ingredients, kitchen: current_user.team,
-                         volume: batch_volume, unit: 'L')
+                         ingredients: find_ingredients, kitchen: current_user.team)
   end
 
   def save

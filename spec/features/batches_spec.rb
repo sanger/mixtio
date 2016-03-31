@@ -123,7 +123,6 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 2.2
-        fill_in "Batch Volume", with: 2.5
         click_button('Create Batch')
       }
 
@@ -216,7 +215,6 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 1.1
-        fill_in "Batch Volume", with: 3.3
       }
 
       it 'saves the batch with the consumable type\'s latest ingredients' do
@@ -335,7 +333,6 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 100
-        fill_in "Batch Volume", with: 2.5
       }
       let("submit") {
         click_button('Create Batch')
@@ -360,7 +357,6 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 100
-        fill_in "Batch Volume", with: 2.5
       }
       let("submit") {
         click_button('Create Batch')
@@ -390,6 +386,16 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(Batch.last.consumables[1].barcode).to eq(Batch.last.consumables[2].barcode)
         end
       end
+    end
+
+    it 'should calculate the batch volume' do
+      visit new_batch_path
+
+      fill_in "Number of Aliquots", with: 3
+      fill_in "Aliquot volume", with: 5
+      select "mL", from: "Aliquot unit"
+
+      expect(page.find('#calculated-batch-volume').value).to eq('0.015')
     end
   end
 end

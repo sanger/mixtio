@@ -17,7 +17,7 @@
     <% if @batch.consumables.length > 0 and @batch.consumables.first.display_volume %>
       <li><strong>Aliquot Volume: </strong><%= @batch.consumables.first.display_volume %></li>
     <% end %>
-    <li><strong>Batch Volume: </strong><%= @batch.display_volume%></li>
+    <li><strong>Batch Volume: </strong><%= @batch.display_volume %></li>
     <li><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></li>
   </ul>
 
