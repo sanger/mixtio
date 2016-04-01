@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321092209) do
+ActiveRecord::Schema.define(version: 20160331153128) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -64,10 +64,12 @@ ActiveRecord::Schema.define(version: 20160321092209) do
     t.date     "expiry_date"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "user_id"
   end
 
   add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
   add_index "ingredients", ["kitchen_id"], name: "index_ingredients_on_kitchen_id"
+  add_index "ingredients", ["user_id"], name: "index_ingredients_on_user_id"
 
   create_table "kitchens", force: :cascade do |t|
     t.string "name"

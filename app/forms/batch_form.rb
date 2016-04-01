@@ -59,7 +59,8 @@ class BatchForm
 
   def batch
     @batch ||= Batch.new(consumable_type_id: consumable_type_id, expiry_date: expiry_date,
-                         ingredients: find_ingredients, kitchen: current_user.team)
+                         ingredients: find_ingredients, kitchen: current_user.team,
+                         user: current_user.user)
   end
 
   def save

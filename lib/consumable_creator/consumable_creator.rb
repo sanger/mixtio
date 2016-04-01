@@ -16,6 +16,7 @@ class ConsumableCreator
     end
 
     Team.create!(name: "TEST TEAM")
+    User.create!(username: 'test', team: Team.last)
 
     cts.each { |consumable_type| create_batch(consumable_type) }
   end
@@ -38,8 +39,9 @@ class ConsumableCreator
 
   def create_batch(consumable_type)
     batch = consumable_type.batches.create!(
-        expiry_date: Date.today.advance(days: consumable_type.days_to_keep).to_s(:uk),
-        kitchen: Team.find_by!(name: "TEST TEAM")
+        expiry_date: Date.today.advance(days: consumable_type.days_to_keep),
+        kitchen: Team.find_by!(name: "TEST TEAM"),
+        user: User.find_by!(username: 'test')
     )
     recipe_ingredients = params["consumable_types"].select { |item| item['name'] == consumable_type.name }[0]["recipe_ingredients"]
     if recipe_ingredients

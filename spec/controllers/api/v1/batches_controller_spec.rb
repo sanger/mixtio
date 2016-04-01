@@ -17,7 +17,7 @@ describe Api::V1::BatchesController, type: :request do
       expect(consumable_type[:id]).to eql(batch.consumable_type.id)
       expect(consumable_type[:uri]).to include(api_v1_consumable_type_path batch.consumable_type)
 
-      expect(batch_response[:expiry_date]).to eql(batch.expiry_date.to_s)
+      expect(batch_response[:expiry_date]).to eql(batch.expiry_date.to_s(:defualt))
     end
 
     context "batch does not exist" do

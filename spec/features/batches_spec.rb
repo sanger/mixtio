@@ -18,6 +18,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       expect(page).to have_content(@batch.number)
       expect(page).to have_content(@batch.kitchen.name)
+      expect(page).to have_content(@batch.user.username)
       expect(page).to have_content(@batch.consumable_type.name)
       expect(page).to have_content(@batch.expiry_date)
       expect(page).to have_content(@batch.consumables.length)
@@ -171,7 +172,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       it 'sets the expiry date', js: true do
         select_a_consumable_type
-        expect(find_field("Expiry Date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_s(:uk))
+        expect(find_field("Expiry Date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_date.to_s(:default))
       end
     end
 
