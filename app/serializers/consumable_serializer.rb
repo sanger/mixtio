@@ -2,7 +2,7 @@ class ConsumableSerializer < ActiveModel::Serializer
 
   self.root = false
 
-  attributes :id, :depleted, :barcode
+  attributes :id, :created_at, :barcode, :volume, :unit, :depleted
 
   has_one :batch
 

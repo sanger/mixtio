@@ -15,6 +15,7 @@ describe Api::V1::ConsumableTypesController, type: :request do
       expect(json[:id]).to eq(consumable_type.id)
       expect(json[:name]).to eq(consumable_type.name)
       expect(json[:days_to_keep]).to eq(consumable_type.days_to_keep)
+      expect(json[:storage_condition]).to eq(consumable_type.storage_condition)
     end
 
     context "Consumable Type does not exist" do
