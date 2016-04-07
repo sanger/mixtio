@@ -12,10 +12,10 @@ describe Api::V1::ConsumableTypesController, type: :request do
 
       json = JSON.parse(response.body, symbolize_names: true)
 
-      expect(json[:id]).to eq(consumable_type.id)
-      expect(json[:name]).to eq(consumable_type.name)
-      expect(json[:days_to_keep]).to eq(consumable_type.days_to_keep)
-      expect(json[:storage_condition]).to eq(consumable_type.storage_condition)
+      expect(json[:data][:id]).to eq(consumable_type.id.to_s)
+      expect(json[:data][:attributes][:name]).to eq(consumable_type.name)
+      expect(json[:data][:attributes][:days_to_keep]).to eq(consumable_type.days_to_keep)
+      expect(json[:data][:attributes][:storage_condition]).to eq(consumable_type.storage_condition)
     end
 
     context "Consumable Type does not exist" do

@@ -10,8 +10,8 @@ describe Api::V1::SuppliersController, type: :request do
       expect(response).to be_success
       supplier_response = JSON.parse(response.body, symbolize_names: true)
 
-      expect(supplier_response[:id]).to eql(supplier.id)
-      expect(supplier_response[:name]).to eql(supplier.name)
+      expect(supplier_response[:data][:id]).to eql(supplier.id.to_s)
+      expect(supplier_response[:data][:attributes][:name]).to eql(supplier.name)
     end
 
     context "supplier does not exist" do

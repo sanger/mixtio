@@ -1,27 +1,25 @@
 class PrintJobSerializer < ActiveModel::Serializer
 
-  # interim fix for json api integration
-  self.root = "data"
+  attributes :label_template_id, :printer_name, :labels
 
-  attributes :attributes
+  def label_template_id
+    object.label_template_id
+  end
 
-  def attributes
-    {
-      attributes: {
-        label_template_id: object.label_template_id,
-        printer_name: object.printer,
-        labels: labels
-      }
-    }
+  def printer_name
+    object.printer
   end
 
   def labels
-
     if object.batch.single_barcode?
-      { body: ActiveModel::ArraySerializer.new([object.batch.consumables.first], each_serializer: ConsumableLabelSerializer) }
+      consumables = [object.batch.consumables.first]
     else
-      { body: ActiveModel::ArraySerializer.new(object.batch.consumables, each_serializer: ConsumableLabelSerializer) }
+      consumables = object.batch.consumables
     end
+
+    {
+        body: consumables.map { |consumable| ConsumableLabelSerializer.new(consumable).attributes }
+    }
   end
 
 end

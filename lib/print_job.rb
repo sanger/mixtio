@@ -1,8 +1,6 @@
 class PrintJob
-  include ActiveModel::SerializerSupport
-  include ActiveModel::Model
 
-  delegate :as_json, :to_json, to: :serializer
+  include ActiveModel::Model
 
   attr_accessor :batch, :printer, :label_template_id
 
@@ -47,6 +45,14 @@ class PrintJob
       end
       return false
     end
+  end
+
+  def to_json
+    {
+        data: {
+            attributes: serializer.attributes
+        }
+    }.to_json
   end
 
   private
