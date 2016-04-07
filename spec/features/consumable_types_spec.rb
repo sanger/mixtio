@@ -16,7 +16,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
       click_link "New Consumable Type"
 
       fill_in "Name*", with: consumable_type.name
-      fill_in "Days to Keep*", with: consumable_type.days_to_keep
+      fill_in "Days to Keep", with: consumable_type.days_to_keep
       select consumable_type.storage_condition, from: "Storage condition"
 
       click_button "Create Consumable type"
@@ -49,7 +49,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
     let(:edit_a_consumable_type) do
       visit edit_consumable_type_path(saved_consumable_type)
       fill_in "Name*", with: consumable_type.name
-      fill_in "Days to Keep*", with: 9
+      fill_in "Days to Keep", with: 9
       select "RT", from: "Storage condition"
       click_button "Update Consumable type"
     end

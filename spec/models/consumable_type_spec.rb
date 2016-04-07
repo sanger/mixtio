@@ -11,8 +11,9 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type, name: consumable_type.name)).to_not be_valid
   end
 
-  it "should not be valid without a days_to_keep greater than zero" do
-    expect(build(:consumable_type, days_to_keep: 0)).to_not be_valid
+  it "should not be valid without a days_to_keep greater or equal to than zero" do
+    expect(build(:consumable_type, days_to_keep: 0)).to be_valid
+    expect(build(:consumable_type, days_to_keep: -1)).to_not be_valid
     expect(build(:consumable_type, days_to_keep: 'abc')).to_not be_valid
     expect(build(:consumable_type, days_to_keep: '')).to be_valid
   end

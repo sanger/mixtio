@@ -24,14 +24,6 @@ class BatchForm
   validates :aliquot_volume, numericality: {greater_than: 0}
 
   validate do
-    unless batch.valid?
-      batch.errors.each do |key, values|
-        errors[key] = values
-      end
-    end
-  end
-
-  validate do
     selected_ingredients.each do |ingredient|
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?

@@ -9,7 +9,7 @@ class ConsumableType < ActiveRecord::Base
   has_many :users, through: :favourites
 
   validates :name, presence: true, uniqueness: {case_sensitive: false}
-  validates_numericality_of :days_to_keep, greater_than: 0, if: Proc.new { |ct| ct.days_to_keep.present? }
+  validates :days_to_keep, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
 
   enum storage_condition: {
       "37°C":  0,
