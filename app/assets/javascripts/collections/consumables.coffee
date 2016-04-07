@@ -5,4 +5,4 @@ class Mixtio.Collections.Consumables extends Backbone.Collection
   model: Mixtio.Models.Consumable
 
   parse: (response, options) ->
-    response.consumables
+    response.data[0]

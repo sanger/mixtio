@@ -18,24 +18,18 @@ class Api::V1::ApiController < ApplicationController
 
     instance_variable_set(plural_resource_name, resources)
     resource = instance_variable_get(plural_resource_name)
-    render json: resource, meta: pagination_dict(resource)
+    render json: resource, include: includes
   end
 
   # GET /api/{plural_resource_name}/1
   def show
-    render json: get_resource
+    render json: get_resource, include: includes
   end
 
   private
 
-  def pagination_dict(object)
-    {
-      current_page: object.current_page,
-      next_page: object.next_page,
-      prev_page: object.prev_page,
-      total_pages: object.total_pages,
-      total_count: object.total_count
-    }
+  def includes
+    []
   end
 
   # Returns the resource from the created instance variable

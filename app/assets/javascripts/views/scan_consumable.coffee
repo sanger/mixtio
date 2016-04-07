@@ -30,6 +30,14 @@ class Mixtio.Views.ScanConsumable extends Backbone.View
             .batch()
             .fetch(
               success: (model) =>
+                data = model.get('data')
+
+                model = new Mixtio.Models.Batch(
+                  id: data.id
+                  consumable_type_id: data.relationships.consumable_type.data.id
+                  kitchen_id: data.relationships.kitchen.data.id
+                  number: data.attributes.number
+                )
                 # Don't add the Ingredient if it's already in there
                 if @collection.where(id: model.id).length is 0
                   @collection.add(model)
