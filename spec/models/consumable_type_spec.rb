@@ -16,6 +16,7 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type, days_to_keep: -1)).to_not be_valid
     expect(build(:consumable_type, days_to_keep: 'abc')).to_not be_valid
     expect(build(:consumable_type, days_to_keep: '')).to be_valid
+    expect(build(:consumable_type, days_to_keep: nil)).to be_valid
   end
 
   it "should return the latest ingredient for each item in its recipe" do
