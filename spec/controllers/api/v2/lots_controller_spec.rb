@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-describe Api::V1::LotsController, type: :request do
+describe Api::V2::LotsController, type: :request do
 
   describe "GET #show" do
 
     it "should return a serialized lot" do
       lot = create(:lot)
-      get api_v1_lot_path(lot)
+      get api_v2_lot_path(lot)
       expect(response).to be_success
       lot_response = JSON.parse(response.body, symbolize_names: true)
 
@@ -26,7 +26,7 @@ describe Api::V1::LotsController, type: :request do
 
     context "lot does not exist" do
       it "should return a 404 with an error message" do
-        get api_v1_lot_path(:id => 123)
+        get api_v2_lot_path(:id => 123)
         expect(response.status).to be(404)
         lot_response = JSON.parse(response.body, symbolize_names: true)
 

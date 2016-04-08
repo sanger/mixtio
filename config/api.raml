@@ -2,7 +2,7 @@
 ---
 title: Mixtio
 baseUri: http://localhost
-version: 1.0
+version: 2.0
 
 traits:
   - pageable:
@@ -11,13 +11,13 @@ traits:
           displayName: page
           type: number
           description: The page you want
-          example: page=1
+          example: 1
           required: false
         page_size:
           displayName: page_size
           type: number
           description: The number of results returned in a page
-          example: page_size=10
+          example: 10
           required: false
   - sortable:
       queryParameters:
@@ -46,123 +46,175 @@ resourceTypes:
     collection:
       exampleCollection: |
         {
-          "batches": [
-            {
-              "id": 57,
-              "number": "TESTTEAM-57",
-              "consumable_type": {
-                "id": 24,
-                "uri": "http://localhost:3000/api/v1/consumable_types/24"
+           "data":[
+              {
+                 "id":"97",
+                 "type":"batches",
+                 "attributes":{
+                    "number":"TESTTEAM-97",
+                    "created_at":"2016-04-08T11:19:44.429Z",
+                    "expiry_date":"2016-05-11",
+                    "volume":"0.000259",
+                    "unit":"L"
+                 },
+                 "relationships":{
+                    "consumable_type":{
+                       "data":{
+                          "id":"31",
+                          "type":"consumable_types"
+                       }
+                    },
+                    "kitchen":{
+                       "data":{
+                          "id":"25",
+                          "type":"teams"
+                       }
+                    },
+                    "user":{
+                       "data":{
+                          "id":"1",
+                          "type":"users"
+                       }
+                    },
+                    "ingredients":{
+                       "data":[
+
+                       ]
+                    },
+                    "consumables":{
+                       "data":[
+                          {
+                             "id":"171",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"172",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"173",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"174",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"175",
+                             "type":"consumables"
+                          }
+                       ]
+                    }
+                 }
               },
-              "kitchen": {
-                "id": 25,
-                "type": "Team",
-                "name": "TEST TEAM"
+              {
+                 "id":"98",
+                 "type":"batches",
+                 "attributes":{
+                    "number":"TESTTEAM-98",
+                    "created_at":"2016-04-08T11:19:44.469Z",
+                    "expiry_date":"2016-05-11",
+                    "volume":"0.4655",
+                    "unit":"L"
+                 },
+                 "relationships":{
+                    "consumable_type":{
+                       "data":{
+                          "id":"32",
+                          "type":"consumable_types"
+                       }
+                    },
+                    "kitchen":{
+                       "data":{
+                          "id":"25",
+                          "type":"teams"
+                       }
+                    },
+                    "user":{
+                       "data":{
+                          "id":"1",
+                          "type":"users"
+                       }
+                    },
+                    "ingredients":{
+                       "data":[
+
+                       ]
+                    },
+                    "consumables":{
+                       "data":[
+                          {
+                             "id":"176",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"177",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"178",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"179",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"180",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"181",
+                             "type":"consumables"
+                          },
+                          {
+                             "id":"182",
+                             "type":"consumables"
+                          }
+                       ]
+                    }
+                 }
+              }
+           ],
+           "included":[
+              {
+                 "id":"31",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"IMDM",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
               },
-              "expiry_date": "2016-08-13",
-              "ingredients": [
-                {
-                  "id": 9,
-                  "consumable_type_id": 9,
-                  "kitchen_id": 9,
-                  "number": "1695274",
-                  "expiry_date": null,
-                  "created_at": "2016-02-15T13:39:49.770Z",
-                  "updated_at": "2016-02-15T13:39:49.770Z"
-                },
-                {
-                  "id": 10,
-                  "consumable_type_id": 10,
-                  "kitchen_id": 10,
-                  "number": "LIMSBATCH1005480",
-                  "expiry_date": null,
-                  "created_at": "2016-02-15T13:39:49.777Z",
-                  "updated_at": "2016-02-15T13:39:49.777Z"
-                }
-              ],
-              "consumables": [
-                {
-                  "id": 146,
-                  "batch_id": 57,
-                  "created_at": "2016-02-15T13:39:52.018Z",
-                  "updated_at": "2016-02-15T13:39:52.018Z",
-                  "name": null,
-                  "barcode": "RGNT-146",
-                  "depleted": false
-                },
-                {
-                  "id": 147,
-                  "batch_id": 57,
-                  "created_at": "2016-02-15T13:39:52.026Z",
-                  "updated_at": "2016-02-15T13:39:52.026Z",
-                  "name": null,
-                  "barcode": "RGNT-147",
-                  "depleted": false
-                }
-              ]
-            },
-            {
-              "id": 58,
-              "number": "TESTTEAM-58",
-              "consumable_type": {
-                "id": 25,
-                "uri": "http://localhost:3000/api/v1/consumable_types/25"
+              {
+                 "id":"25",
+                 "type":"teams",
+                 "attributes":{
+                    "name":"TEST TEAM"
+                 }
               },
-              "kitchen": {
-                "id": 25,
-                "type": "Team",
-                "name": "TEST TEAM"
+              {
+                 "id":"1",
+                 "type":"users",
+                 "attributes":{
+                    "username":"test"
+                 }
               },
-              "expiry_date": "2016-05-15",
-              "ingredients": [
-                {
-                  "id": 13,
-                  "consumable_type_id": 13,
-                  "kitchen_id": 13,
-                  "number": "FZ1914061",
-                  "expiry_date": null,
-                  "created_at": "2016-02-15T13:39:49.794Z",
-                  "updated_at": "2016-02-15T13:39:49.794Z"
-                },
-                {
-                  "id": 14,
-                  "consumable_type_id": 14,
-                  "kitchen_id": 14,
-                  "number": "BATCH1007103",
-                  "expiry_date": null,
-                  "created_at": "2016-02-15T13:39:49.799Z",
-                  "updated_at": "2016-02-15T13:39:49.799Z"
-                }
-              ],
-              "consumables": [
-                {
-                  "id": 156,
-                  "batch_id": 58,
-                  "created_at": "2016-02-15T13:39:52.116Z",
-                  "updated_at": "2016-02-15T13:39:52.116Z",
-                  "name": null,
-                  "barcode": "RGNT-156",
-                  "depleted": false
-                },
-                {
-                  "id": 157,
-                  "batch_id": 58,
-                  "created_at": "2016-02-15T13:39:52.124Z",
-                  "updated_at": "2016-02-15T13:39:52.124Z",
-                  "name": null,
-                  "barcode": "RGNT-157",
-                  "depleted": false
-                },
-              ]
-            }
-          ],
-          "meta": {
-            "current_page": 1,
-            "next_page": 2,
-            "prev_page": null,
-            "total_pages": 2,
-            "total_count": 30
-          }
+              {
+                 "id":"32",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"F12 Nut Mix",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
+              }
+           ],
+           "links":{
+              "self":"http://0.0.0.0:3000/api/v2/batches?page%5Bnumber%5D=1\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "next":"http://0.0.0.0:3000/api/v2/batches?page%5Bnumber%5D=2\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "last":"http://0.0.0.0:3000/api/v2/batches?page%5Bnumber%5D=15\u0026page%5Bsize%5D=2\u0026page_size=2"
+           }
         }
   /{batch_id}:
     get:
@@ -173,65 +225,91 @@ resourceTypes:
             application/json:
               example: |
                 {
-                  "id": 34,
-                  "number": "TESTTEAM-34",
-                  "consumable_type": {
-                    "id": 1,
-                    "uri": "http://localhost:3000/api/v1/consumable_types/1"
-                  },
-                  "kitchen": {
-                    "id": 25,
-                    "type": "Team",
-                    "name": "TEST TEAM"
-                  },
-                  "expiry_date": "2016-03-19",
-                  "ingredients": [{
-                      id: 15,
-                      consumable_type_id: 15,
-                      kitchen_id: 15,
-                      number: "1715661",
-                      expiry_date: null,
-                      created_at: "2016-02-15T13:39:49.805Z",
-                      updated_at: "2016-02-15T13:39:49.805Z"
-                    },
-                    {
-                      id: 16,
-                      consumable_type_id: 16,
-                      kitchen_id: 16,
-                      number: "1672599",
-                      expiry_date: null,
-                      created_at: "2016-02-15T13:39:49.812Z",
-                      updated_at: "2016-02-15T13:39:49.812Z"
-                    }],
-                  "consumables": [
-                    {
-                      "id": 1,
-                      "batch_id": 34,
-                      "created_at": "2016-02-15T13:39:49.973Z",
-                      "updated_at": "2016-02-15T13:39:49.973Z",
-                      "name": null,
-                      "barcode": "RGNT-1",
-                      "depleted": false
-                    },
-                    {
-                      "id": 2,
-                      "batch_id": 34,
-                      "created_at": "2016-02-15T13:39:49.981Z",
-                      "updated_at": "2016-02-15T13:39:49.981Z",
-                      "name": null,
-                      "barcode": "RGNT-2",
-                      "depleted": false
-                    },
-                    {
-                      "id": 3,
-                      "batch_id": 34,
-                      "created_at": "2016-02-15T13:39:49.987Z",
-                      "updated_at": "2016-02-15T13:39:49.987Z",
-                      "name": null,
-                      "barcode": "RGNT-3",
-                      "depleted": false
-                    }
-                  ]
+                   "data":{
+                      "id":"97",
+                      "type":"batches",
+                      "attributes":{
+                         "number":"TESTTEAM-97",
+                         "created_at":"2016-04-08T11:19:44.429Z",
+                         "expiry_date":"2016-05-11",
+                         "volume":"0.000259",
+                         "unit":"L"
+                      },
+                      "relationships":{
+                         "consumable_type":{
+                            "data":{
+                               "id":"31",
+                               "type":"consumable_types"
+                            }
+                         },
+                         "kitchen":{
+                            "data":{
+                               "id":"25",
+                               "type":"teams"
+                            }
+                         },
+                         "user":{
+                            "data":{
+                               "id":"1",
+                               "type":"users"
+                            }
+                         },
+                         "ingredients":{
+                            "data":[
+
+                            ]
+                         },
+                         "consumables":{
+                            "data":[
+                               {
+                                  "id":"171",
+                                  "type":"consumables"
+                               },
+                               {
+                                  "id":"172",
+                                  "type":"consumables"
+                               },
+                               {
+                                  "id":"173",
+                                  "type":"consumables"
+                               },
+                               {
+                                  "id":"174",
+                                  "type":"consumables"
+                               },
+                               {
+                                  "id":"175",
+                                  "type":"consumables"
+                               }
+                            ]
+                         }
+                      }
+                   },
+                   "included":[
+                      {
+                         "id":"31",
+                         "type":"consumable_types",
+                         "attributes":{
+                            "name":"IMDM",
+                            "days_to_keep":33,
+                            "storage_condition":null
+                         }
+                      },
+                      {
+                         "id":"25",
+                         "type":"teams",
+                         "attributes":{
+                            "name":"TEST TEAM"
+                         }
+                      },
+                      {
+                         "id":"1",
+                         "type":"users",
+                         "attributes":{
+                            "username":"test"
+                         }
+                      }
+                   ]
                 }
         404:
           body:
@@ -246,42 +324,31 @@ resourceTypes:
     collection:
       exampleCollection: |
         {
-          "consumable_types": [
-            {
-              "id": 1,
-              "name": "IMDM",
-              "days_to_keep": 33,
-              "recipe_ingredients": []
-            },
-            {
-              "id": 25,
-              "name": "EPO",
-              "days_to_keep": 90,
-              "recipe_ingredients": [
-                {
-                  "id": 13,
-                  "name": "Recombinant human EPO",
-                  "days_to_keep": 490,
-                  "created_at": "2016-02-15T13:39:49.328Z",
-                  "updated_at": "2016-02-15T13:39:49.328Z"
-                },
-                {
-                  "id": 14,
-                  "name": "0.1% HSA in PBS",
-                  "days_to_keep": 9,
-                  "created_at": "2016-02-15T13:39:49.333Z",
-                  "updated_at": "2016-02-15T13:39:49.333Z"
-                }
-              ]
-            }
-          ],
-          "meta": {
-            "current_page": 1,
-            "next_page": 2,
-            "prev_page": null,
-            "total_pages": 2,
-            "total_count": 30
-          }
+           "data":[
+              {
+                 "id":"31",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"IMDM",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
+              },
+              {
+                 "id":"32",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"F12 Nut Mix",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
+              }
+           ],
+           "links":{
+              "self":"http://0.0.0.0:3000/api/v2/consumable_types?page%5Bnumber%5D=1\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "next":"http://0.0.0.0:3000/api/v2/consumable_types?page%5Bnumber%5D=2\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "last":"http://0.0.0.0:3000/api/v2/consumable_types?page%5Bnumber%5D=15\u0026page%5Bsize%5D=2\u0026page_size=2"
+           }
         }
 
   /{consumable_type_id}:
@@ -293,25 +360,15 @@ resourceTypes:
             application/json:
               example: |
                 {
-                  "id": 25,
-                  "name": "EPO",
-                  "days_to_keep": 90,
-                  "recipe_ingredients": [
-                    {
-                      "id": 13,
-                      "name": "Recombinant human EPO",
-                      "days_to_keep": 490,
-                      "created_at": "2016-02-15T13:39:49.328Z",
-                      "updated_at": "2016-02-15T13:39:49.328Z"
-                    },
-                    {
-                      "id": 14,
-                      "name": "0.1% HSA in PBS",
-                      "days_to_keep": 9,
-                      "created_at": "2016-02-15T13:39:49.333Z",
-                      "updated_at": "2016-02-15T13:39:49.333Z"
-                    }
-                  ]
+                   "data":{
+                      "id":"31",
+                      "type":"consumable_types",
+                      "attributes":{
+                         "name":"IMDM",
+                         "days_to_keep":33,
+                         "storage_condition":null
+                      }
+                   }
                 }
         404:
           body:
@@ -337,43 +394,74 @@ resourceTypes:
           application/json:
             example: |
               {
-                "consumables": [
-                  {
-                    "id": 1,
-                    "depleted": false,
-                    "barcode": "RGNT-1",
-                    "batch": {
-                      "id": 34,
-                      "uri": "http://localhost:3000/api/v1/batches/34"
+                 "data":[
+                    {
+                       "id":"171",
+                       "type":"consumables",
+                       "attributes":{
+                          "created_at":"2016-04-08T11:19:44.440Z",
+                          "barcode":"RGNT_171",
+                          "volume":"51.8",
+                          "unit":"μL",
+                          "depleted":false
+                       },
+                       "relationships":{
+                          "batch":{
+                             "data":{
+                                "id":"97",
+                                "type":"batches"
+                             }
+                          },
+                          "consumable_type":{
+                             "data":{
+                                "id":"31",
+                                "type":"consumable_types"
+                             }
+                          }
+                       }
                     },
-                    "consumable_type": {
-                      "id": 1,
-                      "name": "IMDM",
-                      "uri": "http://localhost:3000/api/v1/consumable_types/1"
+                    {
+                       "id":"172",
+                       "type":"consumables",
+                       "attributes":{
+                          "created_at":"2016-04-08T11:19:44.446Z",
+                          "barcode":"RGNT_172",
+                          "volume":"51.8",
+                          "unit":"μL",
+                          "depleted":false
+                       },
+                       "relationships":{
+                          "batch":{
+                             "data":{
+                                "id":"97",
+                                "type":"batches"
+                             }
+                          },
+                          "consumable_type":{
+                             "data":{
+                                "id":"31",
+                                "type":"consumable_types"
+                             }
+                          }
+                       }
                     }
-                  },
-                  {
-                    "id": 25,
-                    "depleted": false,
-                    "barcode": "RGNT-25",
-                    "batch": {
-                      "id": 38,
-                      "uri": "http://localhost:3000/api/v1/batches/38"
-                    },
-                    "consumable_type": {
-                      "id": 5,
-                      "name": "Insulin",
-                      "uri": "http://localhost:3000/api/v1/consumable_types/5"
+                 ],
+                 "included":[
+                    {
+                       "id":"31",
+                       "type":"consumable_types",
+                       "attributes":{
+                          "name":"IMDM",
+                          "days_to_keep":33,
+                          "storage_condition":null
+                       }
                     }
-                  }
-                ],
-                "meta": {
-                  "current_page": 1,
-                  "next_page": 2,
-                  "prev_page": null,
-                  "total_pages": 8,
-                  "total_count": 177
-                }
+                 ],
+                 "links":{
+                    "self":"http://0.0.0.0:3000/api/v2/consumables?page%5Bnumber%5D=1\u0026page%5Bsize%5D=2\u0026page_size=2",
+                    "next":"http://0.0.0.0:3000/api/v2/consumables?page%5Bnumber%5D=2\u0026page%5Bsize%5D=2\u0026page_size=2",
+                    "last":"http://0.0.0.0:3000/api/v2/consumables?page%5Bnumber%5D=85\u0026page%5Bsize%5D=2\u0026page_size=2"
+                 }
               }
 
   /{consumable_id}:
@@ -385,18 +473,42 @@ resourceTypes:
             application/json:
               example: |
                 {
-                  "id": 25,
-                  "depleted": false,
-                  "barcode": "RGNT-25",
-                  "batch": {
-                    "id": 38,
-                    "uri": "http://localhost:3000/api/v1/batches/38"
-                  },
-                  "consumable_type": {
-                    "id": 5,
-                    "name": "Insulin",
-                    "uri": "http://localhost:3000/api/v1/consumable_types/5"
-                  }
+                   "data":{
+                      "id":"171",
+                      "type":"consumables",
+                      "attributes":{
+                         "created_at":"2016-04-08T11:19:44.440Z",
+                         "barcode":"RGNT_171",
+                         "volume":"51.8",
+                         "unit":"μL",
+                         "depleted":false
+                      },
+                      "relationships":{
+                         "batch":{
+                            "data":{
+                               "id":"97",
+                               "type":"batches"
+                            }
+                         },
+                         "consumable_type":{
+                            "data":{
+                               "id":"31",
+                               "type":"consumable_types"
+                            }
+                         }
+                      }
+                   },
+                   "included":[
+                      {
+                         "id":"31",
+                         "type":"consumable_types",
+                         "attributes":{
+                            "name":"IMDM",
+                            "days_to_keep":33,
+                            "storage_condition":null
+                         }
+                      }
+                   ]
                 }
         404:
           body:
@@ -411,41 +523,89 @@ resourceTypes:
     collection:
       exampleCollection: |
         {
-          "lots": [
-            {
-              "id": 1,
-              "number": "1695234",
-              "consumable_type": {
-                "id": 1,
-                "uri": "http://localhost:3000/api/v1/consumable_types/1"
+           "data":[
+              {
+                 "id":"64",
+                 "type":"lots",
+                 "attributes":{
+                    "number":"1695234"
+                 },
+                 "relationships":{
+                    "consumable_type":{
+                       "data":{
+                          "id":"31",
+                          "type":"consumable_types"
+                       }
+                    },
+                    "kitchen":{
+                       "data":{
+                          "id":"27",
+                          "type":"suppliers"
+                       }
+                    }
+                 }
               },
-              "kitchen": {
-                "id": 1,
-                "type": "Supplier",
-                "name": "LIFE TECH 21980-032"
+              {
+                 "id":"65",
+                 "type":"lots",
+                 "attributes":{
+                    "number":"1696982"
+                 },
+                 "relationships":{
+                    "consumable_type":{
+                       "data":{
+                          "id":"32",
+                          "type":"consumable_types"
+                       }
+                    },
+                    "kitchen":{
+                       "data":{
+                          "id":"28",
+                          "type":"suppliers"
+                       }
+                    }
+                 }
               }
-            },
-            {
-              "id": 25,
-              "number": "STBD6281V",
-              "consumable_type": {
-                "id": 17,
-                "uri": "http://localhost:3000/api/v1/consumable_types/17"
+           ],
+           "included":[
+              {
+                 "id":"31",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"IMDM",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
               },
-              "kitchen": {
-                "id": 17,
-                "type": "Supplier",
-                "name": "SIGMA M6250-100ML"
+              {
+                 "id":"27",
+                 "type":"suppliers",
+                 "attributes":{
+                    "name":"LIFE TECH 21980-032"
+                 }
+              },
+              {
+                 "id":"32",
+                 "type":"consumable_types",
+                 "attributes":{
+                    "name":"F12 Nut Mix",
+                    "days_to_keep":33,
+                    "storage_condition":null
+                 }
+              },
+              {
+                 "id":"28",
+                 "type":"suppliers",
+                 "attributes":{
+                    "name":"LIFE TECH 31765-027"
+                 }
               }
-            }
-          ],
-          "meta": {
-            "current_page": 1,
-            "next_page": 2,
-            "prev_page": null,
-            "total_pages": 2,
-            "total_count": 34
-          }
+           ],
+           "links":{
+              "self":"http://0.0.0.0:3000/api/v2/lots?page%5Bnumber%5D=1\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "next":"http://0.0.0.0:3000/api/v2/lots?page%5Bnumber%5D=2\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "last":"http://0.0.0.0:3000/api/v2/lots?page%5Bnumber%5D=17\u0026page%5Bsize%5D=2\u0026page_size=2"
+           }
         }
   /{lot_id}:
     get:
@@ -456,17 +616,45 @@ resourceTypes:
             application/json:
               example: |
                 {
-                  "id": 25,
-                  "number": "STBD6281V",
-                  "consumable_type": {
-                    "id": 17,
-                    "uri": "http://localhost:3000/api/v1/consumable_types/17"
-                  },
-                  "kitchen": {
-                    "id": 17,
-                    "type": "Supplier",
-                    "name": "SIGMA M6250-100ML"
-                  }
+                   "data":{
+                      "id":"64",
+                      "type":"lots",
+                      "attributes":{
+                         "number":"1695234"
+                      },
+                      "relationships":{
+                         "consumable_type":{
+                            "data":{
+                               "id":"31",
+                               "type":"consumable_types"
+                            }
+                         },
+                         "kitchen":{
+                            "data":{
+                               "id":"27",
+                               "type":"suppliers"
+                            }
+                         }
+                      }
+                   },
+                   "included":[
+                      {
+                         "id":"31",
+                         "type":"consumable_types",
+                         "attributes":{
+                            "name":"IMDM",
+                            "days_to_keep":33,
+                            "storage_condition":null
+                         }
+                      },
+                      {
+                         "id":"27",
+                         "type":"suppliers",
+                         "attributes":{
+                            "name":"LIFE TECH 21980-032"
+                         }
+                      }
+                   ]
                 }
         404:
           body:
@@ -481,23 +669,27 @@ resourceTypes:
     collection:
       exampleCollection: |
         {
-          "suppliers": [
-            {
-              "id": 1,
-              "name": "LIFE TECH 21980-032"
-            },
-            {
-              "id": 24,
-              "name": "CAMBRIDGE UNIVERSITY"
-            }
-          ],
-          "meta": {
-            "current_page": 1,
-            "next_page": null,
-            "prev_page": null,
-            "total_pages": 1,
-            "total_count": 24
-          }
+           "data":[
+              {
+                 "id":"27",
+                 "type":"suppliers",
+                 "attributes":{
+                    "name":"LIFE TECH 21980-032"
+                 }
+              },
+              {
+                 "id":"28",
+                 "type":"suppliers",
+                 "attributes":{
+                    "name":"LIFE TECH 31765-027"
+                 }
+              }
+           ],
+           "links":{
+              "self":"http://0.0.0.0:3000/api/v2/suppliers?page%5Bnumber%5D=1\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "next":"http://0.0.0.0:3000/api/v2/suppliers?page%5Bnumber%5D=2\u0026page%5Bsize%5D=2\u0026page_size=2",
+              "last":"http://0.0.0.0:3000/api/v2/suppliers?page%5Bnumber%5D=12\u0026page%5Bsize%5D=2\u0026page_size=2"
+           }
         }
   /{supplier_id}:
     get:
@@ -508,8 +700,13 @@ resourceTypes:
             application/json:
               example: |
                 {
-                  id: 1,
-                  name: "Acme Ltd."
+                   "data":{
+                      "id":"27",
+                      "type":"suppliers",
+                      "attributes":{
+                         "name":"LIFE TECH 21980-032"
+                      }
+                   }
                 }
         404:
           body:

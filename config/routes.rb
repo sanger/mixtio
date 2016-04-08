@@ -23,9 +23,19 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
 
     # Redirect to the latest version of the docs... current (and probably forever) v1
-    get 'docs', to: redirect('api/v1/docs')
+    get 'docs', to: redirect('api/v2/docs')
 
     namespace :v1 do
+      get 'docs', to: 'docs#index', defaults: { format: :html }
+      resources :consumables, only: [:show, :index]
+      resources :consumable_types, only: [:show, :index]
+      resources :ingredients, only: [:show, :index]
+      resources :batches, only: [:show, :index]
+      resources :lots, only: [:show, :index]
+      resources :suppliers, only: [:show, :index]
+    end
+
+    namespace :v2 do
       get 'docs', to: 'docs#index', defaults: { format: :html }
       resources :consumables, only: [:show, :index]
       resources :consumable_types, only: [:show, :index]

@@ -5,6 +5,8 @@ class Api::V1::BatchesController < Api::V1::ApiController
         :consumable_type,
         :kitchen,
         :user,
+        :ingredients,
+        :consumables,
     ]
   end
 

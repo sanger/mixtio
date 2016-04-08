@@ -4,6 +4,7 @@ class Consumable < ActiveRecord::Base
   include HasVolume
 
   belongs_to :batch
+  has_one :consumable_type, through: :batch
 
   validates :batch, :volume, :unit, presence: true
   validates :volume, numericality: {greater_than: 0}
