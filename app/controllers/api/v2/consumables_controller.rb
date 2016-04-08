@@ -1,4 +1,4 @@
-class Api::V1::ConsumablesController < Api::V1::ApiController
+class Api::V2::ConsumablesController < Api::V2::ApiController
 
   def query_params
     params.permit(:barcode)
@@ -6,7 +6,6 @@ class Api::V1::ConsumablesController < Api::V1::ApiController
 
   def includes
     [
-        :batch,
         :consumable_type
     ]
   end

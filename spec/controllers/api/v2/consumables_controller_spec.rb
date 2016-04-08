@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-describe Api::V1::ConsumablesController, type: :request do
+describe Api::V2::ConsumablesController, type: :request do
 
   describe "GET #show" do
 
     it "should return a serialized consumable by barcode" do
       consumable = create(:consumable)
-      get api_v1_consumable_path(consumable.id)
+      get api_v2_consumable_path(consumable.id)
       expect(response).to be_success
       consumable_response = JSON.parse(response.body, symbolize_names: true)
 
@@ -26,7 +26,7 @@ describe Api::V1::ConsumablesController, type: :request do
 
     context "consumable does not exist" do
       it "should return a 404 with an error message" do
-        get api_v1_consumable_path(123)
+        get api_v2_consumable_path(123)
         expect(response.status).to be(404)
         consumable_response = JSON.parse(response.body, symbolize_names: true)
 

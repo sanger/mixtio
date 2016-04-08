@@ -1,5 +1,5 @@
 class KitchenSerializer < ActiveModel::Serializer
 
-  attributes :name
+  attributes :id, :name
 
 end

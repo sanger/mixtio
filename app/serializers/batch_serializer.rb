@@ -1,6 +1,6 @@
 class BatchSerializer < ActiveModel::Serializer
 
-  attributes :number, :created_at, :expiry_date, :volume, :unit
+  attributes :id, :number, :created_at, :expiry_date, :volume, :unit
 
   has_one :consumable_type
   has_one :kitchen

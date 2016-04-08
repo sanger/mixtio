@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-describe Api::V1::BatchesController, type: :request do
+describe Api::V2::BatchesController, type: :request do
 
   describe "GET #show" do
 
     it "should return a serialized batch" do
       batch = create(:batch_with_consumables)
-      get api_v1_batch_path(batch)
+      get api_v2_batch_path(batch)
       expect(response).to be_success
 
       batch_response = JSON.parse(response.body, symbolize_names: true)
@@ -33,7 +33,7 @@ describe Api::V1::BatchesController, type: :request do
 
     it 'should return the batch\'s ingredients' do
       batch = create(:batch_with_ingredients)
-      get api_v1_batch_path(batch)
+      get api_v2_batch_path(batch)
       expect(response).to be_success
       batch_response = JSON.parse(response.body, symbolize_names: true)
 
@@ -46,7 +46,7 @@ describe Api::V1::BatchesController, type: :request do
 
     context "batch does not exist" do
       it "should return a 404 with an error message" do
-        get api_v1_batch_path(:id => 123)
+        get api_v2_batch_path(:id => 123)
         expect(response.status).to be(404)
         batch_response = JSON.parse(response.body, symbolize_names: true)
 

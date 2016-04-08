@@ -4,4 +4,4 @@ window.Mixtio =
   Views: {}
   Routers: {}
   Bootstrap: {}
-  BaseURL: '/api/v1'
+  BaseURL: '/api/v2'

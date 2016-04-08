@@ -1,4 +1,4 @@
-class Api::V1::ApiController < ApplicationController
+class Api::V2::ApiController < ApplicationController
 
   protect_from_forgery with: :null_session
 
@@ -18,28 +18,18 @@ class Api::V1::ApiController < ApplicationController
 
     instance_variable_set(plural_resource_name, resources)
     resource = instance_variable_get(plural_resource_name)
-    render json: { resource_name.pluralize => resource, meta: pagination_dict(resource) }, include: includes, adapter: :attributes
+    render json: resource, include: includes, adapter: :json_api
   end
 
   # GET /api/{plural_resource_name}/1
   def show
-    render json: get_resource, include: includes, adapter: :attributes
+    render json: get_resource, include: includes, adapter: :json_api
   end
 
   private
 
   def includes
     []
-  end
-
-  def pagination_dict(object)
-    {
-        current_page: object.current_page,
-        next_page: object.next_page,
-        prev_page: object.prev_page,
-        total_pages: object.total_pages,
-        total_count: object.total_count
-    }
   end
 
   # Returns the resource from the created instance variable
