@@ -21,6 +21,7 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content(@batch.user.username)
       expect(page).to have_content(@batch.consumable_type.name)
       expect(page).to have_content(@batch.expiry_date)
+      expect(page).to have_content(@batch.consumable_type.storage_condition)
       expect(page).to have_content(@batch.consumables.length)
       expect(page).to have_content(@batch.display_volume)
       expect(page).to_not have_content("Aliquot Volume")
@@ -34,6 +35,33 @@ RSpec.describe "Batches", type: feature, js: true do
 
       expect(page).to have_content(batch.consumables.first.display_volume)
       expect(page).to have_content("Aliquot Volume")
+    end
+
+    it 'displays correctly without storage conditions' do
+      consumable_type = create(:consumable_type, storage_condition: nil)
+      batch = create(:batch, consumable_type: consumable_type)
+
+      visit batch_path(batch)
+
+      expect(page).to have_content("Storage conditions: None specified")
+    end
+
+    it 'should display barcode type when per aliquot' do
+      batch = create(:batch)
+      batch.consumables = create_list(:consumable, 3)
+
+      visit batch_path(batch)
+
+      expect(page).to have_content('Barcode Type: One per aliquot')
+    end
+
+    it 'should display barcode type when per batch' do
+      batch = create(:batch)
+      batch.consumables = create_list(:consumable, 3, barcode: 'RGNT_1')
+
+      visit batch_path(batch)
+
+      expect(page).to have_content('Barcode Type: One per batch')
     end
 
     it 'prints labels for the batch' do

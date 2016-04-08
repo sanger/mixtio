@@ -13,7 +13,7 @@
     <li><strong>Created by: </strong><%= @batch.user.username %> (<%= @batch.kitchen.name %>)</li>
     <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
     <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
-    <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition %></li>
+    <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
     <li><strong>Consumables: </strong><%= @batch.consumables.length %></li>
     <% if @batch.consumables.length > 0 and @batch.consumables.first.display_volume %>
       <li><strong>Aliquot Volume: </strong><%= @batch.consumables.first.display_volume %></li>

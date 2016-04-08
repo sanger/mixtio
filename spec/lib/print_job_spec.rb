@@ -63,6 +63,19 @@ RSpec.describe PrintJob, type: :model do
     expect(first_label[:label_1][:storage_condition]).to eql('37C')
   end
 
+  it 'should serialize a batch with no storage condition' do
+    batch = create(:batch_with_consumables)
+    batch.consumable_type.storage_condition = nil
+    print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
+    json = JSON.parse(print_job.to_json, symbolize_names: true)
+
+    labels = json[:data][:attributes][:labels]
+    expect(labels[:body]).to be_kind_of(Array)
+
+    first_label = labels[:body].first
+    expect(first_label[:label_1][:storage_condition]).to eql("")
+  end
+
   it "should return true when a print job executes successfully" do
     allow(RestClient).to receive(:post).and_return(OpenStruct.new(:code => 200))
     expect(@print_job.execute!).to eq(true)

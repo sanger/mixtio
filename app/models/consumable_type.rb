@@ -21,7 +21,7 @@ class ConsumableType < ActiveRecord::Base
   }
 
   def simple_storage_condition
-    storage_condition.gsub('°', '')
+    (storage_condition or "").gsub('°', '')
   end
 
   def latest_batch
