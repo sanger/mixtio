@@ -127,6 +127,7 @@ printers:
 - {label_type: Tube (2ml), name: e365bc2}
 suppliers:
 - {name: AMSBIO GSC-6001G}
+- {name: BEAGLE LIMS}
 - {name: DISPASE 17105-041}
 - {name: GE HEALTHCARE K41-001}
 - {name: LAB TECH FB-1001}
