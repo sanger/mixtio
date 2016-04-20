@@ -1,7 +1,19 @@
+default: &default
+  smtp:
+    address: smtp.tools.example.com
+    port: 587
+    domain: test.mixtio
+    sender: notifier@example.com
+    recipient: exceptions@example.com
+
+development:
+  <<: *default
+
 test:
-    smtp:
-        address: smtp.tools.example.com
-        port: 587
-        domain: test.mixtio
-        sender: notifier@example.com
-        recipient: exceptions@example.com
+  <<: *default
+
+production:
+  <<: *default
+
+staging:
+  <<: *default
