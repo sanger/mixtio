@@ -12,15 +12,16 @@ describe Api::V1::ConsumablesController, type: :request do
 
       expect(consumable_response[:id]).to eql(consumable.id)
       expect(consumable_response[:depleted]).to eql(consumable.depleted)
+      expect(consumable_response[:volume]).to eq(consumable.volume.to_s)
+      expect(consumable_response[:unit]).to eql(consumable.unit)
+      expect(consumable_response[:created_at]).to eql(consumable.created_at.strftime('%Y-%m-%dT%H:%M:%S.%LZ'))
 
       batch = consumable_response[:batch]
       expect(batch[:id]).to eql(consumable.batch.id)
-      expect(batch[:uri]).to include(api_v1_batch_path consumable.batch)
 
       consumable_type = consumable_response[:consumable_type]
       expect(consumable_type[:id]).to eql(consumable.batch.consumable_type.id)
       expect(consumable_type[:name]).to eql(consumable.batch.consumable_type.name)
-      expect(consumable_type[:uri]).to include(api_v1_consumable_type_path consumable.batch.consumable_type)
     end
 
     context "consumable does not exist" do

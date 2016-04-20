@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321092209) do
+ActiveRecord::Schema.define(version: 20160331153128) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20160321092209) do
     t.integer  "batch_id"
     t.datetime "created_at",                                          null: false
     t.datetime "updated_at",                                          null: false
-    t.string   "name"
     t.string   "barcode"
     t.boolean  "depleted",                            default: false
     t.decimal  "volume",     precision: 10, scale: 3
@@ -63,14 +62,14 @@ ActiveRecord::Schema.define(version: 20160321092209) do
     t.string   "number"
     t.string   "type"
     t.date     "expiry_date"
-    t.decimal  "volume",             precision: 10, scale: 3
-    t.integer  "unit"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "user_id"
   end
 
   add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
   add_index "ingredients", ["kitchen_id"], name: "index_ingredients_on_kitchen_id"
+  add_index "ingredients", ["user_id"], name: "index_ingredients_on_user_id"
 
   create_table "kitchens", force: :cascade do |t|
     t.string "name"
@@ -100,13 +99,6 @@ ActiveRecord::Schema.define(version: 20160321092209) do
   end
 
   add_index "printers", ["label_type_id"], name: "index_printers_on_label_type_id"
-
-  create_table "recipes", force: :cascade do |t|
-    t.integer  "consumable_type_id"
-    t.integer  "recipe_ingredient_id"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

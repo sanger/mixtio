@@ -7,7 +7,7 @@ class ConsumableLabelSerializer < ActiveModel::Serializer
       barcode_text: object.barcode,
       reagent_name: object.batch.consumable_type.name,
       batch_no: object.batch.number,
-      date: "Use by: #{object.batch.expiry_date.to_date.to_s(:uk)}",
+      date: "Use by: #{object.batch.expiry_date}",
       barcode: object.barcode,
       volume: object.simple_volume,
       storage_condition: object.batch.consumable_type.simple_storage_condition,

@@ -1,11 +1,11 @@
 require "rails_helper"
 
-Dir[File.join(Rails.root,"lib","consumable_creator","*.rb")].each { |f| require f }
+Dir[File.join(Rails.root, "lib", "consumables", "*.rb")].each { |f| require f }
 
 RSpec.describe ConsumableCreator, type: :model do
 
-  let(:parameters)           { YAML.load_file(File.expand_path(File.join(Rails.root,"spec","lib","data.yml"))) }
-  let(:run_consumable_creator!)    { ConsumableCreator.new(parameters).run! }
+  let(:parameters) { YAML.load_file(File.expand_path(File.join(Rails.root, "spec", "lib", "data.yml"))) }
+  let(:run_consumable_creator!) { ConsumableCreator.new(params: parameters, consumables: true).run! }
 
   before do
     run_consumable_creator!
@@ -16,7 +16,6 @@ RSpec.describe ConsumableCreator, type: :model do
       consumable_type = ConsumableType.find_by_name(consumable_type["name"])
       expect(consumable_type).to_not be_nil
       expect(consumable_type.days_to_keep).to be_present
-      expect(consumable_type.ingredients).to_not be_nil
     end
   end
 

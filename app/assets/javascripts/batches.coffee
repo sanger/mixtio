@@ -35,6 +35,8 @@ $ ->
 
     expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#batch_form_expiry_date'))
 
+    consumablesView = new Mixtio.Views.Consumables()
+
     # Wire everything together
 
     ## When a favourite is added/removed to/from the User Favourites, update the Consumable Types view
@@ -45,11 +47,17 @@ $ ->
     consumableTypeView.on("change:selected", (model, options) ->
       favouritesStarView.update(model, options)
       expiryDateView.update(model)
+      consumablesView.update(model)
+      
+      ingredients = model?.get('latest_batch')?.ingredients?.map (ingredient) ->
+        type = Mixtio.Bootstrap.ConsumableTypes.filter((type) -> type.id == ingredient.consumable_type_id)[0]
+        {
+          consumable_type_id: type.id
+          number: type.latest_lot?.number
+          kitchen_id: type.latest_lot?.kitchen_id
+        }
 
-      if model.get('recipe_ingredients').length is 0
-        ingredientsCollection.reset()
-      else
-        ingredientsCollection.findAndSetToLatest(model.get('recipe_ingredients'))
+      ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
     )
 
     ## When the user favourites/unfavourites a Consumable Type, add/remove it to/from the collection

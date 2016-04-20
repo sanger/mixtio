@@ -15,7 +15,6 @@ describe Api::V1::LotsController, type: :request do
 
       consumable_type = lot_response[:consumable_type]
       expect(consumable_type[:id]).to eql(lot.consumable_type_id)
-      expect(consumable_type[:uri]).to include(api_v1_consumable_type_path lot.consumable_type)
 
       kitchen = lot_response[:kitchen]
       expect(kitchen[:id]).to eql(lot.kitchen_id)

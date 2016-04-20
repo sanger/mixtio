@@ -4,7 +4,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
 
   let! (:consumable_type) { build(:consumable_type) }
   let! (:consumable_types) { create_list(:consumable_type, 3) }
-  let! (:consumable_type_with_ingredients) { create(:consumable_type_with_ingredients) }
+  let! (:saved_consumable_type) { create(:consumable_type) }
 
   before(:each) do
     sign_in
@@ -16,24 +16,14 @@ RSpec.describe "ConsumableTypes", type: :feature do
       click_link "New Consumable Type"
 
       fill_in "Name*", with: consumable_type.name
-      fill_in "Days to Keep*", with: consumable_type.days_to_keep
+      fill_in "Days to Keep", with: consumable_type.days_to_keep
       select consumable_type.storage_condition, from: "Storage condition"
-
-      click_button "Add Ingredient"
-      all("select").last.select(consumable_types.first.name)
-
-      click_button "Add Ingredient"
-      all("select").last.select(consumable_types[1].name)
-
-      click_button "Add Ingredient"
-      all("select").last.select(consumable_types[2].name)
 
       click_button "Create Consumable type"
     end
 
-    it "Allows a user to create a new consumable type with ingredients", js: true do
+    it "Allows a user to create a new consumable type" do
       expect { create_a_consumable_type }.to change(ConsumableType, :count).by(1)
-      expect(ConsumableType.find_by(name: consumable_type.name).recipe_ingredients.count).to eq(3)
       expect(page).to have_content("Consumable type successfully created")
     end
 
@@ -57,17 +47,17 @@ RSpec.describe "ConsumableTypes", type: :feature do
   describe '#edit' do
 
     let(:edit_a_consumable_type) do
-      visit edit_consumable_type_path(consumable_type_with_ingredients)
+      visit edit_consumable_type_path(saved_consumable_type)
       fill_in "Name*", with: consumable_type.name
-      fill_in "Days to Keep*", with: 9
+      fill_in "Days to Keep", with: 9
       select "RT", from: "Storage condition"
       click_button "Update Consumable type"
     end
 
     it "Allows a user to edit an existing consumable type", js: true do
-      expect { edit_a_consumable_type }.to change{ consumable_type_with_ingredients.reload.name }.to(consumable_type.name)
-      expect(consumable_type_with_ingredients.days_to_keep).to eq(9)
-      expect(consumable_type_with_ingredients.storage_condition).to eq("RT")
+      expect { edit_a_consumable_type }.to change{ saved_consumable_type.reload.name }.to(consumable_type.name)
+      expect(saved_consumable_type.days_to_keep).to eq(9)
+      expect(saved_consumable_type.storage_condition).to eq("RT")
       expect(page).to have_content("Consumable type successfully updated")
     end
 

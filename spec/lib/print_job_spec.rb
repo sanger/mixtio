@@ -18,44 +18,32 @@ RSpec.describe PrintJob, type: :model do
   it "should serialize a batch into a label" do
     json = JSON.parse(@print_job.to_json, symbolize_names: true)
 
-    expect(json[:print_job]).to be_truthy
-    expect(json[:print_job][:printer_name]).to eql('ABC123')
-    expect(json[:print_job][:label_template_id]).to eql(1)
+    expect(json[:data]).to be_truthy
+    expect(json[:data][:attributes][:printer_name]).to eql('ABC123')
+    expect(json[:data][:attributes][:label_template_id]).to eql(1)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
+    expect(labels[:body].count).to eq(3)
 
     first_label = labels[:body].first
     first_consumable = @batch.consumables.first
     expect(first_label[:label_1][:barcode_text]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:reagent_name]).to eql(@batch.consumable_type.name)
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
-    expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date.to_s(:uk)}")
+    expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
-    expect(first_label[:label_1][:volume]).to be_nil
+    expect(first_label[:label_1][:volume]).to eq("1.1mL")
     expect(first_label[:label_1][:storage_condition]).to eql('LN2')
   end
 
-  it "should serialize a volume if given one" do
-    batch = create(:batch_with_consumables)
-    batch.consumables.first.volume = 100
-    batch.consumables.first.unit = 'μL'
-    print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
-    json = JSON.parse(print_job.to_json, symbolize_names: true)
-    labels = json[:print_job][:labels]
-    expect(labels[:body]).to be_kind_of(Array)
-
-    first_label = labels[:body].first
-    expect(first_label[:label_1][:volume]).to eql("100uL")
-  end
-
   it "should serialize a batch with special symbols in storage condition" do
     batch = create(:batch_with_consumables)
     batch.consumable_type.storage_condition = 0
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
@@ -68,11 +56,24 @@ RSpec.describe PrintJob, type: :model do
     print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
     json = JSON.parse(print_job.to_json, symbolize_names: true)
 
-    labels = json[:print_job][:labels]
+    labels = json[:data][:attributes][:labels]
     expect(labels[:body]).to be_kind_of(Array)
 
     first_label = labels[:body].first
     expect(first_label[:label_1][:storage_condition]).to eql('37C')
+  end
+
+  it 'should serialize a batch with no storage condition' do
+    batch = create(:batch_with_consumables)
+    batch.consumable_type.storage_condition = nil
+    print_job = PrintJob.new(batch: batch, printer: 'ABC123', label_template_id: 1)
+    json = JSON.parse(print_job.to_json, symbolize_names: true)
+
+    labels = json[:data][:attributes][:labels]
+    expect(labels[:body]).to be_kind_of(Array)
+
+    first_label = labels[:body].first
+    expect(first_label[:label_1][:storage_condition]).to eql("")
   end
 
   it "should return true when a print job executes successfully" do
@@ -118,5 +119,26 @@ RSpec.describe PrintJob, type: :model do
     expect(print_job.execute!).to eq(false)
     expect(print_job.errors.to_a).to_not include("Printer does not exist")
     expect(print_job.errors.to_a).to include("Label template does not exist")
+  end
+
+  it 'should only generate a single label if all barcodes are identical' do
+    batch = create(:batch)
+    consumable = create(:consumable)
+    batch.consumables << (1..3).map {|n| consumable.dup}
+
+    expect(batch.consumables[0].barcode).to eq(consumable.barcode)
+    expect(batch.consumables[1].barcode).to eq(consumable.barcode)
+    expect(batch.consumables[2].barcode).to eq(consumable.barcode)
+
+    print_job = PrintJob.new(batch: batch, printer: @print_job.printer, label_template_id: @print_job.label_template_id)
+    json = JSON.parse(print_job.to_json, symbolize_names: true)
+
+    labels = json[:data][:attributes][:labels]
+    expect(labels[:body]).to be_kind_of(Array)
+    expect(labels[:body].count).to eq(1)
+
+    first_label = labels[:body].first
+    expect(first_label[:label_1][:barcode]).to eql(consumable.barcode)
+    expect(first_label[:label_1][:barcode_text]).to eql(consumable.barcode)
   end
 end

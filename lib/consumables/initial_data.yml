@@ -1,0 +1,206 @@
+consumable_types:
+- {days_to_keep: '30', name: 0.1% BSA, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '30', name: 0.1% Gelatin, storage_conditions: RT}
+- {days_to_keep: '30', name: 0.1% HSA, storage_conditions: "+4\xB0C"}
+- {name: 2-Mercaptoethanol}
+- {days_to_keep: '90', name: 5% PVA, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '180', name: "Activin 50\xB5g/mL", storage_conditions: "-80\xB0C"}
+- {name: Activin A (Human)}
+- {name: Advanced DMEM/F12}
+- {days_to_keep: '180', name: Ascorbic Acid 10mg/mL, storage_conditions: "-20\xB0C"}
+- {name: B27 50X, storage_conditions: "-20\xB0C"}
+- {name: B27 Supplement (50X)}
+- {name: BMP4 (rH)}
+- {days_to_keep: '90', name: "BMP4 10\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: Bovine Serum Albumin (BSA)}
+- {name: CD Lipid Concentrate}
+- {days_to_keep: '14', name: CDM-BSA, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: CDM-PVA, storage_conditions: "+4\xB0C"}
+- {name: CHIR 99021}
+- {days_to_keep: '180', name: CHIR 99021 3mM, storage_conditions: "-80\xB0C"}
+- {days_to_keep: '14', name: Collagenase, storage_conditions: "+4\xB0C"}
+- {name: Collagenase Type I}
+- {name: Collagenase Type IV}
+- {days_to_keep: '14', name: CRISPR DMEM Media, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: CRISPR RPMI Media, storage_conditions: "+4\xB0C"}
+- {name: Dexamethasone}
+- {days_to_keep: '180', name: Dexamethasone 1mM, storage_conditions: "-20\xB0C"}
+- {days_to_keep: '14', name: Dispase, storage_conditions: "+4\xB0C"}
+- {name: Distilled Water}
+- {name: DMEM High Glucose + GlutaMAX + Pyruvate (Fibroblast)}
+- {name: DMEM High Glucose + GlutaMAX + Sodium Pyruvate (Organoids)}
+- {name: DMEM-F12 + HEPES}
+- {name: DMSO}
+- {name: DNAse I}
+- {name: 'DPBS, no calcium, no magnesium'}
+- {days_to_keep: '14', name: E8, storage_conditions: "+4\xB0C"}
+- {name: E8 Basal Media}
+- {days_to_keep: '14', name: E8 Flex, storage_conditions: "+4\xB0C"}
+- {name: E8 Flex Basal Media}
+- {name: E8 Flex Supplement}
+- {name: E8 Supplement}
+- {name: EDTA UltraPure 0.5M}
+- {days_to_keep: '0', name: Endoderm D1, storage_conditions: RT}
+- {days_to_keep: '0', name: Endoderm D2, storage_conditions: RT}
+- {days_to_keep: '0', name: Endoderm D3, storage_conditions: RT}
+- {name: EPO (rH)}
+- {days_to_keep: '90', name: "EPO 2U/\xB5L", storage_conditions: "-20\xB0C"}
+- {days_to_keep: '0', name: Expansion Media, storage_conditions: "+4\xB0C"}
+- {name: F12 Nut Mix}
+- {name: FBS (CRISPR), storage_conditions: "-20\xB0C"}
+- {name: FBS (HIPSCI), storage_conditions: "-20\xB0C"}
+- {name: FBS (Organoids), storage_conditions: "-20\xB0C"}
+- {name: Fetal Bovine Serum (CRISPR)}
+- {name: Fetal Bovine Serum (HIPSCI)}
+- {name: Fetal Bovine Serum (Organoids)}
+- {name: FGF2 (Zebrafish)}
+- {name: Fibroblast Digestion Media, storage_conditions: "-20\xB0C"}
+- {days_to_keep: '14', name: Fibroblast Media, storage_conditions: "+4\xB0C"}
+- {name: Gelatin (Porcine)}
+- {name: Geneticin}
+- {name: Glucose}
+- {days_to_keep: '180', name: Glucose 100X, storage_conditions: "-20\xB0C"}
+- {name: GlutaMAX}
+- {name: Human Serum Albumin (HSA)}
+- {name: Hydrochloric Acid  (0.5M)}
+- {name: IGF-1 (Human)}
+- {days_to_keep: '90', name: "IGF-1 100\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: IL-3 (rH)}
+- {days_to_keep: '180', name: "IL-3 10\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: IMDM}
+- {name: Insulin (rH)}
+- {days_to_keep: '90', name: Insulin 10mg/mL, storage_conditions: "-20\xB0C"}
+- {days_to_keep: '14', name: K Plus, storage_conditions: "+4\xB0C"}
+- {name: Knockout Serum Replacement}
+- {name: KSR, storage_conditions: "-20\xB0C"}
+- {name: L-Ascorbic Acid}
+- {name: L-Glutamine 200mM (100X)}
+- {name: LY 294002}
+- {days_to_keep: '365', name: LY 294002 10mM, storage_conditions: "-20\xB0C"}
+- {days_to_keep: '14', name: M Minus, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: M Plus, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '3', name: MEF-CF1, storage_conditions: "37\xB0C"}
+- {name: MEF-CF1-IRR}
+- {name: MEM NEAA}
+- {days_to_keep: '0', name: Mesoderm, storage_conditions: RT}
+- {name: Mono-Thioglycerol}
+- {days_to_keep: '0', name: Neuroectoderm, storage_conditions: RT}
+- {name: Noggin (rH/FC Chimera)}
+- {days_to_keep: '180', name: "Noggin 100\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: Pen-Strep (100X)}
+- {name: Poly(vinyl alcohol)}
+- {days_to_keep: '0', name: Pre-Differentiation, storage_conditions: RT}
+- {name: RPMI + GlutaMAX}
+- {days_to_keep: '14', name: RPMI 10% FBS, storage_conditions: "+4\xB0C"}
+- {name: RPMI 1640 + HEPES}
+- {name: SB 431542}
+- {days_to_keep: '30', name: SB 431542 10mM, storage_conditions: "-20\xB0C"}
+- {name: SCF (Human)}
+- {days_to_keep: '180', name: "SCF 100\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: Sodium Pyruvate 100mM}
+- {name: SS Media, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: SS Plus Pen Strep, storage_conditions: "+4\xB0C"}
+- {name: Stem Span H3000}
+- {name: TeSR E8 20X Supplement}
+- {name: TeSR E8 500X Supplement}
+- {name: TeSR E8 Basal Media}
+- {days_to_keep: '14', name: TeSR E8 No Pen Strep, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: TeSR E8 Plus Pen Strep, storage_conditions: "+4\xB0C"}
+- {name: Transferrin}
+- {name: Trypan Blue}
+- {name: Trypsin - EDTA (0.05%)}
+- {days_to_keep: '3', name: VTN, storage_conditions: "+4\xB0C"}
+- {name: VTN-N}
+- {days_to_keep: '3', name: VXF, storage_conditions: "+4\xB0C"}
+- {name: Water for Embryo Transfer}
+- {days_to_keep: '14', name: Wnt3a Non Selective, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '14', name: Wnt3a Selective, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '180', name: Y27632 (Rock Inhibitor) 10mM, storage_conditions: "-20\xB0\
+    C"}
+- {name: Y27632 Dihydrochloride}
+- {days_to_keep: '300', name: "zFGF2 4\xB5g/mL", storage_conditions: "-80\xB0C"}
+label_types:
+- {external_id: '2', name: Tube (2ml)}
+- {external_id: '3', name: Plate (96 long)}
+printers:
+- {label_type: Plate (96 long), name: e364bc}
+- {label_type: Tube (2ml), name: e365bc2}
+suppliers:
+- {name: AMSBIO GSC-6001G}
+- {name: BEAGLE LIMS}
+- {name: DISPASE 17105-041}
+- {name: GE HEALTHCARE K41-001}
+- {name: LAB TECH FB-1001}
+- {name: LIFE TECH 10131-035}
+- {name: LIFE TECH 10270-106 (LOT 42F6653K)}
+- {name: LIFE TECH 10270-106 (LOT 42Q7451K)}
+- {name: LIFE TECH 10569-010}
+- {name: LIFE TECH 10828-028}
+- {name: LIFE TECH 11140-035}
+- {name: LIFE TECH 11360-039}
+- {name: LIFE TECH 11905-031}
+- {name: LIFE TECH 12634-028}
+- {name: LIFE TECH 14190-094}
+- {name: LIFE TECH 15140-122}
+- {name: LIFE TECH 15230-071}
+- {name: LIFE TECH 15575-020}
+- {name: LIFE TECH 17104-019}
+- {name: LIFE TECH 17504-044}
+- {name: LIFE TECH 21980-032}
+- {name: LIFE TECH 25030-024}
+- {name: LIFE TECH 25300-054}
+- {name: LIFE TECH 31330-038}
+- {name: LIFE TECH 31765-027}
+- {name: LIFE TECH 31966-021}
+- {name: LIFE TECH 35050-061}
+- {name: LIFE TECH 52400-025}
+- {name: LIFE TECH 61870-010}
+- {name: LIFE TECH A14700}
+- {name: LIFE TECH A1516901}
+- {name: LIFE TECH A1517101}
+- {name: LIFE TECH A2858301}
+- {name: LIFE TECH A2858401}
+- {name: LIFE TECH PHC0034}
+- {name: MILTENYI 130-093-886}
+- {name: MILTENYI 130-096-694}
+- {name: PROMEGA V120A}
+- {name: R&D 287-TC}
+- {name: R&D 314-BP}
+- {name: R&D 3344-NG}
+- {name: ROCHE 10652202001}
+- {name: ROCHE 11376497001}
+- {name: SELLECK CHEM S2924-2MG}
+- {name: SIGMA 318957-500ML}
+- {name: SIGMA A4327-1G}
+- {name: SIGMA A4544-25G}
+- {name: SIGMA D2650-100ML}
+- {name: SIGMA D8 893}
+- {name: SIGMA DN25-100MG}
+- {name: SIGMA G1890-100G}
+- {name: SIGMA G7528-250G}
+- {name: SIGMA M6145-25ML}
+- {name: SIGMA M6250-100ML}
+- {name: SIGMA P8136-250G}
+- {name: SIGMA T8154}
+- {name: SIGMA W1503-500ML}
+- {name: SIGMA Y0503-5MG}
+- {name: STEMCELL 05941}
+- {name: STEMCELL 05942}
+- {name: STEMCELL 05943}
+- {name: STEMCELL 07180}
+- {name: STEMCELL 09850}
+- {name: TOCRIS 1614/1}
+- {name: UNIVERSITY OF CAMBRIDGE H ACTIVIN A 0.1MG}
+- {name: UNIVERSITY OF CAMBRIDGE ZFGF2 0.5MG}
+- {name: WORTHINGTON BIOCHEMICALS LS004194}
+teams:
+- {name: CGAP}
+- {name: DEV}
+users:
+- {team: CGAP, username: mp20}
+- {team: CGAP, username: cg4}
+- {team: CGAP, username: kst}
+- {team: CGAP, username: am52}
+- {team: DEV, username: rf9}
+- {team: DEV, username: rl15}
+- {team: DEV, username: dr6}

@@ -5,5 +5,5 @@ class Kitchen < ActiveRecord::Base
   has_many :ingredients
 
   validates_presence_of :name
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { case_sensitive: false }
 end

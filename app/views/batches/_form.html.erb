@@ -1,9 +1,9 @@
 <%= form_for @batch_form, :url => batches_path do |f| %>
 
     <script type="text/javascript">
-      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe) %>
-      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.order_by_name.to_json(include: :recipe_ingredients).html_safe) %>
-      Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.order_by_name.to_json.html_safe) %>
+      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe); %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.order_by_name.to_json(include: {latest_batch: {include: {ingredients: {}, consumables: {}}}, latest_lot: {}}).html_safe); %>
+      Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.order_by_name.to_json.html_safe) %>;
     </script>
 
     <div class="form-group">
@@ -42,7 +42,7 @@
             <span class="input-group-addon" id="barcode-scanner">
               <%= fa_icon "barcode" %>
             </span>
-            <input type="text" class="form-control" aria-describedby="barcode-scanner"></input>
+            <input type="text" class="form-control" aria-describedby="barcode-scanner">
           </div>
           <span class="help-block"></span>
         </div>
@@ -67,24 +67,33 @@
       <%= f.text_field :aliquots, { class: 'form-control' } %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :aliquot_volume, 'Aliquot volume' %>
-      <div class="row">
-        <div class="col-md-9">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <%= f.label :aliquot_volume, 'Aliquot volume*' %>
           <%= f.text_field :aliquot_volume, { class: 'form-control' } %>
         </div>
-        <div class="col-md-3">
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <%= f.label :aliquot_unit, 'Aliquot unit*' %>
           <%= f.select :aliquot_unit, Consumable.units, {}, { class: 'form-control' } %>
         </div>
       </div>
     </div>
 
     <div class="form-group">
-      <%= f.label :batch_volume, "Batch Volume*" %>
+      <label>Batch volume</label>
       <div class="input-group">
-        <%= f.text_field :batch_volume, { class: 'form-control' } %>
+        <input class="form-control" id="calculated_batch_volume" readonly>
         <span class="input-group-addon">L</span>
       </div>
+    </div>
+
+    <div class="checkbox">
+      <%= f.label :single_barcode do %>
+        <%= f.check_box :single_barcode %> All aliquots share one barcode
+      <% end %>
     </div>
 
     <div class="form-group">

@@ -1,17 +1,8 @@
 class LotSerializer < ActiveModel::Serializer
 
-  self.root = false
+  attributes :id, :number
 
-  attributes :id, :number, :consumable_type, :kitchen
-
-  def consumable_type
-    consumable_type = object.consumable_type
-    { id: consumable_type.id, uri: scope.api_v1_consumable_type_url(consumable_type) }
-  end
-
-  def kitchen
-    kitchen = object.kitchen
-    { id: kitchen.id, type: kitchen.type, name: kitchen.name }
-  end
+  has_one :consumable_type
+  has_one :kitchen
 
 end

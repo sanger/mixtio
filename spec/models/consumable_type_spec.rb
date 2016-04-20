@@ -11,35 +11,30 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type, name: consumable_type.name)).to_not be_valid
   end
 
-  it "should not be valid without a days_to_keep greater than zero" do
-    expect(build(:consumable_type, days_to_keep: 0)).to_not be_valid
+  it "should not be valid without a days_to_keep greater or equal to than zero" do
+    expect(build(:consumable_type, days_to_keep: 0)).to be_valid
+    expect(build(:consumable_type, days_to_keep: -1)).to_not be_valid
     expect(build(:consumable_type, days_to_keep: 'abc')).to_not be_valid
     expect(build(:consumable_type, days_to_keep: '')).to be_valid
-  end
-
-  it "should be able to have one recipe ingredient" do
-    consumable_type = create(:consumable_type)
-    child      = create(:consumable_type)
-    consumable_type.recipe_ingredients << child
-
-    expect(consumable_type.recipe_ingredients.count).to eq(1)
-  end
-
-  it "should be able to have many recipe ingredients" do
-    consumable_type = create(:consumable_type)
-    recipe_ingredients = create_list(:consumable_type, 3)
-
-    consumable_type.recipe_ingredients = recipe_ingredients
-
-    expect(recipe_ingredients.all? {|ingredient| consumable_type.recipe_ingredients.include?(ingredient)}).to be_truthy
+    expect(build(:consumable_type, days_to_keep: nil)).to be_valid
   end
 
   it "should return the latest ingredient for each item in its recipe" do
-    consumable_type = create(:consumable_type_with_ingredients)
-    parent_consumable_type = create(:consumable_type)
+    consumable_type = create(:consumable_type)
+    expect(consumable_type.latest_ingredients).to be_empty
 
-    expect(parent_consumable_type.latest_ingredients).to be_empty
-    expect(consumable_type.latest_ingredients.count).to eq(consumable_type.recipe_ingredients.count)
+    batch_1 = create(:batch_with_ingredients, consumable_type: consumable_type)
+    batch_2 = create(:batch_with_ingredients, consumable_type: consumable_type)
+    expect(consumable_type.latest_ingredients).to eq(batch_2.ingredients)
+  end
+
+  it 'should return the latest lot of the consumable type' do
+    consumable_type = create(:consumable_type)
+    expect(consumable_type.latest_lot).to be_nil
+
+    lot_1 = create(:lot, consumable_type: consumable_type)
+    lot_2 = create(:lot, consumable_type: consumable_type)
+    expect(consumable_type.latest_lot).to eq(lot_2)
   end
 
   it "should be able to return a collection by name (ignoring case)" do
