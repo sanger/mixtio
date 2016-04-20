@@ -43,10 +43,10 @@ gem 'backbone-on-rails'
 
 gem 'rest-client'
 
+gem 'exception_notification'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'has_secure_token'
-gem 'warden'
 
 # Use Unicorn as the app server
 # gem 'unicorn'
