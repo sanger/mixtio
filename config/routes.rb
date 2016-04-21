@@ -46,4 +46,6 @@ Rails.application.routes.draw do
     end
   end
 
+  match 'test_exception_notifier', controller: 'application', action: 'test_exception_notifier', via: :get
+
 end

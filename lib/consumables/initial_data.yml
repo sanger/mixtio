@@ -2,7 +2,10 @@ consumable_types:
 - {days_to_keep: '30', name: 0.1% BSA, storage_conditions: "+4\xB0C"}
 - {days_to_keep: '30', name: 0.1% Gelatin, storage_conditions: RT}
 - {days_to_keep: '30', name: 0.1% HSA, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '30', name: 10% RPMI (mesc), storage_conditions: "+4\xB0C"}
 - {name: 2-Mercaptoethanol}
+- {name: 2-Mercaptoethanol (mesc)}
+- {name: 2.5% Trypsin}
 - {days_to_keep: '90', name: 5% PVA, storage_conditions: "+4\xB0C"}
 - {days_to_keep: '180', name: "Activin 50\xB5g/mL", storage_conditions: "-80\xB0C"}
 - {name: Activin A (Human)}
@@ -10,12 +13,14 @@ consumable_types:
 - {days_to_keep: '180', name: Ascorbic Acid 10mg/mL, storage_conditions: "-20\xB0C"}
 - {name: B27 50X, storage_conditions: "-20\xB0C"}
 - {name: B27 Supplement (50X)}
+- {name: Blasticidin}
 - {name: BMP4 (rH)}
 - {days_to_keep: '90', name: "BMP4 10\xB5g/mL", storage_conditions: "-20\xB0C"}
 - {name: Bovine Serum Albumin (BSA)}
 - {name: CD Lipid Concentrate}
 - {days_to_keep: '14', name: CDM-BSA, storage_conditions: "+4\xB0C"}
 - {days_to_keep: '14', name: CDM-PVA, storage_conditions: "+4\xB0C"}
+- {name: Chicken Serum}
 - {name: CHIR 99021}
 - {days_to_keep: '180', name: CHIR 99021 3mM, storage_conditions: "-80\xB0C"}
 - {days_to_keep: '14', name: Collagenase, storage_conditions: "+4\xB0C"}
@@ -32,6 +37,7 @@ consumable_types:
 - {name: DMEM-F12 + HEPES}
 - {name: DMSO}
 - {name: DNAse I}
+- {name: DPBS}
 - {name: 'DPBS, no calcium, no magnesium'}
 - {days_to_keep: '14', name: E8, storage_conditions: "+4\xB0C"}
 - {name: E8 Basal Media}
@@ -39,6 +45,7 @@ consumable_types:
 - {name: E8 Flex Basal Media}
 - {name: E8 Flex Supplement}
 - {name: E8 Supplement}
+- {name: EDTA (mesc - pathogens)}
 - {name: EDTA UltraPure 0.5M}
 - {days_to_keep: '0', name: Endoderm D1, storage_conditions: RT}
 - {days_to_keep: '0', name: Endoderm D2, storage_conditions: RT}
@@ -49,6 +56,8 @@ consumable_types:
 - {name: F12 Nut Mix}
 - {name: FBS (CRISPR), storage_conditions: "-20\xB0C"}
 - {name: FBS (HIPSCI), storage_conditions: "-20\xB0C"}
+- {name: FBS (macrophage differentiation)}
+- {name: FBS (mesc)}
 - {name: FBS (Organoids), storage_conditions: "-20\xB0C"}
 - {name: Fetal Bovine Serum (CRISPR)}
 - {name: Fetal Bovine Serum (HIPSCI)}
@@ -56,11 +65,13 @@ consumable_types:
 - {name: FGF2 (Zebrafish)}
 - {name: Fibroblast Digestion Media, storage_conditions: "-20\xB0C"}
 - {days_to_keep: '14', name: Fibroblast Media, storage_conditions: "+4\xB0C"}
+- {name: G418 50mg/ml (for Neomycin resistance)}
 - {name: Gelatin (Porcine)}
 - {name: Geneticin}
 - {name: Glucose}
 - {days_to_keep: '180', name: Glucose 100X, storage_conditions: "-20\xB0C"}
 - {name: GlutaMAX}
+- {name: GMEM}
 - {name: Human Serum Albumin (HSA)}
 - {name: Hydrochloric Acid  (0.5M)}
 - {name: IGF-1 (Human)}
@@ -74,29 +85,50 @@ consumable_types:
 - {name: Knockout Serum Replacement}
 - {name: KSR, storage_conditions: "-20\xB0C"}
 - {name: L-Ascorbic Acid}
+- {name: L-Glutamine}
 - {name: L-Glutamine 200mM (100X)}
+- {days_to_keep: '180', name: L-glutamine-Sodium pyruvate, storage_conditions: "-20\xB0\
+    C"}
+- {days_to_keep: '180', name: L929 supernatant, storage_conditions: "-20\xB0C"}
+- {name: LIF}
 - {name: LY 294002}
 - {days_to_keep: '365', name: LY 294002 10mM, storage_conditions: "-20\xB0C"}
 - {days_to_keep: '14', name: M Minus, storage_conditions: "+4\xB0C"}
 - {days_to_keep: '14', name: M Plus, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '0', name: Macrophage medium (mESC)}
 - {days_to_keep: '3', name: MEF-CF1, storage_conditions: "37\xB0C"}
 - {name: MEF-CF1-IRR}
 - {name: MEM NEAA}
+- {days_to_keep: '7', name: mESC BASE Medium, storage_conditions: "+4\xB0C"}
+- {days_to_keep: '0', name: mESC Complete Medium}
+- {days_to_keep: '0', name: mESC freezing medium}
+- {days_to_keep: '0', name: mESC KO Medium (Blasticidin resistance)}
+- {days_to_keep: '0', name: mESC KO Medium (Neomycin resistance)}
 - {days_to_keep: '0', name: Mesoderm, storage_conditions: RT}
 - {name: Mono-Thioglycerol}
+- {days_to_keep: '0', name: Monocyte medium (mESC)}
+- {name: mouse iL-3}
+- {name: NEAA (mesc)}
 - {days_to_keep: '0', name: Neuroectoderm, storage_conditions: RT}
 - {name: Noggin (rH/FC Chimera)}
 - {days_to_keep: '180', name: "Noggin 100\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: Pen Strep}
+- {days_to_keep: '180', name: Pen Strep (mesc), storage_conditions: "-20\xB0C"}
 - {name: Pen-Strep (100X)}
 - {name: Poly(vinyl alcohol)}
 - {days_to_keep: '0', name: Pre-Differentiation, storage_conditions: RT}
 - {name: RPMI + GlutaMAX}
 - {days_to_keep: '14', name: RPMI 10% FBS, storage_conditions: "+4\xB0C"}
+- {name: RPMI 1640}
 - {name: RPMI 1640 + HEPES}
+- {days_to_keep: '180', name: Sal (Pathogens Challenge), storage_conditions: "-80\xB0\
+    C"}
+- {name: Salmonella (T0015)}
 - {name: SB 431542}
 - {days_to_keep: '30', name: SB 431542 10mM, storage_conditions: "-20\xB0C"}
 - {name: SCF (Human)}
 - {days_to_keep: '180', name: "SCF 100\xB5g/mL", storage_conditions: "-20\xB0C"}
+- {name: Sodium Pyruvate (100mM)}
 - {name: Sodium Pyruvate 100mM}
 - {name: SS Media, storage_conditions: "+4\xB0C"}
 - {days_to_keep: '14', name: SS Plus Pen Strep, storage_conditions: "+4\xB0C"}
@@ -109,6 +141,8 @@ consumable_types:
 - {name: Transferrin}
 - {name: Trypan Blue}
 - {name: Trypsin - EDTA (0.05%)}
+- {days_to_keep: '180', name: Trypsin (mesc - pathogens), storage_conditions: "-20\xB0\
+    C"}
 - {days_to_keep: '3', name: VTN, storage_conditions: "+4\xB0C"}
 - {name: VTN-N}
 - {days_to_keep: '3', name: VXF, storage_conditions: "+4\xB0C"}
@@ -119,6 +153,9 @@ consumable_types:
     C"}
 - {name: Y27632 Dihydrochloride}
 - {days_to_keep: '300', name: "zFGF2 4\xB5g/mL", storage_conditions: "-80\xB0C"}
+- {name: Zymosan}
+- {days_to_keep: '180', name: Zymozan (Pathogens Challenge), storage_conditions: "-20\xB0\
+    C"}
 label_types:
 - {external_id: '2', name: Tube (2ml)}
 - {external_id: '3', name: Plate (96 long)}
@@ -127,10 +164,20 @@ printers:
 - {label_type: Tube (2ml), name: e365bc2}
 suppliers:
 - {name: AMSBIO GSC-6001G}
+- {name: C HALE}
 - {name: BEAGLE LIMS}
 - {name: DISPASE 17105-041}
 - {name: GE HEALTHCARE K41-001}
+- {name: GIBCO 11140050}
+- {name: GIBCO 11360039}
+- {name: GIBCO 11811-031}
+- {name: GIBCO 15090-046}
+- {name: GIBCO 16110-082}
+- {name: GIBCO PMC0031}
+- {name: INVITROGEN}
+- {name: INVITROGEN R210-01}
 - {name: LAB TECH FB-1001}
+- {name: LABTECH FCS-SA500}
 - {name: LIFE TECH 10131-035}
 - {name: LIFE TECH 10270-106 (LOT 42F6653K)}
 - {name: LIFE TECH 10270-106 (LOT 42Q7451K)}
@@ -161,8 +208,10 @@ suppliers:
 - {name: LIFE TECH A2858301}
 - {name: LIFE TECH A2858401}
 - {name: LIFE TECH PHC0034}
+- {name: MILLIPORE ESG1107}
 - {name: MILTENYI 130-093-886}
 - {name: MILTENYI 130-096-694}
+- {name: MOLECULAR PROBES P35365}
 - {name: PROMEGA V120A}
 - {name: R&D 287-TC}
 - {name: R&D 314-BP}
@@ -173,11 +222,16 @@ suppliers:
 - {name: SIGMA 318957-500ML}
 - {name: SIGMA A4327-1G}
 - {name: SIGMA A4544-25G}
+- {name: SIGMA D2650}
 - {name: SIGMA D2650-100ML}
 - {name: SIGMA D8 893}
 - {name: SIGMA DN25-100MG}
+- {name: SIGMA E6511}
+- {name: SIGMA FCS-SA500}
 - {name: SIGMA G1890-100G}
+- {name: SIGMA G5154}
 - {name: SIGMA G7528-250G}
+- {name: SIGMA M3148-25ML}
 - {name: SIGMA M6145-25ML}
 - {name: SIGMA M6250-100ML}
 - {name: SIGMA P8136-250G}
