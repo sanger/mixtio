@@ -4,7 +4,7 @@ module HasVolume
 
   included do
     enum unit: {
-        "μL": -6,
+        "µL": -6,
         "mL": -3,
         'L': 0,
     }
@@ -17,10 +17,6 @@ module HasVolume
     else
       nil
     end
-  end
-
-  def simple_volume
-    display_volume ? display_volume.gsub('μ', 'u') : nil
   end
 
 end
