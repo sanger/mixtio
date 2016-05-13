@@ -16,15 +16,11 @@ RSpec.describe Consumable, type: :model do
   end
 
   it "should have a display volume" do
-    expect(build(:consumable, volume: 100, unit: 'μL').display_volume).to eql('100μL')
-  end
-
-  it "should have a simple volume" do
-    expect(build(:consumable, volume: 100, unit: 'μL').simple_volume).to eql('100uL')
+    expect(build(:consumable, volume: 100, unit: 'µL').display_volume).to eql('100µL')
   end
 
   it "should show fractional volume when given one" do
-    expect(build(:consumable, volume: 100.05, unit: 'μL').display_volume).to eql('100.05μL')
+    expect(build(:consumable, volume: 100.05, unit: 'µL').display_volume).to eql('100.05µL')
   end
 
   it "should not be valid without a volume" do
