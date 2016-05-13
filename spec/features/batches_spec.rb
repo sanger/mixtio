@@ -185,6 +185,7 @@ RSpec.describe "Batches", type: feature, js: true do
         create_batch
         expect(page).to have_content('errors prohibited this record from being saved')
       end
+
     end
 
     context 'when a consumable type is selected' do
@@ -226,6 +227,16 @@ RSpec.describe "Batches", type: feature, js: true do
       it 'displays a validation error' do
         fill_out_form
         expect(page).to have_content("with number 12345 could not be found")
+      end
+
+      it 'maintains the selected options' do
+        fill_out_form
+        expect(page).to have_select('Consumable Type', selected: @consumable_type.name)
+        expect(page).to have_select('batch_form[ingredients][][consumable_type_id]', selected: @consumable_type.name)
+        expect(find(:xpath, '//input[@name="batch_form[ingredients][][number]"]').value).to eq('12345')
+        expect(page).to have_select('batch_form[ingredients][][kitchen_id]', selected: @team.name)
+        expect(find_field("Expiry Date").value).to eq(@batch.expiry_date.to_s)
+        expect(find_field("Number of Aliquots").value).to eq("3")
       end
 
     end

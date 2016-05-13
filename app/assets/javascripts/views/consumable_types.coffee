@@ -1,7 +1,7 @@
 class Mixtio.Views.ConsumableTypes extends Backbone.View
 
   events:
-    change: 'setSelected'
+    change: 'onChange'
 
   initialize: (options) ->
     @favourites_collection = options.favourites
@@ -30,7 +30,10 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
       @$el.append(view)
     )
 
-  setSelected: () ->
+  setSelected: (val) ->
+    @$el.val(val)
+
+  onChange: () ->
     id = @$el.val()
 
     if id is ""
