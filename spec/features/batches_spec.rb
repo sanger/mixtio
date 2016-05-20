@@ -205,6 +205,23 @@ RSpec.describe "Batches", type: feature, js: true do
       end
     end
 
+    context 'when a consumable type is selected that has a days_to_keep of 0' do
+      before do
+        @consumable_type = create(:consumable_type, days_to_keep: 0)
+      end
+
+      let(:select_a_consumable_type) {
+        visit new_batch_path
+        select @consumable_type.name, from: 'Consumable Type'
+        wait_for_ajax
+      }
+
+      it 'sets the expiry date to today', js: true do
+        select_a_consumable_type
+        expect(find_field("Expiry Date").value).to eq(Date.today.to_date.to_s(:default))
+      end
+    end
+
     context 'when trying to use a batch that does not exist as an ingredient' do
 
       before do
