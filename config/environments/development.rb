@@ -41,4 +41,6 @@ Rails.application.configure do
 
   # config.stub_ldap = true
 
+  # Print My Barcode api base
+  config.x.pmb_api_base = 'http://pmb.dev/api/v1'
 end
