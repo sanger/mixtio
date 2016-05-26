@@ -21,7 +21,7 @@ private
           barcode_text: consumable.barcode,
           reagent_name: consumable.batch.consumable_type.name,
           batch_no: consumable.batch.number,
-          date: "Use by: #{consumable.batch.expiry_date}",
+          date: "Use by:#{consumable.batch.expiry_date}",
           barcode: consumable.barcode,
           volume: consumable.display_volume,
           storage_condition: consumable.batch.consumable_type.storage_condition,

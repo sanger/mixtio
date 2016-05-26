@@ -18,7 +18,7 @@ RSpec.describe Labels, type: :model do
     expect(first_label[:label_1][:barcode_text]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:reagent_name]).to eql(@batch.consumable_type.name)
     expect(first_label[:label_1][:batch_no]).to eql(@batch.number)
-    expect(first_label[:label_1][:date]).to eql("Use by: #{@batch.expiry_date.to_date}")
+    expect(first_label[:label_1][:date]).to eql("Use by:#{@batch.expiry_date.to_date}")
     expect(first_label[:label_1][:barcode]).to eql(first_consumable.barcode)
     expect(first_label[:label_1][:volume]).to eq("1.1mL")
     expect(first_label[:label_1][:storage_condition]).to eql('LN2')
