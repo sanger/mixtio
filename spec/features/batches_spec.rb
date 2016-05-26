@@ -65,7 +65,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'prints labels for the batch' do
-      allow(RestClient).to receive(:post).and_return(OpenStruct.new(:code => 200))
+      allow(PMB::PrintJob).to receive(:execute).and_return(true)
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -77,8 +77,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user if there\'s and error' do
-      exception = RestClient::Exception.new(OpenStruct.new(code: 500))
-      allow(RestClient).to receive(:post).and_raise(exception)
+      allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -90,6 +89,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user the error if known' do
+      pending 'Need PMB to be fixed first'
       exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
       allow(RestClient).to receive(:post).and_raise(exception)
 
