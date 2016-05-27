@@ -5,7 +5,7 @@ $ ->
     userFavouritesCollection  = new Mixtio.Collections.UserFavourites(Mixtio.Bootstrap.UserFavourites)
     consumableTypesCollection = new Mixtio.Collections.ConsumableTypes(Mixtio.Bootstrap.ConsumableTypes)
     kitchensCollection        = new Mixtio.Collections.Kitchens(Mixtio.Bootstrap.Kitchens)
-    ingredientsCollection     = new Mixtio.Collections.Ingredients()
+    ingredientsCollection     = new Mixtio.Collections.Ingredients(Mixtio.Bootstrap.Ingredients)
 
     # Create the Views
     consumableTypeView = new Mixtio.Views.ConsumableTypes(
@@ -48,7 +48,7 @@ $ ->
       favouritesStarView.update(model, options)
       expiryDateView.update(model)
       consumablesView.update(model)
-      
+
       ingredients = model?.get('latest_batch')?.ingredients?.map (ingredient) ->
         type = Mixtio.Bootstrap.ConsumableTypes.filter((type) -> type.id == ingredient.consumable_type_id)[0]
         {
@@ -66,5 +66,7 @@ $ ->
 
     # And finally render
     consumableTypeView.render()
+    consumableTypeView.setSelected(Mixtio.Bootstrap.SelectedConsumableType)
+    ingredientsView.render()
 
   $('[data-toggle="tooltip"]').tooltip()

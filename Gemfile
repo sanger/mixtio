@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.3'
 # Use sqlite3 as the database for Active Record
@@ -41,7 +40,7 @@ gem 'kaminari'
 
 gem 'backbone-on-rails'
 
-gem 'rest-client'
+gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
 
 gem 'exception_notification'
 

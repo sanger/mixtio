@@ -45,8 +45,4 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type)).to respond_to(:audits)
   end
 
-  it "should simplify storage condition" do
-    expect(build(:consumable_type, storage_condition: 0).simple_storage_condition).to eql('37C')
-  end
-
 end

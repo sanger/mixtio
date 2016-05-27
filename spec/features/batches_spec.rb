@@ -65,7 +65,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'prints labels for the batch' do
-      allow(RestClient).to receive(:post).and_return(OpenStruct.new(:code => 200))
+      allow(PMB::PrintJob).to receive(:execute).and_return(true)
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -77,8 +77,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user if there\'s and error' do
-      exception = RestClient::Exception.new(OpenStruct.new(code: 500))
-      allow(RestClient).to receive(:post).and_raise(exception)
+      allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -90,6 +89,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user the error if known' do
+      pending 'Need PMB to be fixed first'
       exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
       allow(RestClient).to receive(:post).and_raise(exception)
 
@@ -185,6 +185,7 @@ RSpec.describe "Batches", type: feature, js: true do
         create_batch
         expect(page).to have_content('errors prohibited this record from being saved')
       end
+
     end
 
     context 'when a consumable type is selected' do
@@ -201,6 +202,23 @@ RSpec.describe "Batches", type: feature, js: true do
       it 'sets the expiry date', js: true do
         select_a_consumable_type
         expect(find_field("Expiry Date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_date.to_s(:default))
+      end
+    end
+
+    context 'when a consumable type is selected that has a days_to_keep of 0' do
+      before do
+        @consumable_type = create(:consumable_type, days_to_keep: 0)
+      end
+
+      let(:select_a_consumable_type) {
+        visit new_batch_path
+        select @consumable_type.name, from: 'Consumable Type'
+        wait_for_ajax
+      }
+
+      it 'sets the expiry date to today', js: true do
+        select_a_consumable_type
+        expect(find_field("Expiry Date").value).to eq(Date.today.to_date.to_s(:default))
       end
     end
 
@@ -226,6 +244,16 @@ RSpec.describe "Batches", type: feature, js: true do
       it 'displays a validation error' do
         fill_out_form
         expect(page).to have_content("with number 12345 could not be found")
+      end
+
+      it 'maintains the selected options' do
+        fill_out_form
+        expect(page).to have_select('Consumable Type', selected: @consumable_type.name)
+        expect(page).to have_select('batch_form[ingredients][][consumable_type_id]', selected: @consumable_type.name)
+        expect(find(:xpath, '//input[@name="batch_form[ingredients][][number]"]').value).to eq('12345')
+        expect(page).to have_select('batch_form[ingredients][][kitchen_id]', selected: @team.name)
+        expect(find_field("Expiry Date").value).to eq(@batch.expiry_date.to_s)
+        expect(find_field("Number of Aliquots").value).to eq("3")
       end
 
     end

@@ -20,10 +20,6 @@ class ConsumableType < ActiveRecord::Base
       "LN2":   5
   }
 
-  def simple_storage_condition
-    (storage_condition or "").gsub('°', '')
-  end
-
   def latest_batch
     batches.last
   end
