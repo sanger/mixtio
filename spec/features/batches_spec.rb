@@ -411,7 +411,6 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:fill_in_required) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 100
       }
