@@ -29,6 +29,15 @@ class Batch < Ingredient
     'L'
   end
 
+
+  def update_last_label_id(label_type_id)
+    consumable_type.update_column(:last_label_id, label_type_id)
+  end
+
+  def get_last_label_id
+    consumable_type.last_label_id
+  end
+
   private
 
   def generate_batch_number

@@ -3,6 +3,8 @@ class BatchesController < ApplicationController
   before_action :authenticate!, except: [:index]
   before_action :current_resource, only: [:show, :print]
 
+  before_action :save_label_id, only: [:print]
+
   def index
   end
 
@@ -58,6 +60,10 @@ protected
 
   def current_resource
     @batch = Batch.find(params[:id])
+  end
+
+  def save_label_id
+    @batch.update_last_label_id(params[:label_template_id].to_i)
   end
 
   helper_method :batches
