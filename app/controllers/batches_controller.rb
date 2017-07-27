@@ -67,7 +67,7 @@ protected
   end
 
   def save_label_id
-    @batch.update_last_label_id(params[:label_template_id].to_i)
+    @batch.consumable_type.update_column(:last_label_id, params[:label_template_id].to_i)
   end
 
   helper_method :batches
