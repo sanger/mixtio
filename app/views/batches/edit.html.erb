@@ -1,6 +1,6 @@
 <section class="container">
-  <h2>New Batch</h2>
-  <% provide(:action, "Create Batch") %>
+  <h2>Edit Batch <%= @batch.number %></h2>
+  <% provide(:action, "Save Changes") %>
   <%= render "error_messages", target: @batch_form %>
   <%= render "form" %>
 </section>

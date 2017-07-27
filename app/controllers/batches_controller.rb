@@ -1,7 +1,7 @@
 class BatchesController < ApplicationController
 
   before_action :authenticate!, except: [:index]
-  before_action :current_resource, only: [:show, :print]
+  before_action :current_resource, only: [:show, :print, :edit]
 
   before_action :save_label_id, only: [:print]
 
@@ -22,6 +22,10 @@ class BatchesController < ApplicationController
   end
 
   def show
+  end
+
+  def edit
+    @batch_form = BatchForm.new
   end
 
   def print
