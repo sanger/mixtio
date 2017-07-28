@@ -61,23 +61,4 @@ RSpec.describe Batch, type: :model do
     expect(batch.display_volume).to eq('1.007L')
   end
 
-  it 'should return the id of the last label template that type was printed to' do
-    consumable_type = create(:consumable_type, id: 9, last_label_id: 180)
-    batch = create(:batch, consumable_type_id: 9)
-
-    expect(batch.get_last_label_id).to eq(180)
-  end
-
-  it 'should update the id of the last label template upon printing' do
-    label_type = create(:label_type, external_id: 299)
-    consumable_type = create(:consumable_type, id: 54, last_label_id: 299)
-    batch = create(:batch, consumable_type_id: 54)
-
-    batch.update_last_label_id(304)
-    consumable_type.reload
-
-    expect(consumable_type[:last_label_id]).to eq(304)
-
-  end
-
 end
