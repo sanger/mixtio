@@ -42,9 +42,17 @@
     </tbody>
   </table>
 
-  <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printModal">
-    Print Labels
-  </button>
+  <div class="row">
+    <div class="col-md-2">
+      <%# Button should be enabled on batches that are editable %>
+      <button type="button" class="btn btn-primary" disabled>Edit Batch</button>
+    </div>
+    <div class="col-md-offset-8 col-md-2">
+      <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printModal">
+        Print Labels
+      </button>
+    </div>
+  </div>
 
   <div class="modal fade" id="printModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">

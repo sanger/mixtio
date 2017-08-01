@@ -4,4 +4,6 @@
   <td><%= link_to batch.number, batch_path(batch) %></td>
   <td><%= batch.expiry_date.to_s %></td>
   <td><%= time_ago_in_words(batch.created_at) %> ago</td>
+  <%# The following should link to the edit page for a batch. Don't show if not editable. %>
+  <td><%= link_to (fa_icon "pencil"), batch_path(batch) %></td>
 </tr>
