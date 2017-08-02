@@ -14,7 +14,8 @@
 //= require jquery-ui
 //= require jquery_ujs
 //= require bootstrap-sprockets
-//= require turbolinks
+// Disabled turbolinks as some fields weren't populating until after a refresh
+// require turbolinks
 //= require jquery.turbolinks
 //= require underscore
 //= require backbone
