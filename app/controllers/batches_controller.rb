@@ -1,11 +1,19 @@
 class BatchesController < ApplicationController
 
   before_action :authenticate!, except: [:index]
-  before_action :current_resource, only: [:show, :print]
+  before_action :current_resource, only: [:show, :print, :edit]
 
+  # Save the label type ID when printing so it can be shown as default choice later
   before_action :save_label_id, only: [:print]
 
+  # Disable editing once the batch has been printed
+  after_action :set_editable_false, only: [:print]
+
   def index
+  end
+
+  def edit
+    @batch_form = current_resource
   end
 
   def create
@@ -25,16 +33,16 @@ class BatchesController < ApplicationController
   end
 
   def print
-    print_job = PrintJob.new(print_params.merge(:batch => current_resource))
-
-    if print_job.execute!
-      flash[:notice] = ["Your labels have been printed"]
-    else
-      flash[:error] = ["Your labels could not be printed"]
-      print_job.errors.to_a.each do |error|
-          flash[:error] << error
-      end
-    end
+    # print_job = PrintJob.new(print_params.merge(:batch => current_resource))
+    #
+    # if print_job.execute!
+    #   flash[:notice] = ["Your labels have been printed"]
+    # else
+    #   flash[:error] = ["Your labels could not be printed"]
+    #   print_job.errors.to_a.each do |error|
+    #       flash[:error] << error
+    #   end
+    # end
 
     redirect_to batch_path(@batch)
   end
@@ -64,6 +72,10 @@ protected
 
   def save_label_id
     @batch.consumable_type.update_column(:last_label_id, params[:label_template_id].to_i)
+  end
+
+  def set_editable_false
+    @batch.update_column(:editable, false)
   end
 
   helper_method :batches
