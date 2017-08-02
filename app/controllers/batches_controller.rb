@@ -14,6 +14,10 @@ class BatchesController < ApplicationController
 
   def edit
     @batch_form = current_resource
+    unless @batch_form.editable
+      redirect_to batches_path
+      flash[:error] = "This batch has already been printed, so can't be modified."
+    end
   end
 
   def create
@@ -33,16 +37,16 @@ class BatchesController < ApplicationController
   end
 
   def print
-    # print_job = PrintJob.new(print_params.merge(:batch => current_resource))
-    #
-    # if print_job.execute!
-    #   flash[:notice] = ["Your labels have been printed"]
-    # else
-    #   flash[:error] = ["Your labels could not be printed"]
-    #   print_job.errors.to_a.each do |error|
-    #       flash[:error] << error
-    #   end
-    # end
+    print_job = PrintJob.new(print_params.merge(:batch => current_resource))
+
+    if print_job.execute!
+      flash[:notice] = ["Your labels have been printed"]
+    else
+      flash[:error] = ["Your labels could not be printed"]
+      print_job.errors.to_a.each do |error|
+          flash[:error] << error
+      end
+    end
 
     redirect_to batch_path(@batch)
   end
