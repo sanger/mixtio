@@ -10,8 +10,8 @@ class PrintJob
 
   def printer_label_type_matches
     printer_model    = Printer.find_by(name: printer)
-    label_type_model = LabelType.find_by(external_id: label_template_id)
-
+    label_type_model = LabelType.find_by(id: label_template_id)
+    debugger
     if label_type_model.nil? or printer_model.nil?
       errors.add(:printer, 'does not exist') if printer_model.nil?
       errors.add(:label_template_id, 'does not exist') if label_type_model.nil?
@@ -26,8 +26,11 @@ class PrintJob
   def execute!
     return false unless valid?
 
+    # Find the label type's external ID for use with PMB
+    pmb_template_id = LabelType.find(label_template_id).external_id
+
     begin
-      PMB::PrintJob.execute(printer_name: printer, label_template_id: label_template_id, labels: labels.to_h)
+      PMB::PrintJob.execute(printer_name: printer, label_template_id: pmb_template_id, labels: labels.to_h)
       return true
     ##
     # PMB doesn't format errors in the way PMB::Client expects, so somewhere within the depths

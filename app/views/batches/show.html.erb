@@ -1,6 +1,6 @@
 <section class="container">
   <script type="text/javascript">
-    Mixtio.Bootstrap.Printers  = <%= json_escape(LabelType.all.map { |l| [l.external_id, l.printers.map { |p| p.name }]}.to_h.to_json.html_safe) %>
+    Mixtio.Bootstrap.Printers  = <%= json_escape(LabelType.all.map { |l| [l.id, l.printers.map { |p| p.name }]}.to_h.to_json.html_safe) %>
   </script>
 
   <%= render "error_messages", target: @batch %>
@@ -58,7 +58,7 @@
 
           <div class="form-group">
             <%= label_tag :label_template_id %>
-            <%= select_tag :label_template_id, options_for_select(LabelType.all.map { |type| [type.name, type.external_id] }, @batch.consumable_type.last_label_id ), class: 'form-control' %>
+            <%= select_tag :label_template_id, options_for_select(LabelType.all.map { |type| [type.name, type.id] }, @batch.consumable_type.last_label_id ), class: 'form-control' %>
           </div>
 
           <div class="form-group">
