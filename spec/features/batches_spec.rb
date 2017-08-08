@@ -501,12 +501,12 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'should update the id of the last label template upon printing' do
-      label_old = create(:label_type, name: "Big labels", external_id: 299)
-      label_new = create(:label_type, name: "Small labels", external_id: 304)
-      consumable_type = create(:consumable_type, id: 54, last_label_id: 299)
-      batch = create(:batch, consumable_type_id: 54)
+      label_old = create(:label_type, name: "Big labels")
+      label_new = create(:label_type, name: "Small labels")
       printer_old = create(:printer, label_type: label_old)
       printer_new = create(:printer, label_type: label_new)
+      consumable_type = create(:consumable_type, id: 54, last_label_id: label_old.id)
+      batch = create(:batch, consumable_type_id: 54)
 
       allow(PMB::PrintJob).to receive(:execute).and_return(true)
 
@@ -518,7 +518,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       consumable_type.reload
 
-      expect(consumable_type[:last_label_id]).to eq(304)
+      expect(consumable_type[:last_label_id]).to eq(label_new.id)
 
     end
   end
