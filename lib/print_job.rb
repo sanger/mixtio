@@ -11,7 +11,7 @@ class PrintJob
   def printer_label_type_matches
     printer_model    = Printer.find_by(name: printer)
     label_type_model = LabelType.find_by(id: label_template_id)
-    debugger
+
     if label_type_model.nil? or printer_model.nil?
       errors.add(:printer, 'does not exist') if printer_model.nil?
       errors.add(:label_template_id, 'does not exist') if label_type_model.nil?
