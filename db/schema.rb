@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170725152558) do
+ActiveRecord::Schema.define(version: 20170808142144) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
