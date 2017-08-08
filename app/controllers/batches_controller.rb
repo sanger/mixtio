@@ -13,16 +13,33 @@ class BatchesController < ApplicationController
   end
 
   def edit
-    @batch_form = current_resource
-    unless @batch_form.editable
+    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(
+      aliquots: @batch.get_aliquot_count, aliquot_volume: @batch.get_aliquot_volume,
+      aliquot_unit: @batch.get_aliquot_unit, single_barcode: @batch.single_barcode?,
+      ingredients: @batch.ingredients))
+    unless current_resource.editable
       redirect_to batches_path
       flash[:error] = "This batch has already been printed, so can't be modified."
     end
   end
 
+  def update
+    @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
+    if @batch_form.update(current_resource)
+      redirect_to batch_path, notice: "Reagent batch successfully updated?"
+    else
+      redirect_to batch_path, error: "Error updating batch"
+    end
+
+    # delete all aliquots
+    # update ingredients
+    # update batch record
+    # create new aliquots
+  end
+
   def create
     @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
-    if @batch_form.save
+    if @batch_form.create
       redirect_to batch_path(@batch_form.batch), notice: "Reagent batch successfully created"
     else
       render :new

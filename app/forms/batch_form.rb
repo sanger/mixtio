@@ -55,9 +55,10 @@ class BatchForm
                          user: current_user.user)
   end
 
-  def save
+  def create
     return false unless valid?
 
+    # Creating a batch
     begin
       ActiveRecord::Base.transaction do
         batch.save!
@@ -74,6 +75,41 @@ class BatchForm
         end
 
         batch.create_audit(user: current_user, action: 'create')
+      end
+    rescue
+      return false
+    end
+  end
+
+  def update(batch)
+    @batch = batch
+    debugger
+    return false unless valid?
+
+    # Updating a batch
+    begin
+      ActiveRecord::Base.transaction do
+        # Delete all existing consumables for the batch
+        batch.consumables.destroy_all
+        batch.update_attributes(consumable_type_id: consumable_type_id,
+        expiry_date: expiry_date, ingredients: find_ingredients,
+        kitchen: current_user.team, user: current_user.user)
+        debugger
+        batch.save!
+
+        # Create the new consumables to reflect any changes
+        attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
+        batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+
+        if single_barcode == '1'
+          barcode = batch.consumables.first.barcode
+          batch.consumables.each do |consumable|
+            consumable.barcode = barcode
+            consumable.save!
+          end
+        end
+
+        batch.create_audit(user: current_user, action: 'update')
       end
     rescue
       return false

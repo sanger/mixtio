@@ -3,7 +3,7 @@ class Consumable < ActiveRecord::Base
   include HasOrderByName
   include HasVolume
 
-  belongs_to :batch
+  belongs_to :batch, touch: true
   has_one :consumable_type, through: :batch
 
   validates :batch, :volume, :unit, presence: true

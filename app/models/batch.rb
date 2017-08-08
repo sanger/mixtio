@@ -29,26 +29,16 @@ class Batch < Ingredient
     'L'
   end
 
-
-  # Getters for missing values on edit form
-  def aliquots
+  def get_aliquot_count
     consumables.count
   end
 
-  def aliquot_volume
+  def get_aliquot_volume
     consumables.first.volume
   end
 
-  def aliquot_unit
+  def get_aliquot_unit
     consumables.first["unit"]
-  end
-
-  def single_barcode
-    if consumables.count == 1
-      true
-    else
-      consumables.first.barcode == consumables.second.barcode
-    end
   end
 
   private

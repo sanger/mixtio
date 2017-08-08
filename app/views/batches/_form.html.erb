@@ -1,4 +1,4 @@
-<%= form_for @batch_form, :url => batches_path do |f| %>
+<%= form_for @batch_form, url: yield(:url), method: yield(:method) do |f| %>
 
     <script type="text/javascript">
       Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe); %>
