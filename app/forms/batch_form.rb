@@ -94,7 +94,6 @@ class BatchForm
         batch.update_attributes(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
-        debugger
         batch.save!
 
         # Create the new consumables to reflect any changes
