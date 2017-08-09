@@ -60,4 +60,5 @@ RSpec.describe Batch, type: :model do
 
     expect(batch.display_volume).to eq('1.007L')
   end
+
 end
