@@ -39,7 +39,6 @@ class Mixtio.Views.Consumables extends Backbone.View
 
     # Set precison to remove some floating point errors
     precision = 12
-    #scaled_volume = Math.round(total_volume * (10 ** precision)) * (10 ** -precision)
     scaled_volume = Math.round(total_volume * 10**precision) / (10**precision)
 
     @batchVolumeEl.val(scaled_volume)
