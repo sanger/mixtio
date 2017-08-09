@@ -33,7 +33,6 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
 
   setSelected: (val) ->
     @$el.val(val)
-    @onChange() # trigger this to update favourites when loading a batch in edit mode
 
   onChange: () ->
     id = @$el.val()
