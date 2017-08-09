@@ -58,7 +58,6 @@ class BatchForm
   def create
     return false unless valid?
 
-    # Creating a batch
     begin
       ActiveRecord::Base.transaction do
         batch.save!
@@ -82,10 +81,8 @@ class BatchForm
   end
 
   def update(batch)
-    @batch = batch
     return false unless valid?
 
-    # Updating a batch
     begin
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch

@@ -28,13 +28,8 @@ class BatchesController < ApplicationController
     if @batch_form.update(current_resource)
       redirect_to batch_path, notice: "Reagent batch successfully updated?"
     else
-      redirect_to batch_path, error: "Error updating batch"
+      render :edit
     end
-
-    # delete all aliquots
-    # update ingredients
-    # update batch record
-    # create new aliquots
   end
 
   def create
