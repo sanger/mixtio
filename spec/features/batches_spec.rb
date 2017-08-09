@@ -493,6 +493,9 @@ RSpec.describe "Batches", type: feature, js: true do
       select '', from: 'Consumable Type'
     end
 
+  end
+
+  describe "#print" do
     it 'should return the id of the last label template that type was printed to' do
       consumable_type = create(:consumable_type, id: 9, last_label_id: 180)
       batch = create(:batch, consumable_type_id: 9)
@@ -520,6 +523,50 @@ RSpec.describe "Batches", type: feature, js: true do
 
       expect(consumable_type[:last_label_id]).to eq(304)
 
+    end
+  end
+
+  describe "#edit" do
+    context "submitting invalid info" do
+      it "shows the applicable error(s)" do
+
+      end
+
+      it "doesn't update the record with invalid information" do
+
+      end
+    end
+
+    context "viewing the edit form" do
+      it "populates the from with the info from the current batch" do
+
+      end
+
+      it "shows the correct favourite status of the consumable type" do
+
+      end
+
+      it "shows 'Save Changes' on the submit button" do
+
+      end
+
+      it "shows the title of the batch at the top of the form" do
+
+      end
+    end
+
+    context "submitting the form" do
+      it "updates the appropriate records" do
+
+      end
+
+      it "displays the updated information" do
+
+      end
+
+      it "shows a message upon successful update" do
+        
+      end
     end
   end
 end
