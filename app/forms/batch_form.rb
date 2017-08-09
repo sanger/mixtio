@@ -83,7 +83,6 @@ class BatchForm
 
   def update(batch)
     @batch = batch
-    debugger
     return false unless valid?
 
     # Updating a batch

@@ -18,6 +18,7 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
     @$el.val(@selected.id) if @selected?
     this
 
+
   renderEmpty: (spacer = '') ->
     @$el.append(JST["empty_option"]())
 
@@ -32,6 +33,7 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
 
   setSelected: (val) ->
     @$el.val(val)
+    @onChange() # trigger this to update favourites when loading a batch in edit mode
 
   onChange: () ->
     id = @$el.val()
