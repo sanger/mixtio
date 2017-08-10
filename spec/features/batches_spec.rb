@@ -662,17 +662,13 @@ RSpec.describe "Batches", type: feature, js: true do
         @batch.update(editable: false)
         visit batches_path
         all("table tbody tr").each do |row|
-          row.all("td").each do |col|
-            if col.text == @batch2.consumable_type.name
-              expect(row).to have_selector("i.fa.fa-pencil")
-            elsif col.text == @batch.consumable_type.name
-              expect(row).to_not have_selector("i.fa.fa-pencil")
-            end
+          if row.text.include?(@batch2.consumable_type.name)
+            expect(row).to have_selector("i.fa.fa-pencil")
+          elsif row.text.include?(@batch.consumable_type.name)
+            expect(row).to_not have_selector("i.fa.fa-pencil")
           end
         end
       end
-
-
 
 
     end
