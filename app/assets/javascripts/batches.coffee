@@ -1,4 +1,4 @@
-$ ->
+$(document).on("turbolinks:load", () ->
   for item in $("#batch-ingredients-table")
 
     # Create the Collections
@@ -73,3 +73,4 @@ $ ->
     ingredientsView.render()
 
   $('[data-toggle="tooltip"]').tooltip()
+)
