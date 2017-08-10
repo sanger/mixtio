@@ -26,7 +26,7 @@ class BatchesController < ApplicationController
   def update
     @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
     if @batch_form.update(current_resource)
-      redirect_to batch_path, notice: "Reagent batch successfully updated?"
+      redirect_to batch_path, notice: "Reagent batch successfully updated!"
     else
       render :edit
     end
