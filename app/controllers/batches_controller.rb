@@ -72,8 +72,8 @@ protected
   end
 
   def edit_batch_params
-    {aliquots: @batch.get_aliquot_count, aliquot_volume: @batch.get_aliquot_volume,
-    aliquot_unit: @batch.get_aliquot_unit, single_barcode: @batch.single_barcode?,
+    {aliquots: @batch.size, aliquot_volume: @batch.aliquot_volume,
+    aliquot_unit: @batch.aliquot_unit, single_barcode: @batch.single_barcode?,
     ingredients: @batch.ingredients}
   end
 

@@ -29,15 +29,15 @@ class Batch < Ingredient
     'L'
   end
 
-  def get_aliquot_count
+  def size
     consumables.count
   end
 
-  def get_aliquot_volume
+  def aliquot_volume
     consumables.first.volume
   end
 
-  def get_aliquot_unit
+  def aliquot_unit
     consumables.first["unit"]
   end
 
