@@ -62,15 +62,10 @@ class BatchForm
       ActiveRecord::Base.transaction do
         batch.save!
 
-        attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
-        batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
 
         if single_barcode == '1'
-          barcode = batch.consumables.first.barcode
-          batch.consumables.each do |consumable|
-            consumable.barcode = barcode
-            consumable.save!
-          end
+          generate_single_barcode(batch)
         end
 
         batch.create_audit(user: current_user, action: 'create')
@@ -87,21 +82,16 @@ class BatchForm
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch
         batch.consumables.destroy_all
-        batch.update_attributes(consumable_type_id: consumable_type_id,
+        batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
         batch.save!
 
         # Create the new consumables to reflect any changes
-        attributes = {volume: aliquot_volume, unit: aliquot_unit.to_i}
-        batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
 
         if single_barcode == '1'
-          barcode = batch.consumables.first.barcode
-          batch.consumables.each do |consumable|
-            consumable.barcode = barcode
-            consumable.save!
-          end
+          generate_single_barcode(batch)
         end
 
         batch.create_audit(user: current_user, action: 'update')
@@ -110,5 +100,18 @@ class BatchForm
       return false
     end
   end
+
+  private
+    def create_consumables(batch, attributes)
+      batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+    end
+
+    def generate_single_barcode(batch)
+      barcode = batch.consumables.first.barcode
+      batch.consumables.each do |consumable|
+        consumable.barcode = barcode
+        consumable.save!
+      end
+    end
 
 end
