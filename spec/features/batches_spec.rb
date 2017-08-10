@@ -673,4 +673,42 @@ RSpec.describe "Batches", type: feature, js: true do
 
     end
   end
+
+  describe "getters" do
+    before :each do
+      @batch = create(:batch)
+      @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
+    end
+
+    context "retrieving the batch size (consumable count)" do
+      it "returns the correct value" do
+        expect(@batch.size).to eq(12)
+      end
+    end
+
+    context "retrieving the aliquot count" do
+      it "returns the correct value" do
+        expect(@batch.aliquot_volume).to eq(42)
+      end
+    end
+
+    context "retrieving the aliquot volume" do
+      it "returns the correct value" do
+        expect(@batch.aliquot_unit).to eq(-3)
+      end
+    end
+  end
+
+  describe "consumables" do
+    context "updating a consumable" do
+      it "updates the updated_at column in the parent batch" do
+        @batch = create(:batch)
+        orig_time = @batch.updated_at
+        @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
+        expect(@batch.updated_at).to be > orig_time
+
+      end
+    end
+  end
+
 end
