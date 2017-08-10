@@ -599,7 +599,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       it "shows 'Save Changes' on the submit button" do
         visit edit_batch_path(@batch)
-        expect(page).to have_selector("input[type=submit][value='Save Changes']")
+        expect(page).to have_button("Save Changes")
       end
 
       it "shows the title of the batch at the top of the form" do
@@ -648,6 +648,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it "shows an error if you try to access the URL" do
         @batch.update(editable: false)
         visit edit_batch_path(@batch)
+        current_path.should == "/batches"
         expect(page).to have_text("This batch has already been printed, so can't be modified.")
       end
 
@@ -661,14 +662,19 @@ RSpec.describe "Batches", type: feature, js: true do
         @batch.update(editable: false)
         visit batches_path
         all("table tbody tr").each do |row|
-          row_data = row.all("td")
-          if row_data[1].text == @batch2.consumable_type.name
-            expect(row_data[5]).to have_selector("i.fa.fa-pencil")
-          elsif row_data[1].text == @batch.consumable_type.name
-            expect(row_data[5]).to_not have_selector("i.fa.fa-pencil")
+          row.all("td").each do |col|
+            if col.text == @batch2.consumable_type.name
+              expect(row).to have_selector("i.fa.fa-pencil")
+            elsif col.text == @batch.consumable_type.name
+              expect(row).to_not have_selector("i.fa.fa-pencil")
+            end
           end
         end
       end
+
+
+
+
     end
   end
 end
