@@ -61,4 +61,29 @@ RSpec.describe Batch, type: :model do
     expect(batch.display_volume).to eq('1.007L')
   end
 
+  describe "getters" do
+    before :each do
+      @batch = create(:batch)
+      @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
+    end
+
+    context "retrieving the batch size (consumable count)" do
+      it "returns the correct value" do
+        expect(@batch.size).to eq(12)
+      end
+    end
+
+    context "retrieving the aliquot count" do
+      it "returns the correct value" do
+        expect(@batch.aliquot_volume).to eq(42)
+      end
+    end
+
+    context "retrieving the aliquot volume" do
+      it "returns the correct value" do
+        expect(@batch.aliquot_unit).to eq(-3)
+      end
+    end
+  end
+
 end
