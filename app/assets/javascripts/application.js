@@ -14,7 +14,6 @@
 //= require jquery-ui
 //= require jquery_ujs
 //= require bootstrap-sprockets
-//= require turbolinks
 //= require jquery.turbolinks
 //= require underscore
 //= require backbone
@@ -24,3 +23,4 @@
 //= require_tree ./views
 //= require_tree ../templates
 //= require_tree .
+//= require turbolinks

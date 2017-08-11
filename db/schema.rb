@@ -63,9 +63,10 @@ ActiveRecord::Schema.define(version: 20170808142144) do
     t.string   "number"
     t.string   "type"
     t.date     "expiry_date"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "user_id"
+    t.boolean  "editable",           default: true
   end
 
   add_index "ingredients", ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"

@@ -18,6 +18,7 @@ class Mixtio.Views.ConsumableTypes extends Backbone.View
     @$el.val(@selected.id) if @selected?
     this
 
+
   renderEmpty: (spacer = '') ->
     @$el.append(JST["empty_option"]())
 
