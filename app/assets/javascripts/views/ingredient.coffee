@@ -44,7 +44,7 @@ class Mixtio.Views.Ingredient extends Backbone.View
     else
       @numberInput.val("")
       @kitchenSelect.val(null)
-      
+
     this
 
 
