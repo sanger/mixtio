@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170808142144) do
+ActiveRecord::Schema.define(version: 20170817140044) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -37,12 +37,13 @@ ActiveRecord::Schema.define(version: 20170808142144) do
 
   create_table "consumables", force: :cascade do |t|
     t.integer  "batch_id"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.string   "barcode"
-    t.boolean  "depleted",                            default: false
-    t.decimal  "volume",     precision: 10, scale: 3
+    t.boolean  "depleted",                              default: false
+    t.decimal  "volume",       precision: 10, scale: 3
     t.integer  "unit"
+    t.integer  "sub_batch_id"
   end
 
   add_index "consumables", ["batch_id"], name: "index_consumables_on_batch_id"
