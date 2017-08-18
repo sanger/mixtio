@@ -1,0 +1,8 @@
+<section class="container">
+  <h2>Editing Batch: <%= @batch.number %></h2>
+  <% provide(:action, "Save Changes") %>
+  <% provide(:url, batch_path) %>
+  <% provide(:method, :patch) %>
+  <%= render "error_messages", target: @batch_form %>
+  <%= render "form" %>
+</section>

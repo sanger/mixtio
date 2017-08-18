@@ -1,4 +1,4 @@
-$ ->
+$(document).on("turbolinks:load", () ->
   for item in $("#batch-ingredients-table")
 
     # Create the Collections
@@ -67,6 +67,10 @@ $ ->
     # And finally render
     consumableTypeView.render()
     consumableTypeView.setSelected(Mixtio.Bootstrap.SelectedConsumableType)
+    selectedConsumableType = consumableTypesCollection.findWhere({id: parseInt(Mixtio.Bootstrap.SelectedConsumableType)})
+    if selectedConsumableType?
+      favouritesStarView.update(selectedConsumableType, {isFavourite: !!userFavouritesCollection.findWhere({id: selectedConsumableType.id})})
     ingredientsView.render()
 
   $('[data-toggle="tooltip"]').tooltip()
+)

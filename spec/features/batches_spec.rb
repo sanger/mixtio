@@ -411,7 +411,6 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:fill_in_required) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "Number of Aliquots", with: 3
         fill_in "Aliquot volume", with: 100
       }
@@ -493,5 +492,198 @@ RSpec.describe "Batches", type: feature, js: true do
       select consumable_type.name, from: 'Consumable Type'
       select '', from: 'Consumable Type'
     end
+
   end
+
+  describe "#print" do
+    it 'should return the id of the last label template that type was printed to' do
+      consumable_type = create(:consumable_type, id: 9, last_label_id: 180)
+      batch = create(:batch, consumable_type_id: 9)
+
+      expect(batch.consumable_type.last_label_id).to eq(180)
+    end
+
+    it 'should update the id of the last label template upon printing' do
+      label_old = create(:label_type, name: "Big labels")
+      label_new = create(:label_type, name: "Small labels")
+      printer_old = create(:printer, label_type: label_old)
+      printer_new = create(:printer, label_type: label_new)
+      consumable_type = create(:consumable_type, id: 54, last_label_id: label_old.id)
+      batch = create(:batch, consumable_type_id: 54)
+
+      allow(PMB::PrintJob).to receive(:execute).and_return(true)
+
+      visit batch_path(batch)
+      click_button "Print Labels"
+      sleep 1
+      select label_new.name, from: "Label template"
+      click_button "Print"
+
+      consumable_type.reload
+
+      expect(consumable_type[:last_label_id]).to eq(label_new.id)
+
+    end
+  end
+
+  describe "#edit" do
+    before :each do
+      test_user = create(:user)
+      @consumable_type1 = create(:consumable_type)
+      @consumable_type2 = create(:consumable_type)
+
+      @batch = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
+        ingredients: [create(:ingredient)])
+      @batch.consumables.create!(Array.new(1, {volume: 4, unit: 'mL'}))
+
+      @batch2 = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type2.id)
+    end
+
+    context "submitting invalid info" do
+      before :each do
+        visit edit_batch_path(@batch)
+        @batch_orig = { consumable_type: @batch.consumable_type.name,
+          expiry_date: @batch.expiry_date.to_s,
+          consumables_count: @batch.consumables.count.to_s,
+          aliquot_volume: @batch.consumables.first.display_volume.to_s,
+          ingredients: @batch.ingredients }
+
+        select "", from: "batch_form_consumable_type_id"
+        fill_in "batch_form_expiry_date", with: ""
+        fill_in "batch_form_aliquots", with: ""
+        fill_in "batch_form_aliquot_volume", with: ""
+
+        click_button "Save Changes"
+        sleep 1
+      end
+
+      it "shows the applicable error(s)" do
+        within("div.alert-danger") do
+          expect(page).to have_css("li", count: 5)
+        end
+      end
+
+      it "doesn't update the record with invalid information" do
+        visit batch_path(@batch)
+        expect(page).to have_text("Consumable type: " + @batch_orig[:consumable_type])
+        expect(page).to have_text("Expiry date: " + @batch_orig[:expiry_date])
+        expect(page).to have_text("Consumables: " + @batch_orig[:consumables_count])
+        expect(page).to have_text("Aliquot Volume: " + @batch_orig[:aliquot_volume])
+
+        # ensure the ingredients list shows the same number as pre-edit
+        within("tbody") do
+          expect(page).to have_selector("tr", count: @batch_orig[:ingredients].count)
+        end
+      end
+    end
+
+    context "viewing the edit form" do
+      it "populates the form with the info from the current batch" do
+        visit edit_batch_path(@batch)
+        expect(page).to have_select("batch_form_consumable_type_id", selected: @batch.consumable_type.name)
+        expect(page).to have_select("batch_form_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
+        expect(page).to have_field("batch_form_expiry_date", with: @batch.expiry_date.to_s)
+        expect(page).to have_field("batch_form_aliquots", with: @batch.consumables.count)
+        expect(page).to have_field("batch_form_aliquot_volume", with: @batch.consumables.first.volume)
+        expect(page).to have_select("batch_form_aliquot_unit", selected: @batch.consumables.first.unit)
+        expect(page).to have_unchecked_field("batch_form_single_barcode")
+
+      end
+
+      it "shows the correct favourite status of the consumable type" do
+        @fav = create(:favourite, user_id: test_user.id, consumable_type_id: @consumable_type1.id)
+        visit edit_batch_path(@batch)
+        expect(page).to have_select("batch_form_consumable_type_id", selected: @consumable_type1.name)
+        expect(page).to have_selector("i.fa.fa-star.fa-3x.favourite")
+      end
+
+      it "shows 'Save Changes' on the submit button" do
+        visit edit_batch_path(@batch)
+        expect(page).to have_button("Save Changes")
+      end
+
+      it "shows the title of the batch at the top of the form" do
+        visit edit_batch_path(@batch)
+        expect(page).to have_css("h2", text: 'Editing Batch: ' + @batch.number)
+      end
+    end
+
+    context "submitting the form" do
+      it "updates the appropriate records" do
+        @external_team = create(:supplier)
+
+        visit edit_batch_path(@batch)
+        # consumable type dropdown
+        select @consumable_type2.name, from: "batch_form_consumable_type_id"
+
+        # ingredients form
+        click_button("Add Ingredient")
+        select @consumable_type2.name, from: "batch_form_ingredients__consumable_type_id"
+        select @external_team.name, from: "batch_form_ingredients__kitchen_id"
+
+        # rest of form
+        fill_in "batch_form_expiry_date", with: "11/11/2021"
+        fill_in "batch_form_aliquots", with: "74"
+        fill_in "batch_form_aliquot_volume", with: "9"
+        check("batch_form_single_barcode")
+        click_button "Save Changes"
+
+        visit batch_path(@batch)
+        expect(page).to have_text("Consumable type: " + @consumable_type2.name)
+        expect(page).to have_text("Expiry date: 11/11/2021")
+        expect(page).to have_text("Consumables: 74")
+        expect(page).to have_text("Aliquot Volume: 9mL")
+        expect(page).to have_text("Barcode Type: One per batch")
+        expect(page).to have_text(@external_team.name)
+      end
+
+      it "shows a message upon successful update" do
+        visit edit_batch_path(@batch)
+        click_button("Save Changes")
+        expect(page).to have_text("Reagent batch successfully updated!")
+      end
+    end
+
+    context "trying to edit a printed batch" do
+      it "shows an error if you try to access the URL" do
+        @batch.update(editable: false)
+        visit edit_batch_path(@batch)
+        current_path.should == "/batches"
+        expect(page).to have_text("This batch has already been printed, so can't be modified.")
+      end
+
+      it "disables the 'Edit Batch' button when viewing a batch" do
+        @batch.update(editable: false)
+        visit batch_path(@batch)
+        expect(page).to_not have_button("Edit Batch")
+      end
+
+      it "doesn't show the corresponding pencil when viewing the batch index" do
+        @batch.update(editable: false)
+        visit batches_path
+        all("table tbody tr").each do |row|
+          if row.text.include?(@batch2.consumable_type.name)
+            expect(row).to have_selector("i.fa.fa-pencil")
+          elsif row.text.include?(@batch.consumable_type.name)
+            expect(row).to_not have_selector("i.fa.fa-pencil")
+          end
+        end
+      end
+
+
+    end
+  end
+
+  describe "consumables" do
+    context "updating a consumable" do
+      it "updates the updated_at column in the parent batch" do
+        @batch = create(:batch)
+        orig_time = @batch.updated_at
+        @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
+        expect(@batch.updated_at).to be > orig_time
+
+      end
+    end
+  end
+
 end

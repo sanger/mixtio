@@ -1,6 +1,6 @@
 <section class="container">
   <script type="text/javascript">
-    Mixtio.Bootstrap.Printers  = <%= json_escape(LabelType.all.map { |l| [l.external_id, l.printers.map { |p| p.name }]}.to_h.to_json.html_safe) %>
+    Mixtio.Bootstrap.Printers  = <%= json_escape(LabelType.all.map { |l| [l.id, l.printers.map { |p| p.name }]}.to_h.to_json.html_safe) %>
   </script>
 
   <%= render "error_messages", target: @batch %>
@@ -10,7 +10,7 @@
 
   <ul>
     <li><strong>Created at: </strong><%= @batch.created_at %></li>
-    <li><strong>Created by: </strong><%= @batch.user.username %> (<%= @batch.kitchen.name %>)</li>
+    <li><strong><%= @batch.created_at == @batch.updated_at ? "Created by: " : "Last Updated by: " %></strong><%= @batch.user.username %> (<%= @batch.kitchen.name %>)</li>
     <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
     <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
     <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
@@ -42,9 +42,18 @@
     </tbody>
   </table>
 
-  <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printModal">
-    Print Labels
-  </button>
+  <div class="row">
+    <div class="col-md-2">
+      <% if @batch.editable? %>
+        <%= button_to "Edit Batch", edit_batch_path(@batch), class: "btn btn-primary", method: :get %>
+      <% end %>
+    </div>
+    <div class="col-md-offset-8 col-md-2">
+      <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printModal">
+        Print Labels
+      </button>
+    </div>
+  </div>
 
   <div class="modal fade" id="printModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -58,7 +67,7 @@
 
           <div class="form-group">
             <%= label_tag :label_template_id %>
-            <%= select_tag :label_template_id, options_for_select(LabelType.all.map { |type| [type.name, type.external_id] }), class: 'form-control' %>
+            <%= select_tag :label_template_id, options_for_select(LabelType.all.map { |type| [type.name, type.id] }, @batch.consumable_type.last_label_id ), class: 'form-control' %>
           </div>
 
           <div class="form-group">

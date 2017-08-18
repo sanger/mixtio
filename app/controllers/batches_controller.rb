@@ -1,14 +1,37 @@
 class BatchesController < ApplicationController
 
   before_action :authenticate!, except: [:index]
-  before_action :current_resource, only: [:show, :print]
+  before_action :current_resource, only: [:show, :print, :edit]
+
+  # Save the label type ID when printing so it can be shown as default choice later
+  before_action :save_label_id, only: [:print]
+
+  # Disable editing once the batch has been printed
+  after_action :set_editable_false, only: [:print]
 
   def index
   end
 
+  def edit
+    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(edit_batch_params))
+    unless current_resource.editable
+      redirect_to batches_path
+      flash[:error] = "This batch has already been printed, so can't be modified."
+    end
+  end
+
+  def update
+    @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
+    if @batch_form.update(current_resource)
+      redirect_to batch_path, notice: "Reagent batch successfully updated!"
+    else
+      render :edit
+    end
+  end
+
   def create
     @batch_form = BatchForm.new(batch_params.merge(current_user: current_user))
-    if @batch_form.save
+    if @batch_form.create
       redirect_to batch_path(@batch_form.batch), notice: "Reagent batch successfully created"
     else
       render :new
@@ -48,6 +71,12 @@ protected
           )
   end
 
+  def edit_batch_params
+    {aliquots: @batch.size, aliquot_volume: @batch.aliquot_volume,
+    aliquot_unit: @batch.aliquot_unit, single_barcode: @batch.single_barcode?,
+    ingredients: @batch.ingredients}
+  end
+
   def batches
     @batches ||= Batch.order_by_created_at.page(params[:page])
   end
@@ -58,6 +87,14 @@ protected
 
   def current_resource
     @batch = Batch.find(params[:id])
+  end
+
+  def save_label_id
+    @batch.consumable_type.update_column(:last_label_id, params[:label_template_id].to_i)
+  end
+
+  def set_editable_false
+    @batch.update_column(:editable, false)
   end
 
   helper_method :batches
