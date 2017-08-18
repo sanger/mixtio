@@ -65,9 +65,10 @@ protected
   def batch_params
     params.require(:batch_form)
           .permit(:consumable_type_id, :consumable_name, :expiry_date,
-                  :aliquots, :aliquot_volume, :aliquot_unit, :batch_volume,
+                  #:aliquots, :aliquot_volume, :aliquot_unit, :batch_volume,
                   :single_barcode,
-                  :ingredients => [:consumable_type_id, :number, :kitchen_id]
+                  :ingredients => [:consumable_type_id, :number, :kitchen_id],
+                  :sub_batches => [:quantity, :volume, :unit]
           )
   end
 

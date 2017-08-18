@@ -19,9 +19,11 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
-  validates :aliquots, numericality: {only_integer: true}
-  validates :aliquot_volume, numericality: {greater_than: 0}
+  # validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
+  validates :consumable_type_id, :expiry_date, :current_user, presence: true
+
+  # validates :aliquots, numericality: {only_integer: true}
+  # validates :aliquot_volume, numericality: {greater_than: 0}
 
   validate do
     selected_ingredients.each do |ingredient|

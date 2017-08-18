@@ -4,22 +4,32 @@
   </script>
 
   <%= render "error_messages", target: @batch %>
-  <h2>Batch <%= @batch.number %></h2>
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Batch <%= @batch.number %></h2>
+    </div>
+    <div class="col-md-6" style="margin-top: 20px">
+      <% if (@batch.created_at != @batch.updated_at) %>
+        <small class="pull-right">
+          <%= "Updated by " + @batch.user.username %> (<%= @batch.kitchen.name %>) <%= time_ago_in_words(@batch.updated_at) %> ago
+        </small><br>
+      <% end %>
+      <small class="pull-right">Created <%= "by " + @batch.user.username if (@batch.created_at == @batch.updated_at) %> at <%= @batch.created_at %></small>
+    </div>
+  </div>
 
   <h3>Information</h3>
 
   <ul>
-    <li><strong>Created at: </strong><%= @batch.created_at %></li>
-    <li><strong><%= @batch.created_at == @batch.updated_at ? "Created by: " : "Last Updated by: " %></strong><%= @batch.user.username %> (<%= @batch.kitchen.name %>)</li>
     <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
     <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
     <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
-    <li><strong>Consumables: </strong><%= @batch.consumables.length %></li>
+    <!-- <li><strong>Consumables: </strong><%= @batch.consumables.length %></li>
     <% if @batch.consumables.length > 0 and @batch.consumables.first.display_volume %>
       <li><strong>Aliquot Volume: </strong><%= @batch.consumables.first.display_volume %></li>
     <% end %>
-    <li><strong>Batch Volume: </strong><%= @batch.display_volume %></li>
-    <li><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></li>
+    <li><strong>Batch Volume: </strong><%= @batch.display_volume %></li> -->
+    <li><strike><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></strike></li>
   </ul>
 
   <h3>Ingredients</h3>
@@ -27,7 +37,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th><th></th>
+        <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th>
       </tr>
     </thead>
 
@@ -41,6 +51,38 @@
       <% end %>
     </tbody>
   </table>
+
+  <h3>Sub-Batches <small>Aliquot Groups</small></h3>
+  <div class="row">
+    <div class="col-md-5">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcode Type</th><th>Print</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- Use Javascript to populate this from values stored in database -->
+      <tr>
+        <td>8</td>
+        <td>15</td>
+        <td>mL</td>
+        <td>per aliquot</td>
+        <td><input type="radio" name="" value=""></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>0.5</td>
+        <td>µL</td>
+        <td>per sub-batch</td>
+        <td><input type="radio" name="" value=""></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+</div>
 
   <div class="row">
     <div class="col-md-2">

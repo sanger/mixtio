@@ -1,0 +1,15 @@
+<td>
+  <input class="form-control" type="number" value="<%= quantity %>"
+         name="batch_form[sub_batches][][quantity]" id="batch_form_sub_batches__quantity" />
+</td>
+<td>
+  <input class="form-control" type="number" value="<%= volume %>"
+         name="batch_form[sub_batches][][volume]" id="batch_form_sub_batches__volume" />
+</td>
+<td>
+  <!--  This should be a dropdown popualted from Consumable.units, have created Mixtio.Bootstrap.Units to aid -->
+
+  <input class="form-control" type="text" value="<%= selected_unit %>"
+         name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit" disabled />
+</td>
+<td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>
