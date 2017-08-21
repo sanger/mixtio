@@ -18,60 +18,68 @@
     </div>
   </div>
 
-  <h3>Information</h3>
-
-  <ul>
-    <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
-    <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
-    <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
-    <li><strike><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></strike></li>
-  </ul>
-
-  <h3>Ingredients</h3>
-
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @batch.ingredients.each do |ingredient| %>
-      <tr>
-        <td><%= ingredient.consumable_type.name %></td>
-        <td><%= ingredient.number %></td>
-        <td><%= ingredient.kitchen.name %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <h3>Sub-Batches <small>Aliquot Groups</small></h3>
   <div class="row">
-    <div class="col-md-5">
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcode Type</th><th>Print</th>
-      </tr>
-    </thead>
+    <div class="col-md-6">
+      <h3>Information</h3>
+      <ul>
+        <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
+        <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
+        <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
+        <li><strike><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></strike></li>
+      </ul>
+    </div>
+    <h3>Sub-Batches</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcode Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
+              <tr>
+                <td><%= @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %></td>
+                <td><%= sub_batch.volume %></td>
+                <td><%= sub_batch.unit %></td>
+                <td>?</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-    <tbody>
-      <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
-        <tr>
-          <td><%= @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %></td>
-          <td><%= sub_batch.volume %></td>
-          <td><%= sub_batch.unit %></td>
-          <td>?</td>
-          <td>?</td>
-        </tr>
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Ingredients</h3>
+      <% if @batch.ingredients.count == 0 %>
+        <div style="padding-bottom: 10px;">
+          None
+        </div>
+      <% else %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @batch.ingredients.each do |ingredient| %>
+            <tr>
+              <td><%= ingredient.consumable_type.name %></td>
+              <td><%= ingredient.number %></td>
+              <td><%= ingredient.kitchen.name %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
       <% end %>
-    </tbody>
-  </table>
-
-</div>
-</div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-md-2">
