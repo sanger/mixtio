@@ -8,8 +8,11 @@
 </td>
 <td>
   <!--  This should be a dropdown popualted from Consumable.units, have created Mixtio.Bootstrap.Units to aid -->
-
-  <input class="form-control" type="text" value="<%= selected_unit %>"
-         name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit" disabled />
+   <select class="form-control" name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit">
+     <% var units = Mixtio.Bootstrap.Units %>
+     <% Object.keys(units).forEach(key => { %>
+     <option value=<%= units[key] %> <% if (selected_unit == key) {%> selected <%}%>><%= key %></option>
+     <% }); %>
+   </select>
 </td>
 <td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>
