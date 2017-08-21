@@ -21,7 +21,7 @@ class Mixtio.Views.SubBatches extends Backbone.View
     )
     @$el.append(subBatchView.render().el)
 
-  update: (sub_batch) ->
+  update: (sub_batches) ->
     @collection.reset()
     sub_batches.each (sub_batch) =>
       @collection.add(sub_batch)

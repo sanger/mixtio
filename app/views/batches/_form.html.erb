@@ -9,10 +9,15 @@
 
       Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
 
-      <% if @batch.present? %> // TODO This might not be a solution as the below must also exist when creating a new batch, to hold the data
+      <% if @batch.present? %>
       // Contains one consumable per sub-batch, so the info can be used to populate the table
       Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.consumables.group(:sub_batch_id).to_json.html_safe) %>
+      // Contains the counts of consumables with each sub-type ID
       Mixtio.Bootstrap.SubBatchCounts  = <%= json_escape(@batch.consumables.group(:sub_batch_id).count.to_json.html_safe) %>
+      <% else %>
+      // Creating a new batch, so initialise empty objects to be used by JS
+      Mixtio.Bootstrap.SubBatches      = {};
+      Mixtio.Bootstrap.SubBatchCounts  = {};
       <% end %>
     </script>
 
@@ -30,16 +35,18 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :ingredients %>
+      <h3>Ingredients</h3>
       <%= f.fields_for "ingredients[]", Ingredient.new do |ingredient| %>
         <%= hidden_field_tag "batch_form[ingredients][]" %>
 
         <div class="row">
           <div class="col-md-12">
             <table id="batch-ingredients-table" class="table table-striped">
+            <thead>
               <tr>
                 <th>Ingredient*</th><th>Lot/Batch Number</th><th>Supplier (Product Code)*</th><th></th>
               </tr>
+              </thead>
             </table>
           </div>
         </div>
@@ -47,17 +54,17 @@
 
       <div class="row">
 
-        <div id="consumable-barcode" class="col-md-9">
+        <div id="consumable-barcode" class="col-md-3">
           <div class="input-group">
             <span class="input-group-addon" id="barcode-scanner">
               <%= fa_icon "barcode" %>
             </span>
-            <input type="text" class="form-control" aria-describedby="barcode-scanner">
+            <input type="text" class="form-control" aria-describedby="barcode-scanner" placeholder="Scan Barcode">
           </div>
           <span class="help-block"></span>
         </div>
 
-        <div class="col-md-3 text-right">
+        <div class="col-md-offset-6 col-md-3 text-right">
           <button id="add_ingredient_button" class="btn btn-primary btn-block">
             <%= fa_icon "plus" %> Add Ingredient
           </button>
@@ -72,11 +79,8 @@
       <%= f.text_field :expiry_date, { class: 'form-control', data: { behavior: "datepicker" } } %>
     </div>
 
-
-
-
     <div class="form-group">
-      <%= f.label :sub_batches, "Sub-Batches" %>
+      <h3>Sub-Batches</h3>
 
         <div class="row">
           <div class="col-md-12">

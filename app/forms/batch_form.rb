@@ -71,8 +71,13 @@ class BatchForm
       ActiveRecord::Base.transaction do
         batch.save!
 
-        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
-
+        # Create the consumables for each sub-batch
+        sub_batch_id = 1
+        sub_batches.each do |sub_batch|
+          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
+          sub_batch_id += 1
+        end
+        
         if single_barcode == '1'
           generate_single_barcode(batch)
         end
@@ -91,7 +96,7 @@ class BatchForm
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch
         batch.consumables.destroy_all
-        
+
         batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)

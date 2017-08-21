@@ -19,22 +19,21 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-5">
       <h3>Information</h3>
-      <ul>
-        <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
-        <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
-        <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
-        <li><strike><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></strike></li>
+      <ul class="list-group">
+        <li class="list-group-item"><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
+        <li class="list-group-item"><strong>Expiry Date: </strong><%= @batch.expiry_date %></li>
+        <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
+        <li class="list-group-item"><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></li>
       </ul>
     </div>
-    <h3>Sub-Batches</h3>
-    <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-offset-1 col-md-6">
+        <h3>Sub-Batches</h3>
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcode Type</th>
+              <th>Quantity</th><th>Volume</th><th>Unit</th>
             </tr>
           </thead>
           <tbody>
@@ -43,14 +42,12 @@
                 <td><%= @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %></td>
                 <td><%= sub_batch.volume %></td>
                 <td><%= sub_batch.unit %></td>
-                <td>?</td>
               </tr>
             <% end %>
           </tbody>
         </table>
       </div>
     </div>
-  </div>
 
   <div class="row">
     <div class="col-md-12">
