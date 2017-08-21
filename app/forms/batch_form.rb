@@ -5,7 +5,8 @@ class BatchForm
   include ActiveModel::Validations
 
   ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode]
+                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode,
+                :sub_batches]
 
   attr_accessor *ATTRIBUTES
 
@@ -20,7 +21,7 @@ class BatchForm
   end
 
   # validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
-  validates :consumable_type_id, :expiry_date, :current_user, presence: true
+  validates :consumable_type_id, :expiry_date, :sub_batches, :current_user, presence: true
 
   # validates :aliquots, numericality: {only_integer: true}
   # validates :aliquot_volume, numericality: {greater_than: 0}
@@ -35,6 +36,12 @@ class BatchForm
       end
 
     end
+
+    sub_batches.each do |sub_batch|
+      errors[:sub_batch] << "quantity can't be empty" if sub_batch[:quantity].empty?
+      errors[:sub_batch] << "volume can't be empty" if sub_batch[:volume].empty?
+    end
+    
   end
 
   def consumable
