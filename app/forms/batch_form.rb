@@ -4,9 +4,8 @@ class BatchForm
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode,
-                :sub_batches]
+  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :current_user,
+                :single_barcode, :sub_batches]
 
   attr_accessor *ATTRIBUTES
 
@@ -20,11 +19,7 @@ class BatchForm
     false
   end
 
-  # validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
   validates :consumable_type_id, :expiry_date, :sub_batches, :current_user, presence: true
-
-  # validates :aliquots, numericality: {only_integer: true}
-  # validates :aliquot_volume, numericality: {greater_than: 0}
 
   validate do
     selected_ingredients.each do |ingredient|
@@ -39,9 +34,14 @@ class BatchForm
 
     sub_batches.each do |sub_batch|
       errors[:sub_batch] << "quantity can't be empty" if sub_batch[:quantity].empty?
+      errors[:sub_batch] << "quantity must be at least 1" if sub_batch[:quantity].to_i < 1 && sub_batch[:quantity].present?
+
       errors[:sub_batch] << "volume can't be empty" if sub_batch[:volume].empty?
+      errors[:sub_batch] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
     end
-    
+
+    errors[:expiry_date] << "can't be in the past" if expiry_date.to_date < Date.today
+
   end
 
   def consumable
@@ -91,12 +91,18 @@ class BatchForm
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch
         batch.consumables.destroy_all
+        
         batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
 
+
         # Create the new consumables to reflect any changes
-        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
+        sub_batch_id = 1
+        sub_batches.each do |sub_batch|
+          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
+          sub_batch_id += 1
+        end
 
         if single_barcode == '1'
           generate_single_barcode(batch)
@@ -110,8 +116,8 @@ class BatchForm
   end
 
   private
-    def create_consumables(batch, attributes)
-      batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+    def create_consumables(batch, quantity, attributes)
+      batch.consumables.create!(Array.new(quantity, attributes))
     end
 
     def generate_single_barcode(batch)
