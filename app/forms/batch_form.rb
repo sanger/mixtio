@@ -19,7 +19,7 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :expiry_date, :sub_batches, :current_user, presence: true
+  validates :consumable_type_id, :expiry_date, :current_user, presence: true
 
   validate do
     selected_ingredients.each do |ingredient|
@@ -32,15 +32,19 @@ class BatchForm
 
     end
 
-    sub_batches.each do |sub_batch|
-      errors[:sub_batch] << "quantity can't be empty" if sub_batch[:quantity].empty?
-      errors[:sub_batch] << "quantity must be at least 1" if sub_batch[:quantity].to_i < 1 && sub_batch[:quantity].present?
+    if sub_batches.nil?
+      errors[:batch] << "must contain at least 1 sub-batch"
+    else
+      sub_batches.each do |sub_batch|
+        errors["Sub-Batch"] << "aliquots can't be empty" if sub_batch[:quantity].empty?
+        errors["Sub-Batch"] << "aliquots must be at least 1" if sub_batch[:quantity].to_i < 1 && sub_batch[:quantity].present?
 
-      errors[:sub_batch] << "volume can't be empty" if sub_batch[:volume].empty?
-      errors[:sub_batch] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
+        errors["Sub-Batch"] << "volume can't be empty" if sub_batch[:volume].empty?
+        errors["Sub-Batch"] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
+      end
     end
 
-    errors[:expiry_date] << "can't be in the past" if expiry_date.to_date < Date.today
+    errors[:expiry_date] << "can't be in the past" if expiry_date.present? && expiry_date.to_date < Date.today
 
   end
 
@@ -77,7 +81,7 @@ class BatchForm
           create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
           sub_batch_id += 1
         end
-        
+
         if single_barcode == '1'
           generate_single_barcode(batch)
         end
