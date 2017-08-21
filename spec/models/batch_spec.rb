@@ -72,18 +72,6 @@ RSpec.describe Batch, type: :model do
         expect(@batch.size).to eq(12)
       end
     end
-
-    context "retrieving the aliquot count" do
-      it "returns the correct value" do
-        expect(@batch.aliquot_volume).to eq(42)
-      end
-    end
-
-    context "retrieving the aliquot volume" do
-      it "returns the correct value" do
-        expect(@batch.aliquot_unit).to eq(-3)
-      end
-    end
   end
 
 end
