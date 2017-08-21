@@ -24,11 +24,6 @@
     <li><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
     <li><strong>Expiry date: </strong><%= @batch.expiry_date %></li>
     <li><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
-    <!-- <li><strong>Consumables: </strong><%= @batch.consumables.length %></li>
-    <% if @batch.consumables.length > 0 and @batch.consumables.first.display_volume %>
-      <li><strong>Aliquot Volume: </strong><%= @batch.consumables.first.display_volume %></li>
-    <% end %>
-    <li><strong>Batch Volume: </strong><%= @batch.display_volume %></li> -->
     <li><strike><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></strike></li>
   </ul>
 
@@ -63,21 +58,15 @@
     </thead>
 
     <tbody>
-      <!-- Use Javascript to populate this from values stored in database -->
-      <tr>
-        <td>8</td>
-        <td>15</td>
-        <td>mL</td>
-        <td>per aliquot</td>
-        <td><input type="radio" name="" value=""></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>0.5</td>
-        <td>µL</td>
-        <td>per sub-batch</td>
-        <td><input type="radio" name="" value=""></td>
-      </tr>
+      <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
+        <tr>
+          <td><%= @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %></td>
+          <td><%= sub_batch.volume %></td>
+          <td><%= sub_batch.unit %></td>
+          <td>?</td>
+          <td>?</td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 
