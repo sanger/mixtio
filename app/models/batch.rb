@@ -33,14 +33,6 @@ class Batch < Ingredient
     consumables.count
   end
 
-  def aliquot_volume
-    consumables.first.volume
-  end
-
-  def aliquot_unit
-    consumables.first["unit"]
-  end
-
   private
 
   def generate_batch_number

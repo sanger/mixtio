@@ -6,10 +6,7 @@ class Mixtio.Views.SubBatch extends Backbone.View
     # Run the close function if the X button is clicked for the row
     'click a[data-behavior~=remove_row]': 'close'
 
-  initialize: (options) ->
-    # @consumableTypes = options.consumableTypes
-    # @kitchens        = options.kitchens
-
+  initialize: () ->
     @on("render", () => @setSubviews())
 
   setSubviews: () ->
