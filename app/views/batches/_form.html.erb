@@ -1,18 +1,18 @@
 <%= form_for @batch_form, url: yield(:url), method: yield(:method) do |f| %>
 
     <script type="text/javascript">
-      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe); %>
-      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.order_by_name.to_json(include: {latest_batch: {include: {ingredients: {}, consumables: {}}}, latest_lot: {}}).html_safe); %>
-      Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch_form.consumable_type_id.to_json.html_safe) %>;
-      Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.order_by_name.to_json.html_safe) %>;
-      Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>;
+      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.find_user_favourites(current_user).to_json.html_safe) %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.order_by_name.to_json(include: {latest_batch: {include: {ingredients: {}, consumables: {}}}, latest_lot: {}}).html_safe) %>
+      Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch_form.consumable_type_id.to_json.html_safe) %>
+      Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.order_by_name.to_json.html_safe) %>
+      Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>
 
-      Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>;
+      Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
 
-      <% if @batch.present? %> // TODO This probably isnt a solution as the below must also exist when creating a new batch, to hold the data
+      <% if @batch.present? %> // TODO This might not be a solution as the below must also exist when creating a new batch, to hold the data
       // Contains one consumable per sub-batch, so the info can be used to populate the table
-      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.consumables.group(:sub_batch_id).to_json.html_safe) %>;
-      Mixtio.Bootstrap.SubBatchCounts  = <%= json_escape(@batch.consumables.group(:sub_batch_id).count.to_json.html_safe) %>;
+      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.consumables.group(:sub_batch_id).to_json.html_safe) %>
+      Mixtio.Bootstrap.SubBatchCounts  = <%= json_escape(@batch.consumables.group(:sub_batch_id).count.to_json.html_safe) %>
       <% end %>
     </script>
 
