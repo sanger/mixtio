@@ -7,10 +7,8 @@
          name="batch_form[sub_batches][][volume]" id="batch_form_sub_batches__volume" />
 </td>
 <td>
-  <!--  This should be a dropdown popualted from Consumable.units, have created Mixtio.Bootstrap.Units to aid -->
    <select class="form-control" name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit">
-     <% var units = Mixtio.Bootstrap.Units %>
-     <% Object.keys(units).forEach(key => { %>
+     <% Object.keys(units).forEach(function(key) { %>
      <option value=<%= units[key] %> <% if (selected_unit == key) {%> selected <%}%>><%= key %></option>
      <% }); %>
    </select>

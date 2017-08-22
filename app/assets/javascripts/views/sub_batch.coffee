@@ -20,6 +20,7 @@ class Mixtio.Views.SubBatch extends Backbone.View
       quantity: Mixtio.Bootstrap.SubBatchCounts[@model.get("sub_batch_id")]
       volume: @model.get("volume")
       selected_unit: @model.get("unit") # string representation eg "mL"
+      units: Mixtio.Bootstrap.Units
     ))
 
     @trigger("render")
