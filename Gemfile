@@ -93,4 +93,8 @@ end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
+
+  # Annotate Rails classes with schema and routes info
+  # https://github.com/ctran/annotate_models
+  gem 'annotate', '~> 2.7', require: false
 end

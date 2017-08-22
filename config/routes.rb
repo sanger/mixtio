@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :kitchens
   resources :teams
   resources :suppliers
+  resources :projects
 
   post 'batches/:id/print', to: 'batches#print', as: 'print'
 
@@ -33,6 +34,7 @@ Rails.application.routes.draw do
       resources :batches, only: [:show, :index]
       resources :lots, only: [:show, :index]
       resources :suppliers, only: [:show, :index]
+      resources :projects, only: [:show, :index]
     end
 
     namespace :v2 do
@@ -43,6 +45,7 @@ Rails.application.routes.draw do
       resources :batches, only: [:show, :index]
       resources :lots, only: [:show, :index]
       resources :suppliers, only: [:show, :index]
+      resources :projects, only: [:show, :index]
     end
   end
 

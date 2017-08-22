@@ -12,6 +12,7 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-left">
+          <li><%= link_to "Projects", projects_path, class: cp(projects_path) %></li>
           <li><%= link_to "Suppliers", suppliers_path, class: cp(suppliers_path) %></li>
           <li><%= link_to "Types", consumable_types_path, class: cp(consumable_types_path) %></li>
           <li><%= link_to "Batches", batches_path, class: cp(batches_path) %></li>

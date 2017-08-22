@@ -11,7 +11,7 @@ Reagent creation and barcoding service for DNA Pipeline.
 ~~~
 config.stub_ldap = true
 ~~~
-3. In Rails console:
+3. In Rails console (`$ rails console`):
 ~~~
 > team = Team.create(name: "Team Name")
 > user = User.create(username: "Username", team_id: team.id)
@@ -23,6 +23,11 @@ config.stub_ldap = true
 To initialize data while dev-ing/testing run:
 `rake consumables:load`
 
+## Testing
+To run tests, execute: `rake spec`
+
 ## Gems used
-* For testing web interactions: [Capybara](|https://github.com/teamcapybara/capybara)
-* Creating test data: [factory_girl](https://github.com/thoughtbot/factory_girl)
+* Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
+* Pagination: [Kaminari](https://github.com/kaminari/kaminari)
+* Creating test data: [Factory Girl](https://github.com/thoughtbot/factory_girl)
+* For testing web interactions: [Capybara](https://github.com/teamcapybara/capybara)
