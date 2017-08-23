@@ -66,13 +66,12 @@ protected
     params.require(:batch_form)
           .permit(:consumable_type_id, :consumable_name, :expiry_date, :single_barcode,
                   :ingredients => [:consumable_type_id, :number, :kitchen_id],
-                  :sub_batches => [:quantity, :volume, :unit]
+                  :sub_batches => [:quantity, :volume, :unit, :barcode_type]
           )
   end
 
   def edit_batch_params
-    {single_barcode: @batch.single_barcode?,
-    ingredients: @batch.ingredients}
+    {ingredients: @batch.ingredients}
   end
 
   def batches

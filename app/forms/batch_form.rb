@@ -5,7 +5,7 @@ class BatchForm
   include ActiveModel::Validations
 
   ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :current_user,
-                :single_barcode, :sub_batches]
+                :sub_batches]
 
   attr_accessor *ATTRIBUTES
 
@@ -76,14 +76,14 @@ class BatchForm
         batch.save!
 
         # Create the consumables for each sub-batch
-        sub_batch_id = 1
-        sub_batches.each do |sub_batch|
+        sub_batches.each_with_index do |sub_batch, id|
+          sub_batch_id = id + 1
           create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
-          sub_batch_id += 1
-        end
 
-        if single_barcode == '1'
-          generate_single_barcode(batch)
+          if sub_batch[:barcode_type] == "single"
+            generate_single_barcode(batch.consumables.where(sub_batch_id: sub_batch_id))
+          end
+
         end
 
         batch.create_audit(user: current_user, action: 'create')
@@ -107,14 +107,12 @@ class BatchForm
 
 
         # Create the new consumables to reflect any changes
-        sub_batch_id = 1
-        sub_batches.each do |sub_batch|
-          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
-          sub_batch_id += 1
+        sub_batches.each_with_index do |sub_batch, id|
+          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: id + 1})
         end
 
-        if single_barcode == '1'
-          generate_single_barcode(batch)
+        if sub_batch[:barcode_type] == "single"
+          generate_single_barcode(batch.consumables.where(sub_batch_id: sub_batch_id))
         end
 
         batch.create_audit(user: current_user, action: 'update')
@@ -129,9 +127,9 @@ class BatchForm
       batch.consumables.create!(Array.new(quantity, attributes))
     end
 
-    def generate_single_barcode(batch)
-      barcode = batch.consumables.first.barcode
-      batch.consumables.each do |consumable|
+    def generate_single_barcode(sub_batch_consumables)
+      barcode = sub_batch_consumables.first.barcode
+      sub_batch_consumables.each do |consumable|
         consumable.barcode = barcode
         consumable.save!
       end

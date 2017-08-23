@@ -17,8 +17,13 @@ class Batch < Ingredient
 
   scope :order_by_created_at, -> { order('created_at desc') }
 
-  def single_barcode?
-    consumables.count > 1 and consumables.all? {|x| x.barcode == consumables.first.barcode}
+  # Takes the last consumable with a given sub_batch_id and returns whether that sub_batch is
+  # single barcode or not
+  def single_barcode?(sub_batch)
+    if consumables.where(sub_batch_id: sub_batch.sub_batch_id).count == 1
+      return true
+    end
+    consumables.find(sub_batch.id).barcode == consumables.find(sub_batch.id - 1).barcode
   end
 
   def volume

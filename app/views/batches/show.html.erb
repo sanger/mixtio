@@ -14,7 +14,7 @@
           <%= "Updated by " + @batch.user.username %> (<%= @batch.kitchen.name %>) <%= time_ago_in_words(@batch.updated_at) %> ago
         </small><br>
       <% end %>
-      <small class="pull-right">Created <%= "by " + @batch.user.username if (@batch.created_at == @batch.updated_at) %> at <%= @batch.created_at %></small>
+      <small class="pull-right">Created <%= "by " + @batch.user.username + " (" + @batch.kitchen.name + ")" if (@batch.created_at == @batch.updated_at) %> at <%= @batch.created_at %></small>
     </div>
   </div>
 
@@ -25,7 +25,6 @@
         <li class="list-group-item"><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
         <li class="list-group-item"><strong>Expiry Date: </strong><%= @batch.expiry_date %></li>
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
-        <li class="list-group-item"><strong>Barcode Type: </strong><% if @batch.single_barcode? %>One per batch<% else %>One per aliquot<% end %></li>
       </ul>
     </div>
       <div class="col-md-offset-1 col-md-6">
@@ -33,17 +32,31 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Quantity</th><th>Volume</th><th>Unit</th>
+              <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcodes</th>
             </tr>
           </thead>
           <tbody>
             <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
+              <% sub_batch_consumable_count = @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %>
+              <%# Sub batch only contains one aliquot, or the last and second last aliquots have the same barcode (so all do) %>
+              <% if @batch.single_barcode?(sub_batch) %>
+                <% sub_batch_barcode_type = "single" %>
+              <% else %>
+                <% sub_batch_barcode_type = "per aliquot" %>
+              <% end %>
               <tr>
-                <td><%= @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %></td>
+                <td><%= sub_batch_consumable_count %></td>
                 <td><%= sub_batch.volume %></td>
                 <td><%= sub_batch.unit %></td>
+                <td><%= sub_batch_barcode_type %></td>
               </tr>
             <% end %>
+            <tr class="info top-border">
+              <td><strong><%= @batch.consumables.count %></strong></td>
+              <td><strong><%= @batch.display_volume %></strong></td>
+              <td></td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>

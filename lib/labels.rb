@@ -3,7 +3,14 @@ class Labels
   attr_accessor :consumables
 
   def initialize(batch)
-    @consumables = batch.single_barcode? ? [batch.consumables.first] : batch.consumables
+    @consumables = []
+    batch.consumables.group(:sub_batch_id).each do |sub_batch|
+      if (batch.single_barcode?(sub_batch))
+        @consumables.push(batch.consumables.where(sub_batch_id: sub_batch.sub_batch_id).first)
+      else
+        @consumables += batch.consumables.where(sub_batch_id: sub_batch.sub_batch_id)
+      end
+    end
   end
 
   def to_h

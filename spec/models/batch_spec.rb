@@ -40,8 +40,8 @@ RSpec.describe Batch, type: :model do
 
   it "should say single barcode is false if consumable barcodes differ" do
     batch = create(:batch_with_consumables)
-
-    expect(batch.single_barcode?).to eq(false)
+    
+    expect(batch.single_barcode?(batch.consumables.where(sub_batch_id: 1).last)).to eq(false)
   end
 
   it "should say single barcode is true if consumable barcodes are all the same" do
@@ -49,7 +49,7 @@ RSpec.describe Batch, type: :model do
     consumable = create(:consumable)
     batch.consumables = (1..3).map { |n| consumable.dup }
 
-    expect(batch.single_barcode?).to eq(true)
+    expect(batch.single_barcode?(batch.consumables.where(sub_batch_id: 1).last)).to eq(true)
   end
 
   it 'should total the volumes of the consumables' do

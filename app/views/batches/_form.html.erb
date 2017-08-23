@@ -14,6 +14,13 @@
       Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.consumables.group(:sub_batch_id).to_json.html_safe) %>
       // Contains the counts of consumables with each sub-type ID
       Mixtio.Bootstrap.SubBatchCounts  = <%= json_escape(@batch.consumables.group(:sub_batch_id).count.to_json.html_safe) %>
+      <% barcode_type = {} %>
+      <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
+        <% consumable_id = sub_batch.id %>
+        <% sub_batch_id = sub_batch.sub_batch_id %>
+        <% barcode_type[consumable_id] = @batch.single_barcode?(sub_batch) %>
+      <% end %>
+      Mixtio.Bootstrap.SubBatchSingleBarcodes = <%= json_escape(barcode_type.to_json.html_safe)%>
       <% else %>
       // Creating a new batch, so initialise empty objects to be used by JS
       Mixtio.Bootstrap.SubBatches      = {};
@@ -87,7 +94,7 @@
             <table id="batch-sub-batch-table" class="table table-striped">
               <thead>
                 <tr>
-                  <th>Aliquots</th><th>Volume</th><th>Unit</th><th></th>
+                  <th>Aliquots</th><th>Volume</th><th>Unit</th><th>Barcodes</th><th></th>
                 </tr>
               </thead>
               <tbody>
@@ -114,12 +121,6 @@
         <input class="form-control" id="calculated_batch_volume" readonly>
         <span class="input-group-addon">L</span>
       </div>
-    </div>
-
-    <div class="checkbox">
-      <%= f.label :single_barcode do %>
-        <%= f.check_box :single_barcode %> All aliquots share one barcode
-      <% end %>
     </div>
 
     <div class="form-group">
