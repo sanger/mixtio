@@ -1,10 +1,14 @@
 class Mixtio.Views.SubBatches extends Backbone.View
 
   initialize: () ->
+    @collection.on('change', () => @render())
     @collection.on('reset', () => @render())
     @collection.on('add', () => @add())
 
+
   render: () ->
+    @$el.find("tr:gt(0)").remove()
+
     @collection.each (sub_batch) =>
       subBatchView = new Mixtio.Views.SubBatch(
         collection: @collection
