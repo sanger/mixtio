@@ -83,7 +83,6 @@ class BatchForm
           if sub_batch[:barcode_type] == "single"
             generate_single_barcode(batch.consumables.where(sub_batch_id: sub_batch_id))
           end
-
         end
 
         batch.create_audit(user: current_user, action: 'create')
@@ -108,11 +107,12 @@ class BatchForm
 
         # Create the new consumables to reflect any changes
         sub_batches.each_with_index do |sub_batch, id|
-          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: id + 1})
-        end
+          sub_batch_id = id + 1
+          create_consumables(batch, sub_batch[:quantity].to_i, {volume: sub_batch[:volume].to_f, unit: sub_batch[:unit].to_i, sub_batch_id: sub_batch_id})
 
-        if sub_batch[:barcode_type] == "single"
-          generate_single_barcode(batch.consumables.where(sub_batch_id: sub_batch_id))
+          if sub_batch[:barcode_type] == "single"
+            generate_single_barcode(batch.consumables.where(sub_batch_id: sub_batch_id))
+          end
         end
 
         batch.create_audit(user: current_user, action: 'update')
