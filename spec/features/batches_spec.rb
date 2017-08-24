@@ -641,7 +641,6 @@ RSpec.describe "Batches", type: feature, js: true do
         click_button "Save Changes"
 
         visit batch_path(@batch)
-        save_and_open_page
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
         expect(page).to have_text("Expiry Date: 11/11/2021")
         expect(page).to have_text("74")
@@ -662,7 +661,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it "shows an error if you try to access the URL" do
         @batch.update(editable: false)
         visit edit_batch_path(@batch)
-        current_path.should == "/batches"
+        expect(current_path).to eq "/batches"
         expect(page).to have_text("This batch has already been printed, so can't be modified.")
       end
 
