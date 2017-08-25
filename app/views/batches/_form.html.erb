@@ -6,26 +6,9 @@
       Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch_form.consumable_type_id.to_json.html_safe) %>
       Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>
-
       Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
+      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch_form.sub_batches.to_json(methods: [:quantity, :single_barcode?]).html_safe) %>
 
-      <% if @batch.present? %>
-      // Contains one consumable per sub-batch, so the info can be used to populate the table
-      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.consumables.group(:sub_batch_id).to_json.html_safe) %>
-      // Contains the counts of consumables with each sub-type ID
-      Mixtio.Bootstrap.SubBatchCounts  = <%= json_escape(@batch.consumables.group(:sub_batch_id).count.to_json.html_safe) %>
-      <% barcode_type = {} %>
-      <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
-        <% consumable_id = sub_batch.id %>
-        <% sub_batch_id = sub_batch.sub_batch_id %>
-        <% barcode_type[consumable_id] = @batch.single_barcode?(sub_batch) %>
-      <% end %>
-      Mixtio.Bootstrap.SubBatchSingleBarcodes = <%= json_escape(barcode_type.to_json.html_safe)%>
-      <% else %>
-      // Creating a new batch, so initialise empty objects to be used by JS
-      Mixtio.Bootstrap.SubBatches      = {};
-      Mixtio.Bootstrap.SubBatchCounts  = {};
-      <% end %>
     </script>
 
     <div class="form-group">

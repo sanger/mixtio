@@ -1,5 +1,5 @@
 <td>
-  <input class="form-control" type="number" value="<%= quantity %>"
+  <input class="form-control" type="number" value="<%= quantity == 0 ? null : quantity %>"
          name="batch_form[sub_batches][][quantity]" id="batch_form_sub_batches__quantity" />
 </td>
 <td>
@@ -9,13 +9,12 @@
 <td>
    <select class="form-control" name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit">
      <% Object.keys(units).forEach(function(key) { %>
-     <option value=<%= units[key] %> <% if (selected_unit == key) {%> selected <%}%>><%= key %></option>
+     <option value=<%= key %> <% if (selected_unit == key) {%> selected <%}%>><%= key %></option>
      <% }); %>
    </select>
 </td>
 <td>
     <select class="form-control" name="batch_form[sub_batches][][barcode_type]" id="batch_form_sub_batches__barcode_type">
-      <% try { var single_barcode = Mixtio.Bootstrap.SubBatchSingleBarcodes[sub_batch["id"]] } catch(e) { var single_barcode = false } %>
       <option <% if (single_barcode) {%> selected <%}%> value="aliquot">per aliquot</option>
       <option <% if (single_barcode) {%> selected <%}%> value="single">single</option>
     </select>

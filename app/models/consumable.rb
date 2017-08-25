@@ -3,11 +3,11 @@ class Consumable < ActiveRecord::Base
   include HasOrderByName
   include HasVolume
 
-  belongs_to :batch, touch: true
-  has_one :consumable_type, through: :batch
+  belongs_to :sub_batch, touch: true
+  has_one :consumable_type, through: :sub_batch
 
-  validates :batch, :volume, :unit, presence: true
-  validates :volume, numericality: {greater_than: 0}
+  # Allows access the the volume and unit of a consumable, as well as the batch it belongs to
+  delegate :batch, :volume, :unit, to: :sub_batch
 
   after_create :generate_barcode
 

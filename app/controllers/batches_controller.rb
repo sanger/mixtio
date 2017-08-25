@@ -13,7 +13,7 @@ class BatchesController < ApplicationController
   end
 
   def edit
-    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(edit_batch_params))
+    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(edit_batch_params.merge(sub_batches: current_resource.sub_batches)))
     unless current_resource.editable
       redirect_to batches_path
       flash[:error] = "This batch has already been printed, so can't be modified."
@@ -39,7 +39,8 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @batch_form = BatchForm.new
+    batch = Batch.new_with_sub_batch
+    @batch_form = BatchForm.new(batch.attributes.symbolize_keys.merge(sub_batches: batch.sub_batches))
   end
 
   def show

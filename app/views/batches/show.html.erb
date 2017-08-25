@@ -32,22 +32,20 @@
         <table class="table table-striped" id="sub-batch-table">
           <thead>
             <tr>
-              <th>Quantity</th><th>Volume</th><th>Unit</th><th>Barcodes</th>
+              <th>Quantity</th><th>Volume</th><th>Total</th><th>Barcodes</th>
             </tr>
           </thead>
           <tbody>
-            <% @batch.consumables.group(:sub_batch_id).each do |sub_batch| %>
-              <% sub_batch_consumable_count = @batch.consumables.group(:sub_batch_id).count[sub_batch.sub_batch_id] %>
-              <%# Sub batch only contains one aliquot, or the last and second last aliquots have the same barcode (so all do) %>
-              <% if @batch.single_barcode?(sub_batch) %>
+            <% @batch.sub_batches.each do |sub_batch| %>
+              <% if sub_batch.single_barcode? %>
                 <% sub_batch_barcode_type = "single" %>
               <% else %>
                 <% sub_batch_barcode_type = "per aliquot" %>
               <% end %>
               <tr>
-                <td><%= sub_batch_consumable_count %></td>
-                <td><%= sub_batch.volume %></td>
-                <td><%= sub_batch.unit %></td>
+                <td><%= sub_batch.quantity %></td>
+                <td><%= sub_batch.display_volume %></td>
+                <td><%= sub_batch.total_volume(true) %></td>
                 <td><%= sub_batch_barcode_type %></td>
               </tr>
             <% end %>

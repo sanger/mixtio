@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170821131131) do
+ActiveRecord::Schema.define(version: 20170824111209) do
 
   create_table "audits", force: :cascade do |t|
     t.integer  "auditable_id"
@@ -37,12 +37,10 @@ ActiveRecord::Schema.define(version: 20170821131131) do
 
   create_table "consumables", force: :cascade do |t|
     t.integer  "batch_id"
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "barcode"
-    t.boolean  "depleted",                              default: false
-    t.decimal  "volume",       precision: 10, scale: 3
-    t.integer  "unit"
+    t.boolean  "depleted",     default: false
     t.integer  "sub_batch_id"
   end
 
@@ -102,6 +100,16 @@ ActiveRecord::Schema.define(version: 20170821131131) do
   end
 
   add_index "printers", ["label_type_id"], name: "index_printers_on_label_type_id"
+
+  create_table "sub_batches", force: :cascade do |t|
+    t.float    "volume"
+    t.integer  "unit"
+    t.integer  "ingredients_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "sub_batches", ["ingredients_id"], name: "index_sub_batches_on_ingredients_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

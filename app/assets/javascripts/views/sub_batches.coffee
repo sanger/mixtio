@@ -1,7 +1,7 @@
 class Mixtio.Views.SubBatches extends Backbone.View
 
   initialize: () ->
-    @collection.on('change', () => @render())
+    #@collection.on('change', () => @render())
     @collection.on('reset', () => @render())
     @collection.on('add', () => @add())
 

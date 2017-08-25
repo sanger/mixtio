@@ -10,7 +10,6 @@ $(document).on("turbolinks:load", () ->
     # Collection of sub-batch details (volume and unit, soon also projects)
     subBatchesCollection      = new Mixtio.Collections.SubBatches(Mixtio.Bootstrap.SubBatches)
 
-
     # Create the Views
     consumableTypeView = new Mixtio.Views.ConsumableTypes(
       el: $('#batch_form_consumable_type_id')
@@ -49,7 +48,11 @@ $(document).on("turbolinks:load", () ->
 
     expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#batch_form_expiry_date'))
 
-    consumablesView = new Mixtio.Views.Consumables()
+    # Handles live calculation of batch volume
+    consumablesView = new Mixtio.Views.Consumables(
+      el: $('#calculated_batch_volume')
+      collection: subBatchesCollection
+    )
 
     # Wire everything together
 

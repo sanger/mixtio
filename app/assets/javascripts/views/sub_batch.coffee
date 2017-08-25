@@ -5,6 +5,9 @@ class Mixtio.Views.SubBatch extends Backbone.View
   events:
     # Run the close function if the X button is clicked for the row
     'click a[data-behavior~=remove_row]': 'close'
+    'change input[name*="quantity"]': 'update'
+    'change input[name*="volume"]': 'update'
+    'change select[name*="unit"]': 'update'
 
   initialize: () ->
     @on("render", () => @setSubviews())
@@ -18,11 +21,11 @@ class Mixtio.Views.SubBatch extends Backbone.View
   render: () ->
     @$el.html(JST['batches/sub_batch'](
       sub_batch: @model
-      quantity: Mixtio.Bootstrap.SubBatchCounts[@model.get("sub_batch_id")]
+      quantity: @model.get("quantity")
       volume: @model.get("volume")
       selected_unit: @model.get("unit") # string representation eg "mL"
       units: Mixtio.Bootstrap.Units
-      single_barcode: Mixtio.Bootstrap.SubBatchSingleBarcodes
+      single_barcode: @model.get("single_barcode?")
     ))
 
     @trigger("render")
@@ -33,17 +36,7 @@ class Mixtio.Views.SubBatch extends Backbone.View
     @render()
 
   update: () ->
-    # selectedId = @consumableTypeSelect.val()
-    # consumableType = @consumableTypes.filter((type) -> type.id == parseInt(selectedId))[0]
-    #
-    # lot = consumableType?.get('latest_lot')
-    # if lot?
-    #   @numberInput.val(lot.number)
-    #   @kitchenSelect.val(lot.kitchen_id)
-    # else
-    #   @numberInput.val("")
-    #   @kitchenSelect.val(null)
-
+    @model.set("quantity": @quantityInput.val(), "volume": @volumeInput.val(), "unit": @unitSelect.val())
     this
 
 
