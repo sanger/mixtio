@@ -73,21 +73,15 @@ class BatchForm
 
     begin
       ActiveRecord::Base.transaction do
-        puts("Saving batch...")
         batch.save!
 
         # Create the consumables for each sub-batch
         sub_batches.each do |sub_batch|
-          puts("Batch saved. Creating new sub-batch record")
           sub_batch_record = create_sub_batch(batch, sub_batch)
 
-          puts("Sub-batch record created")
           create_consumables(sub_batch_record, sub_batch[:quantity].to_i, {sub_batch_id: sub_batch_record.id})
-          puts("Sub-batch consumables created")
           if sub_batch[:barcode_type] == "single"
-            puts("Single barcode generation starting...")
             generate_single_barcode(sub_batch_record.consumables)
-            puts("Single barcode generation completed.")
           end
         end
 
@@ -99,39 +93,28 @@ class BatchForm
   end
 
   def update(batch)
-    puts("Checking validations")
     return false unless valid?
-    puts("Validations passed")
 
     begin
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch
-        puts("Destroying consumables")
         batch.sub_batches.each do |old_sub_batch|
           old_sub_batch.consumables.destroy_all
         end
-        puts("Consumables destroyed, onto sub-batches...")
         batch.sub_batches.destroy_all
-        puts("Sub-batches destroyed, updating attributes...")
 
         # Update attributes for the batch record
         batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
-        puts("Attributes updated")
 
 
         # Create the consumables for each sub-batch
         sub_batches.each do |sub_batch|
-          puts("Creating new sub-batch record")
           sub_batch_record = create_sub_batch(batch, sub_batch)
-          puts("Sub-batch record created")
           create_consumables(sub_batch_record, sub_batch[:quantity].to_i, {sub_batch_id: sub_batch_record.id})
-          puts("Sub-batch consumables created")
           if sub_batch[:barcode_type] == "single"
-            puts("Single barcode generation starting...")
             generate_single_barcode(sub_batch_record.consumables)
-            puts("Single barcode generation completed.")
           end
         end
 
@@ -148,9 +131,7 @@ class BatchForm
     end
 
     def create_consumables(sub_batch, quantity, attributes)
-      puts("Creating consumables")
       sub_batch.consumables.create!(Array.new(quantity, attributes))
-      puts("Consumables created!")
     end
 
     def generate_single_barcode(sub_batch_consumables)

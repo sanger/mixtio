@@ -28,13 +28,10 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'displays volume when aliquot has volume' do
-      batch = create(:batch)
-      batch.consumables.create!(Array.new(1, {volume: 4, unit: 'mL'}))
+      visit batch_path(@batch)
 
-      visit batch_path(batch)
-
-      expect(page).to have_content(batch.consumables.first.volume.to_s)
-      expect(page).to have_content(batch.consumables.first.unit)
+      expect(page).to have_content(@batch.consumables.first.volume.to_s)
+      expect(page).to have_content(@batch.consumables.first.unit)
     end
 
     it 'displays correctly without storage conditions' do
@@ -47,17 +44,13 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'should display barcode type when per aliquot' do
-      batch = create(:batch)
-      batch.consumables = create_list(:consumable, 3)
-
-      visit batch_path(batch)
+      visit batch_path(@batch)
 
       expect(page).to have_content('per aliquot')
     end
 
     it 'should display barcode type when per batch' do
-      batch = create(:batch)
-      batch.consumables = create_list(:consumable, 3, barcode: 'RGNT_1')
+      batch = create(:batch_1SB_same_barcode)
 
       visit batch_path(batch)
 
@@ -265,6 +258,7 @@ RSpec.describe "Batches", type: feature, js: true do
         @consumable_type = create(:consumable_type)
         @lot             = create(:lot, consumable_type: @consumable_type)
         @previous_batch  = create(:batch_with_ingredients, consumable_type: @consumable_type)
+        @batch           = create(:batch_with_consumables)
       end
 
       let(:fill_out_form) {
@@ -351,27 +345,24 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(batch.ingredients).to eq(all_ingredients)
         end
 
-        before do
-          @consumable = create(:consumable)
-        end
-
         it 'can scan in an ingredient' do
           fill_out_form
 
+          # Get a consumable from a batch that's already been created
+
+          consumable = @batch.consumables.first
           consumable_barcode = find("#consumable-barcode input")
-          consumable_barcode.set(@consumable.barcode)
+          consumable_barcode.set(consumable.barcode)
 
           consumable_barcode.native.send_key(:Enter)
 
           wait_for_ajax
-
           click_button "Create Batch"
-
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
           expect(batch.ingredients.size).to eq(4)
-          expect(batch.ingredients.include?(@consumable.batch)).to be_truthy
+          expect(batch.ingredients.include?(consumable.batch)).to be_truthy
 
         end
       end
@@ -409,7 +400,7 @@ RSpec.describe "Batches", type: feature, js: true do
           fill_in "batch_form_sub_batches__volume", with: 2
           submit
 
-          expect(Batch.last.consumables.first.volume).to eql(2)
+          expect(Batch.last.consumables.first.volume).to eql(2.0)
           expect(Batch.last.consumables.first.unit).to eql(Consumable.units.keys.first)
         end
       end
@@ -464,41 +455,6 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page.find('#calculated_batch_volume').value).to eq('0.015')
     end
 
-    # Leaving the following tests in case persistence is still required with sub-batch info
-    #
-    # context 'when the selected consumable type has been made before' do
-    #
-    #   before :each do
-    #     @consumable_type = create(:consumable_type)
-    #     @lot             = create(:lot, consumable_type: @consumable_type)
-    #     @previous_batch  = create(:batch_with_consumables, consumable_type: @consumable_type)
-    #   end
-    #
-    #   let(:fill_out_form) {
-    #     visit new_batch_path
-    #     select @consumable_type.name, from: 'Consumable Type'
-    #   }
-    #
-    #
-    #
-    #   it 'should populate the previous aliquot values' do
-    #     fill_out_form
-    #     click_button "Create Batch"
-    #     expect(page).to have_content("Reagent batch successfully created")
-    #
-    #     batch = Batch.last
-    #     expect(batch.consumables.count).to eq(@previous_batch.consumables.count)
-    #     expect(batch.consumables.first.volume).to eq(@previous_batch.consumables.first.volume)
-    #     expect(batch.consumables.first.unit).to eq(@previous_batch.consumables.first.unit)
-    #   end
-    #
-    #   it 'should update the batch volume' do
-    #     fill_out_form
-    #
-    #     expect(page.find('#calculated_batch_volume').value.to_f).to_not eq(0)
-    #   end
-    # end
-
     it 'shouldn\'t cause errors when setting consumable type to blank' do
       consumable_type = create(:consumable_type)
       visit new_batch_path
@@ -546,9 +502,8 @@ RSpec.describe "Batches", type: feature, js: true do
       @consumable_type1 = create(:consumable_type)
       @consumable_type2 = create(:consumable_type)
 
-      @batch = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
+      @batch = create(:batch_with_consumables, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
         ingredients: [create(:ingredient)])
-      @batch.consumables.create!(Array.new(2, {volume: 4, unit: 'mL', sub_batch_id: 1}))
 
       @batch2 = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type2.id)
     end
@@ -690,17 +645,19 @@ RSpec.describe "Batches", type: feature, js: true do
         end
       end
 
-
     end
   end
 
   describe "consumables" do
     context "updating a consumable" do
       it "updates the updated_at column in the parent batch" do
-        @batch = create(:batch)
-        orig_time = @batch.updated_at
-        @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
-        expect(@batch.updated_at).to be > orig_time
+
+        batch = create(:batch_with_consumables)
+        batch.sub_batches.first.consumables.destroy_all
+
+        expect {
+          batch.sub_batches.first.consumables = create_list(:consumable, 12, sub_batch: batch.sub_batches.first)
+        }.to change { batch.reload.updated_at }
 
       end
     end

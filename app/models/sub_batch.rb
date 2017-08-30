@@ -1,14 +1,14 @@
 class SubBatch < ActiveRecord::Base
-
-  # following line causing batch volume calculation to fail as unit becomes e.g "mL" instead of -3
   include HasVolume
 
   has_many :consumables
 
-  belongs_to :batch, foreign_key: "ingredients_id"
+  belongs_to :batch, foreign_key: "ingredients_id", touch: true
 
   validates :volume, presence: true
   validates :unit, presence: true
+
+  after_touch :touch_batch
 
   # Returns a boolean indicating whether the current sub-batch consumables have the same barcode
   def single_barcode?
@@ -31,5 +31,11 @@ class SubBatch < ActiveRecord::Base
       quantity * volume.to_d
     end
   end
+
+  private
+
+    def touch_batch
+      batch.touch
+    end
 
 end

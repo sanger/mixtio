@@ -4,11 +4,11 @@ class Labels
 
   def initialize(batch)
     @consumables = []
-    batch.consumables.group(:sub_batch_id).each do |sub_batch|
-      if (batch.single_barcode?(sub_batch))
-        @consumables.push(batch.consumables.where(sub_batch_id: sub_batch.sub_batch_id).first)
+    batch.sub_batches.each do |sub_batch|
+      if (sub_batch.single_barcode?)
+        @consumables.push(sub_batch.consumables.first)
       else
-        @consumables += batch.consumables.where(sub_batch_id: sub_batch.sub_batch_id)
+        @consumables += sub_batch.consumables
       end
     end
   end

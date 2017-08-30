@@ -10,7 +10,11 @@ FactoryGirl.define do
     end
 
     factory :batch_with_consumables, parent: :batch do
-      consumables { build_list :consumable, 3 }
+      sub_batches { build_list :sub_batch_diff_bacodes, 1 }
+    end
+
+    factory :batch_1SB_same_barcode, parent: :batch do
+      sub_batches { build_list :sub_batch_same_bacodes, 1 }
     end
 
     factory :batch_with_ingredients, parent: :batch do
