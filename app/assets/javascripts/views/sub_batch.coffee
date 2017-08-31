@@ -2,6 +2,14 @@ class Mixtio.Views.SubBatch extends Backbone.View
 
   tagName: 'tr'
 
+  id: () ->
+    id = @model.get("id")
+    if (id != null and id != undefined)
+      "sub-batch-" + id
+    else
+      "sub-batch-new"
+
+
   events:
     # Run the close function if the X button is clicked for the row
     'click a[data-behavior~=remove_row]': 'close'

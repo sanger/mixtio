@@ -42,7 +42,7 @@
               <% else %>
                 <% sub_batch_barcode_type = "per aliquot" %>
               <% end %>
-              <tr>
+              <tr id="sub-batch-<%= sub_batch.id %>">
                 <td><%= sub_batch.quantity %></td>
                 <td><%= sub_batch.display_volume %></td>
                 <td><%= sub_batch.total_volume(true) %></td>
