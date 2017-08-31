@@ -1,21 +1,28 @@
 # mixtio
-## Installation (for testing and development)
-Remove ".sample" from the following filenames:
-* config/ldap.yml
-* config/mailer.yml
-* config/print_service.yml
-* config/secrets.yml
+Reagent creation and barcoding service for DNA Pipeline.
 
-In config/application.rb line 25, set:
+## Installation (for testing and development)
+1. Remove ".sample" from the following file names:
+  * config/ldap.yml
+  * config/mailer.yml
+  * config/print_service.yml
+  * config/secrets.yml
+2. In config/application.rb line 25, set:
 ~~~
 config.stub_ldap = true
 ~~~
+3. In Rails console:
+~~~
+> team = Team.create(name: "Team Name")
+> user = User.create(username: "Username", team_id: team.id)
+~~~
+4. Run `rails server` and navigate to http://localhost:3000
+5. Log in with your chosen username and no password.
 
-In Rails console:   
-`team = Team.create(name: "Team Name")`  
-`user = User.create(username: "Username", team_id: team.id)`  
+### Initialising data
+To initialize data while dev-ing/testing run:
+`rake consumables:load`
 
-
-then `rails server` and navigate to http://localhost:3000
-
-Log in with your chosen username and no password.
+## Gems used
+* For testing web interactions: [Capybara](|https://github.com/teamcapybara/capybara)
+* Creating test data: [factory_girl](https://github.com/thoughtbot/factory_girl)

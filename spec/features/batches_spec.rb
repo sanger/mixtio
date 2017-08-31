@@ -167,6 +167,22 @@ RSpec.describe "Batches", type: feature, js: true do
 
     end
 
+    context "when a user clicks the submit button" do
+      let(:create_batch) {
+        visit new_batch_path
+        # important: this stops the submission so the page doesn't change;
+        # but crucially doesn't stop UJS from doing its thing
+        # https://stackoverflow.com/a/44414754
+        execute_script("$('form').submit(function() { event.preventDefault() })")
+        click_button "Create Batch"
+      }
+
+      it "submit is disabled and says 'Saving'" do
+        create_batch
+        expect(page).to have_button('Saving', disabled: true)
+      end
+    end
+
     context 'when fields are missing' do
 
       let(:create_batch) {
