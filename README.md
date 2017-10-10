@@ -1,4 +1,6 @@
 # mixtio
+[![Build Status](https://travis-ci.org/sanger/mixtio.svg?branch=devel)](https://travis-ci.org/sanger/mixtio)
+
 Reagent creation and barcoding service for DNA Pipeline.
 
 ## Installation (for testing and development)
@@ -26,7 +28,9 @@ To initialize data while dev-ing/testing run:
 ## Testing
 To run tests, execute: `rake spec`
 
-## Gems used
+## Misc
+
+### Gems used
 * Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
 * Pagination: [Kaminari](https://github.com/kaminari/kaminari)
 * Creating test data: [Factory Girl](https://github.com/thoughtbot/factory_girl)
