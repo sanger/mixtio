@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.3'
-# Use sqlite3 as the database for Active Record
-group :development, :test do
-  gem 'sqlite3'
+# Force git gems to use secure HTTPS
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
 end
 
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '4.2.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -26,71 +27,60 @@ gem 'jquery-turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
 gem 'puma'
-
 gem 'active_model_serializers', '~> 0.10.6'
-
 gem 'bootstrap-sass', '~> 3.3.6'
-gem "font-awesome-rails"
-
+gem 'font-awesome-rails'
 gem 'net-ldap'
-
 gem 'kaminari'
-
 gem 'backbone-on-rails'
-
-gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
-
 gem 'exception_notification'
-
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
 # Use Unicorn as the app server
 # gem 'unicorn'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+###
+# Sanger gems
+###
+gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
+
+
+###
+# Groups
+###
+group :development do
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console', '~> 2.0'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
+  gem 'rake'
+end
+
 group :development, :test do
+  # Use sqlite3 as the database for Active Record
+  gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-
   gem 'factory_girl_rails'
-
   gem 'rspec-rails', '~> 3.1'
-
   gem 'with_model'
-
   gem 'raml_ruby', '~> 0.1.1'
-
-
   # Headless browser testing
   gem 'phantomjs'
   gem 'poltergeist'
   gem 'teaspoon-jasmine'
 end
 
-group :test do
-
-  gem 'capybara'
-  gem 'selenium-webdriver'
-  gem 'database_cleaner'
-  gem 'rake'
-
-end
-
 group :deployment do
   gem 'therubyracer'
   gem 'mysql2', '0.3.20'
-
-end
-
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
 end
