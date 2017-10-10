@@ -50,9 +50,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
-    annotate (2.7.2)
-      activerecord (>= 3.2, < 6.0)
-      rake (>= 10.4, < 13.0)
     arel (6.0.4)
     autoprefixer-rails (7.1.2.6)
       execjs
@@ -293,7 +290,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.6)
-  annotate (~> 2.7)
   backbone-on-rails
   bootstrap-sass (~> 3.3.6)
   byebug
