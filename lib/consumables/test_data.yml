@@ -226,3 +226,7 @@ lots:
   - number: 40508
     consumable_type: FBS
     supplier: LAB TECH FCS-SA
+teams:
+- {name: DEV}
+users:
+- {team: DEV, username: pj5}
