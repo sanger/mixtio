@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20170824111209) do
 
   create_table "audits", force: :cascade do |t|
@@ -101,6 +102,7 @@ ActiveRecord::Schema.define(version: 20170824111209) do
 
   add_index "printers", ["label_type_id"], name: "index_printers_on_label_type_id"
 
+
   create_table "sub_batches", force: :cascade do |t|
     t.float    "volume"
     t.integer  "unit"
@@ -110,6 +112,14 @@ ActiveRecord::Schema.define(version: 20170824111209) do
   end
 
   add_index "sub_batches", ["ingredients_id"], name: "index_sub_batches_on_ingredients_id"
+
+
+  create_table "projects", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
