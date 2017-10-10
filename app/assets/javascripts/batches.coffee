@@ -7,6 +7,9 @@ $(document).on("turbolinks:load", () ->
     kitchensCollection        = new Mixtio.Collections.Kitchens(Mixtio.Bootstrap.Kitchens)
     ingredientsCollection     = new Mixtio.Collections.Ingredients(Mixtio.Bootstrap.Ingredients)
 
+    # Collection of sub-batch details (volume and unit, soon also projects)
+    subBatchesCollection      = new Mixtio.Collections.SubBatches(Mixtio.Bootstrap.SubBatches)
+
     # Create the Views
     consumableTypeView = new Mixtio.Views.ConsumableTypes(
       el: $('#batch_form_consumable_type_id')
@@ -17,7 +20,7 @@ $(document).on("turbolinks:load", () ->
     favouritesStarView = new Mixtio.Views.FavouritesStar(el: $('i.fa-star'))
 
     ingredientsView = new Mixtio.Views.Ingredients(
-      el: item,
+      el: item
       collection: ingredientsCollection
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
@@ -33,9 +36,23 @@ $(document).on("turbolinks:load", () ->
       collection: ingredientsCollection
     )
 
+    subBatchesView = new Mixtio.Views.SubBatches(
+      el: $("#batch-sub-batch-table")
+      collection: subBatchesCollection
+    )
+
+    addSubBatchView = new Mixtio.Views.AddSubBatch(
+      el: $('#add_sub_batch_button')
+      collection: subBatchesCollection
+    )
+
     expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#batch_form_expiry_date'))
 
-    consumablesView = new Mixtio.Views.Consumables()
+    # Handles live calculation of batch volume
+    consumablesView = new Mixtio.Views.Consumables(
+      el: $('#calculated_batch_volume')
+      collection: subBatchesCollection
+    )
 
     # Wire everything together
 
@@ -71,6 +88,7 @@ $(document).on("turbolinks:load", () ->
     if selectedConsumableType?
       favouritesStarView.update(selectedConsumableType, {isFavourite: !!userFavouritesCollection.findWhere({id: selectedConsumableType.id})})
     ingredientsView.render()
+    subBatchesView.render()
 
   $('[data-toggle="tooltip"]').tooltip()
 )

@@ -44,13 +44,11 @@ class Mixtio.Views.Ingredient extends Backbone.View
     else
       @numberInput.val("")
       @kitchenSelect.val(null)
-      
+
     this
 
 
   close: (e) ->
     e.preventDefault()
-    @$el.fadeOut(400, () =>
-      @$el.remove()
-      @collection.remove(@model)
-    )
+    @$el.remove()
+    @collection.remove(@model)

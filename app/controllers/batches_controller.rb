@@ -13,7 +13,7 @@ class BatchesController < ApplicationController
   end
 
   def edit
-    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(edit_batch_params))
+    @batch_form = BatchForm.new(current_resource.attributes.symbolize_keys.merge(edit_batch_params.merge(sub_batches: current_resource.sub_batches)))
     unless current_resource.editable
       redirect_to batches_path
       flash[:error] = "This batch has already been printed, so can't be modified."
@@ -39,7 +39,8 @@ class BatchesController < ApplicationController
   end
 
   def new
-    @batch_form = BatchForm.new
+    batch = Batch.new_with_sub_batch
+    @batch_form = BatchForm.new(batch.attributes.symbolize_keys.merge(sub_batches: batch.sub_batches))
   end
 
   def show
@@ -64,17 +65,14 @@ protected
 
   def batch_params
     params.require(:batch_form)
-          .permit(:consumable_type_id, :consumable_name, :expiry_date,
-                  :aliquots, :aliquot_volume, :aliquot_unit, :batch_volume,
-                  :single_barcode,
-                  :ingredients => [:consumable_type_id, :number, :kitchen_id]
+          .permit(:consumable_type_id, :consumable_name, :expiry_date, :single_barcode,
+                  :ingredients => [:consumable_type_id, :number, :kitchen_id],
+                  :sub_batches => [:quantity, :volume, :unit, :barcode_type]
           )
   end
 
   def edit_batch_params
-    {aliquots: @batch.size, aliquot_volume: @batch.aliquot_volume,
-    aliquot_unit: @batch.aliquot_unit, single_barcode: @batch.single_barcode?,
-    ingredients: @batch.ingredients}
+    {ingredients: @batch.ingredients}
   end
 
   def batches
