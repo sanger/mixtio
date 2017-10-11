@@ -25,6 +25,7 @@ class Mixtio.Views.SubBatch extends Backbone.View
     @volumeInput = @$el.find('input[name*="volume"]')
     @unitSelect = @$el.find('select[name*="unit"]')
     @barcodeSelect = @$el.find('select[name*="barcode_type"]')
+    @projectSelect = @$el.find('select[name*="project"]')
 
   render: () ->
     @$el.html(JST['batches/sub_batch'](
@@ -34,6 +35,8 @@ class Mixtio.Views.SubBatch extends Backbone.View
       selected_unit: @model.get("unit") # string representation eg "mL"
       units: Mixtio.Bootstrap.Units
       single_barcode: @model.get("single_barcode?")
+      projects: Mixtio.Bootstrap.Projects
+      selected_project: @model.get("project_id")
     ))
 
     @trigger("render")

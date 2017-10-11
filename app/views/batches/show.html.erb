@@ -27,12 +27,12 @@
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
       </ul>
     </div>
-      <div class="col-md-offset-1 col-md-6">
+      <div class="col-md-7">
         <h3>Sub-Batches</h3>
         <table class="table table-striped" id="sub-batch-table">
           <thead>
             <tr>
-              <th>Quantity</th><th>Volume</th><th>Total</th><th>Barcodes</th>
+              <th>Qty.</th><th>Volume</th><th>Total</th><th>Barcodes</th><th>Project</th>
             </tr>
           </thead>
           <tbody>
@@ -47,11 +47,13 @@
                 <td><%= sub_batch.display_volume %></td>
                 <td><%= sub_batch.total_volume(true) %></td>
                 <td><%= sub_batch_barcode_type %></td>
+                <td><%= Project.find(sub_batch.project_id).name %></td>
               </tr>
             <% end %>
             <tr class="info top-border">
               <td><strong><%= @batch.consumables.count %></strong></td>
               <td><strong><%= @batch.display_volume %></strong></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>

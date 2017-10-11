@@ -66,7 +66,8 @@ class ConsumableCreator
       end
     end
 
-    batch.sub_batches.create!(volume: (1..100).step(0.1).to_a.sample, unit: Consumable.units.to_a.sample[0])
+    project = Project.new(name: "A Project")
+    batch.sub_batches.create!(volume: (1..100).step(0.1).to_a.sample, unit: Consumable.units.to_a.sample[0], project: project)
     batch.sub_batches.first.consumables.create!(Array.new(rand(1..10)))
   end
 

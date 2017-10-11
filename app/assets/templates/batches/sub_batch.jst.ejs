@@ -19,4 +19,11 @@
       <option <% if (single_barcode) {%> selected <%}%> value="single">single</option>
     </select>
 </td>
+<td>
+   <select class="form-control" name="batch_form[sub_batches][][project_id]" id="batch_form_sub_batches__project_id">
+     <% Object.keys(projects).forEach(function(key) { %>
+     <option value=<%= projects[key].id %> <% if (selected_project == projects[key].id) {%> selected <%}%>><%= projects[key].name %></option>
+     <% }); %>
+   </select>
+</td>
 <td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>
