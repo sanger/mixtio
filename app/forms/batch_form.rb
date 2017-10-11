@@ -41,6 +41,8 @@ class BatchForm
 
         errors["Sub-Batch"] << "volume can't be empty" if sub_batch[:volume].empty?
         errors["Sub-Batch"] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
+
+        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?       
       end
     end
 
@@ -74,7 +76,6 @@ class BatchForm
     begin
       ActiveRecord::Base.transaction do
         batch.save!
-
         # Create the consumables for each sub-batch
         sub_batches.each do |sub_batch|
           sub_batch_record = create_sub_batch(batch, sub_batch)
@@ -107,7 +108,6 @@ class BatchForm
         batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
-
 
         # Create the consumables for each sub-batch
         sub_batches.each do |sub_batch|

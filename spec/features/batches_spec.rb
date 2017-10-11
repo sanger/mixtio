@@ -135,6 +135,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
     before do
       @batch = build(:batch)
+      @project = create(:project)
     end
 
     context 'when all required fields are filled in' do

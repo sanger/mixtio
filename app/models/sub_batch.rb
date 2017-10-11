@@ -7,6 +7,7 @@ class SubBatch < ActiveRecord::Base
   belongs_to :project
 
   validates :volume, presence: true
+  validates :project, presence: true
   validates :unit, presence: true
 
   after_touch :touch_batch

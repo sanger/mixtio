@@ -8,7 +8,7 @@
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>
       Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
       Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch_form.sub_batches.to_json(methods: [:quantity, :single_barcode?]).html_safe) %>
-
+      Mixtio.Bootstrap.Projects      = <%= json_escape(Project.all.to_json.html_safe) %>
     </script>
 
     <div class="form-group">
@@ -77,7 +77,7 @@
             <table id="batch-sub-batch-table" class="table table-striped">
               <thead>
                 <tr>
-                  <th>Aliquots</th><th>Volume</th><th>Unit</th><th>Barcodes</th><th></th>
+                  <th>Aliquots</th><th>Volume</th><th>Unit</th><th>Barcodes</th><th>Project</th><th></th>
                 </tr>
               </thead>
               <tbody>
