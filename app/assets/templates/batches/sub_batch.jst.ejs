@@ -1,0 +1,29 @@
+<td>
+  <input class="form-control" type="number" value="<%= quantity == 0 ? null : quantity %>"
+         name="batch_form[sub_batches][][quantity]" id="batch_form_sub_batches__quantity" />
+</td>
+<td>
+  <input class="form-control" type="number" step="0.01" value="<%= volume %>"
+         name="batch_form[sub_batches][][volume]" id="batch_form_sub_batches__volume" />
+</td>
+<td>
+   <select class="form-control" name="batch_form[sub_batches][][unit]" id="batch_form_sub_batches__unit">
+     <% Object.keys(units).forEach(function(key) { %>
+     <option value=<%= key %> <% if (selected_unit == key) {%> selected <%}%>><%= key %></option>
+     <% }); %>
+   </select>
+</td>
+<td>
+    <select class="form-control" name="batch_form[sub_batches][][barcode_type]" id="batch_form_sub_batches__barcode_type">
+      <option <% if (single_barcode) {%> selected <%}%> value="aliquot">per aliquot</option>
+      <option <% if (single_barcode) {%> selected <%}%> value="single">single</option>
+    </select>
+</td>
+<td>
+   <select class="form-control" name="batch_form[sub_batches][][project_id]" id="batch_form_sub_batches__project_id">
+     <% Object.keys(projects).forEach(function(key) { %>
+     <option value=<%= projects[key].id %> <% if (selected_project == projects[key].id) {%> selected <%}%>><%= projects[key].name %></option>
+     <% }); %>
+   </select>
+</td>
+<td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>

@@ -1,21 +1,37 @@
 # mixtio
-## Installation (for testing and development)
-Remove ".sample" from the following filenames:
-* config/ldap.yml
-* config/mailer.yml
-* config/print_service.yml
-* config/secrets.yml
+[![Build Status](https://travis-ci.org/sanger/mixtio.svg?branch=devel)](https://travis-ci.org/sanger/mixtio)
 
-In config/application.rb line 25, set:
+Reagent creation and barcoding service for DNA Pipeline.
+
+## Installation (for testing and development)
+1. Remove ".sample" from the following file names:
+  * config/ldap.yml
+  * config/mailer.yml
+  * config/print_service.yml
+  * config/secrets.yml
+2. In config/application.rb line 25, set:
 ~~~
 config.stub_ldap = true
 ~~~
+3. In Rails console (`$ rails console`):
+~~~
+> team = Team.create(name: "Team Name")
+> user = User.create(username: "Username", team_id: team.id)
+~~~
+4. Run `rails server` and navigate to http://localhost:3000
+5. Log in with your chosen username and no password.
 
-In Rails console:   
-`team = Team.create(name: "Team Name")`  
-`user = User.create(username: "Username", team_id: team.id)`  
+### Initialising data
+To initialize data while dev-ing/testing run:
+`rake consumables:load`
 
+## Testing
+To run tests, execute: `rake spec`
 
-then `rails server` and navigate to http://localhost:3000
+## Misc
 
-Log in with your chosen username and no password.
+### Gems used
+* Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
+* Pagination: [Kaminari](https://github.com/kaminari/kaminari)
+* Creating test data: [Factory Girl](https://github.com/thoughtbot/factory_girl)
+* For testing web interactions: [Capybara](https://github.com/teamcapybara/capybara)

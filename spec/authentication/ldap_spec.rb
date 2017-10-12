@@ -1,9 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Authentication::Ldap, type: :model do |variable|
-  
+
   before(:each) do
-    Authentication::Ldap.setup(port: 999, 
+    if Rails.configuration.stub_ldap
+      pending "Fake LDAP is enabled"
+    end
+
+    Authentication::Ldap.setup(port: 999,
       host: "ldap.example.company.co.uk",
       dn_attribute: "oh",
       prefix: "ou=pepper",

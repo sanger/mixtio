@@ -41,47 +41,38 @@ RSpec.describe Batch, type: :model do
   it "should say single barcode is false if consumable barcodes differ" do
     batch = create(:batch_with_consumables)
 
-    expect(batch.single_barcode?).to eq(false)
+    expect(batch.sub_batches.first.single_barcode?).to eq(false)
   end
 
   it "should say single barcode is true if consumable barcodes are all the same" do
-    batch = create(:batch)
-    consumable = create(:consumable)
-    batch.consumables = (1..3).map { |n| consumable.dup }
+    batch = create(:batch_1SB_same_barcode)
 
-    expect(batch.single_barcode?).to eq(true)
+    expect(batch.sub_batches.first.single_barcode?).to eq(true)
   end
 
   it 'should total the volumes of the consumables' do
     batch = create(:batch)
-    batch.consumables << create(:consumable, volume: 5, unit: 'mL')
-    batch.consumables << create(:consumable, volume: 2, unit: 'mL')
-    batch.consumables << create(:consumable, volume: 1, unit: 'L')
+    batch.sub_batches << create(:sub_batch, volume: 1, unit: 'L')
+    batch.sub_batches << create(:sub_batch, volume: 5, unit: 'mL')
+    batch.sub_batches << create(:sub_batch, volume: 3, unit: 'mL')
 
-    expect(batch.display_volume).to eq('1.007L')
+    batch.sub_batches.each do |sub_batch|
+      sub_batch.consumables = create_list(:consumable, 5, sub_batch: sub_batch)
+    end
+
+    expect(batch.display_volume).to eq('5.04L')
   end
 
   describe "getters" do
     before :each do
       @batch = create(:batch)
-      @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
+      @batch.sub_batches = [create(:sub_batch, volume: 42, unit: 'mL')]
+      @batch.sub_batches.first.consumables = create_list(:consumable, 12, sub_batch: @batch.sub_batches.first)
     end
 
     context "retrieving the batch size (consumable count)" do
       it "returns the correct value" do
         expect(@batch.size).to eq(12)
-      end
-    end
-
-    context "retrieving the aliquot count" do
-      it "returns the correct value" do
-        expect(@batch.aliquot_volume).to eq(42)
-      end
-    end
-
-    context "retrieving the aliquot volume" do
-      it "returns the correct value" do
-        expect(@batch.aliquot_unit).to eq(-3)
       end
     end
   end
