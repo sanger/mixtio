@@ -3,7 +3,7 @@ class Batch < Ingredient
   include Auditable
   include HasVolume
 
-  has_many :sub_batches, foreign_key: "ingredients_id"
+  has_many :sub_batches, foreign_key: "ingredient_id"
   has_many :consumables, through: :sub_batches
   has_many :consumable_types, through: :consumables
   has_many :mixtures

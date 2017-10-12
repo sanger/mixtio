@@ -110,13 +110,13 @@ ActiveRecord::Schema.define(version: 20171010133851) do
   create_table "sub_batches", force: :cascade do |t|
     t.float    "volume"
     t.integer  "unit"
-    t.integer  "ingredients_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.integer  "ingredient_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "project_id"
   end
 
-  add_index "sub_batches", ["ingredients_id"], name: "index_sub_batches_on_ingredients_id"
+  add_index "sub_batches", ["ingredient_id"], name: "index_sub_batches_on_ingredient_id"
   add_index "sub_batches", ["project_id"], name: "index_sub_batches_on_project_id"
 
   create_table "users", force: :cascade do |t|
