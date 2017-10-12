@@ -8,7 +8,7 @@ RSpec.describe SubBatch, type: :model do
   describe "creating sub-batches", js: true do
 
     let :fill_in_one_sub_batch do
-      page.fill_in "batch_form_sub_batches__quantity", with: rand(1..20)
+      page.fill_in "batch_form_sub_batches__quantity", with: rand(2..20)
       page.fill_in "batch_form_sub_batches__volume", with: rand(0.01..20.00).round(2)
       page.select "mL", from: "batch_form_sub_batches__unit"
       page.select "per aliquot", from: "batch_form_sub_batches__barcode_type"
