@@ -9,14 +9,16 @@ class CreateSubBatches < ActiveRecord::Migration
     end
 
     Batch.all.each do |batch|
-      sub_batch = SubBatch.create(volume: batch.consumables.first.volume, unit: batch.consumables.first.unit, ingredient_id: batch.id)
-      batch.consumables.each do |consumable|
+      consumable = Consumable.find_by(batch_id: batch.id)
+      sub_batch = SubBatch.create(volume: consumable["volume"], unit: consumable["unit"], ingredient_id: batch.id)
+
+      Consumable.where(batch_id: batch.id).each do |consumable|
         consumable.update_attribute(:sub_batch_id, sub_batch.id)
       end
     end
 
-    remove_column :consumables, :volume
-    remove_column :consumables, :unit
+    # remove_column :consumables, :volume
+    # remove_column :consumables, :unit
 
   end
 end
