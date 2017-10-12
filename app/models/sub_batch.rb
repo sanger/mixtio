@@ -3,7 +3,7 @@ class SubBatch < ActiveRecord::Base
 
   has_many :consumables
 
-  belongs_to :batch, foreign_key: "ingredients_id", touch: true
+  belongs_to :batch, foreign_key: "ingredient_id", touch: true
   belongs_to :project
 
   validates :volume, presence: true
