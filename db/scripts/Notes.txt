@@ -1,0 +1,4 @@
+Patch 1 is to create a batch to hold a group of consumables for which the respective
+batch had been deleted. Creating this batch prevents issues when migrating the
+databases to support sub-batches. It also creates the Patch user as a member of
+the dev team, to be used for future batches.
