@@ -4,8 +4,8 @@ class BatchForm
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :aliquots,
-                :aliquot_volume, :aliquot_unit, :current_user, :single_barcode]
+  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :current_user,
+                :sub_batches]
 
   attr_accessor *ATTRIBUTES
 
@@ -19,9 +19,7 @@ class BatchForm
     false
   end
 
-  validates :consumable_type_id, :expiry_date, :aliquots, :current_user, presence: true
-  validates :aliquots, numericality: {only_integer: true}
-  validates :aliquot_volume, numericality: {greater_than: 0}
+  validates :consumable_type_id, :expiry_date, :current_user, presence: true
 
   validate do
     selected_ingredients.each do |ingredient|
@@ -33,6 +31,23 @@ class BatchForm
       end
 
     end
+
+    if sub_batches.nil?
+      errors[:batch] << "must contain at least 1 sub-batch"
+    else
+      sub_batches.each do |sub_batch|
+        errors["Sub-Batch"] << "aliquots can't be empty" if sub_batch[:quantity].empty?
+        errors["Sub-Batch"] << "aliquots must be at least 1" if sub_batch[:quantity].to_i < 1 && sub_batch[:quantity].present?
+
+        errors["Sub-Batch"] << "volume can't be empty" if sub_batch[:volume].empty?
+        errors["Sub-Batch"] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
+
+        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?       
+      end
+    end
+
+    errors[:expiry_date] << "can't be in the past" if expiry_date.present? && expiry_date.to_date < Date.today
+
   end
 
   def consumable
@@ -61,11 +76,14 @@ class BatchForm
     begin
       ActiveRecord::Base.transaction do
         batch.save!
+        # Create the consumables for each sub-batch
+        sub_batches.each do |sub_batch|
+          sub_batch_record = create_sub_batch(batch, sub_batch)
 
-        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
-
-        if single_barcode == '1'
-          generate_single_barcode(batch)
+          create_consumables(sub_batch_record, sub_batch[:quantity].to_i, {sub_batch_id: sub_batch_record.id})
+          if sub_batch[:barcode_type] == "single"
+            generate_single_barcode(sub_batch_record.consumables)
+          end
         end
 
         batch.create_audit(user: current_user, action: 'create')
@@ -81,16 +99,23 @@ class BatchForm
     begin
       ActiveRecord::Base.transaction do
         # Delete all existing consumables for the batch
-        batch.consumables.destroy_all
+        batch.sub_batches.each do |old_sub_batch|
+          old_sub_batch.consumables.destroy_all
+        end
+        batch.sub_batches.destroy_all
+
+        # Update attributes for the batch record
         batch.update_attributes!(consumable_type_id: consumable_type_id,
         expiry_date: expiry_date, ingredients: find_ingredients,
         kitchen: current_user.team, user: current_user.user)
 
-        # Create the new consumables to reflect any changes
-        create_consumables(batch, {volume: aliquot_volume, unit: aliquot_unit.to_i})
-
-        if single_barcode == '1'
-          generate_single_barcode(batch)
+        # Create the consumables for each sub-batch
+        sub_batches.each do |sub_batch|
+          sub_batch_record = create_sub_batch(batch, sub_batch)
+          create_consumables(sub_batch_record, sub_batch[:quantity].to_i, {sub_batch_id: sub_batch_record.id})
+          if sub_batch[:barcode_type] == "single"
+            generate_single_barcode(sub_batch_record.consumables)
+          end
         end
 
         batch.create_audit(user: current_user, action: 'update')
@@ -101,13 +126,17 @@ class BatchForm
   end
 
   private
-    def create_consumables(batch, attributes)
-      batch.consumables.create!(Array.new(aliquots.to_i, attributes))
+    def create_sub_batch(batch, sub_batch)
+      batch.sub_batches.create!(sub_batch.except(:barcode_type, :quantity))
     end
 
-    def generate_single_barcode(batch)
-      barcode = batch.consumables.first.barcode
-      batch.consumables.each do |consumable|
+    def create_consumables(sub_batch, quantity, attributes)
+      sub_batch.consumables.create!(Array.new(quantity, attributes))
+    end
+
+    def generate_single_barcode(sub_batch_consumables)
+      barcode = sub_batch_consumables.first.barcode
+      sub_batch_consumables.each do |consumable|
         consumable.barcode = barcode
         consumable.save!
       end

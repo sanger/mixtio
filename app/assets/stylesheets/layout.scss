@@ -9,15 +9,19 @@
   height: 300px;
 
   &.production {
-    background-color: #386164;
-  }
-  &.staging {
-    background-color: lightgreen;
-  }
-  &.development {
     background: #2C3E50;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to top, #4CA1AF, #2C3E50);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to top, #4CA1AF, #2C3E50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  &.staging {
+    background: #1D976C;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #93F9B9, #1D976C);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #93F9B9, #1D976C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+  &.development {
+    background: #000046;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #1CB5E0, #000046);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #1CB5E0, #000046); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
   &.test {
     background-color: red;
@@ -116,4 +120,7 @@
 
 .flash {
   padding-top: 10px;
+}
+.top-border {
+  border-top: 2px solid grey;
 }

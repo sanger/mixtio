@@ -9,7 +9,7 @@ RSpec.describe "Batches", type: feature, js: true do
   describe '#show' do
 
     before :each do
-      @batch   = create(:batch)
+      @batch   = create(:batch_with_consumables)
       @printer = create(:printer)
     end
 
@@ -28,13 +28,10 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'displays volume when aliquot has volume' do
-      batch = create(:batch)
-      batch.consumables.create!(Array.new(1, {volume: 4, unit: 'mL'}))
+      visit batch_path(@batch)
 
-      visit batch_path(batch)
-
-      expect(page).to have_content(batch.consumables.first.display_volume)
-      expect(page).to have_content("Aliquot Volume")
+      expect(page).to have_content(@batch.consumables.first.volume.to_s)
+      expect(page).to have_content(@batch.consumables.first.unit)
     end
 
     it 'displays correctly without storage conditions' do
@@ -47,21 +44,17 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'should display barcode type when per aliquot' do
-      batch = create(:batch)
-      batch.consumables = create_list(:consumable, 3)
+      visit batch_path(@batch)
 
-      visit batch_path(batch)
-
-      expect(page).to have_content('Barcode Type: One per aliquot')
+      expect(page).to have_content('per aliquot')
     end
 
     it 'should display barcode type when per batch' do
-      batch = create(:batch)
-      batch.consumables = create_list(:consumable, 3, barcode: 'RGNT_1')
+      batch = create(:batch_1SB_same_barcode)
 
       visit batch_path(batch)
 
-      expect(page).to have_content('Barcode Type: One per batch')
+      expect(page).to have_content('single')
     end
 
     it 'prints labels for the batch' do
@@ -142,6 +135,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
     before do
       @batch = build(:batch)
+      @project = create(:project)
     end
 
     context 'when all required fields are filled in' do
@@ -150,8 +144,8 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "Number of Aliquots", with: 3
-        fill_in "Aliquot volume", with: 2.2
+        fill_in "batch_form_sub_batches__quantity", with: 3
+        fill_in "batch_form_sub_batches__volume", with: 2.2
         click_button('Create Batch')
       }
 
@@ -172,6 +166,22 @@ RSpec.describe "Batches", type: feature, js: true do
         expect { create_batch }.to change { Audit.count }.by(1)
       end
 
+    end
+
+    context "when a user clicks the submit button" do
+      let(:create_batch) {
+        visit new_batch_path
+        # important: this stops the submission so the page doesn't change;
+        # but crucially doesn't stop UJS from doing its thing
+        # https://stackoverflow.com/a/44414754
+        execute_script("$('form').submit(function() { event.preventDefault() })")
+        click_button "Create Batch"
+      }
+
+      it "submit is disabled and says 'Saving'" do
+        create_batch
+        expect(page).to have_button('Saving', disabled: true)
+      end
     end
 
     context 'when fields are missing' do
@@ -237,7 +247,7 @@ RSpec.describe "Batches", type: feature, js: true do
         all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set('12345')
         all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@team.name)
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "Number of Aliquots", with: 3
+        fill_in "batch_form_sub_batches__quantity", with: 3
         click_button "Create Batch"
       }
 
@@ -253,7 +263,8 @@ RSpec.describe "Batches", type: feature, js: true do
         expect(find(:xpath, '//input[@name="batch_form[ingredients][][number]"]').value).to eq('12345')
         expect(page).to have_select('batch_form[ingredients][][kitchen_id]', selected: @team.name)
         expect(find_field("Expiry Date").value).to eq(@batch.expiry_date.to_s)
-        expect(find_field("Number of Aliquots").value).to eq("3")
+        # Leaving the following line in case persistence is still required with sub-batch info
+        #expect(find_field("batch_form_sub_batches__quantity").value).to eq("3")
       end
 
     end
@@ -264,14 +275,18 @@ RSpec.describe "Batches", type: feature, js: true do
         @consumable_type = create(:consumable_type)
         @lot             = create(:lot, consumable_type: @consumable_type)
         @previous_batch  = create(:batch_with_ingredients, consumable_type: @consumable_type)
+        @batch           = create(:batch_with_consumables)
       end
 
       let(:fill_out_form) {
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "Number of Aliquots", with: 3
-        fill_in "Aliquot volume", with: 1.1
+        fill_in "Expiry Date", with: (@batch.expiry_date.to_s + "\t")
+        sleep(0.5)
+        find_field("batch_form[expiry_date]").native.send_key(:Tab)
+        sleep(0.5)
+        fill_in "batch_form_sub_batches__quantity", with: 3
+        fill_in "batch_form_sub_batches__volume", with: 1.1
       }
 
       it 'saves the batch with the consumable type\'s latest ingredients' do
@@ -287,9 +302,10 @@ RSpec.describe "Batches", type: feature, js: true do
       describe 'editing ingredients' do
         it 'can remove an ingredient' do
           fill_out_form
-          all(:data_behavior, "remove_row").last.click
+          all(:data_behavior, "remove_row").first.click
           sleep 1 # Allow the animation to finish...
           click_button "Create Batch"
+
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
@@ -328,7 +344,9 @@ RSpec.describe "Batches", type: feature, js: true do
           all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
 
           click_button("Add Ingredient")
-          all(:data_behavior, "remove_row").last.click
+          within("table#batch-ingredients-table") do
+            all(:data_behavior, "remove_row").last.click
+          end
           sleep 1
 
           click_button "Create Batch"
@@ -344,26 +362,24 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(batch.ingredients).to eq(all_ingredients)
         end
 
-        before do
-          @consumable = create(:consumable)
-        end
-
         it 'can scan in an ingredient' do
           fill_out_form
 
+          # Get a consumable from a batch that's already been created
+
+          consumable = @batch.consumables.first
           consumable_barcode = find("#consumable-barcode input")
-          consumable_barcode.set(@consumable.barcode)
+          consumable_barcode.set(consumable.barcode)
+
           consumable_barcode.native.send_key(:Enter)
 
           wait_for_ajax
-
           click_button "Create Batch"
-
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
           expect(batch.ingredients.size).to eq(4)
-          expect(batch.ingredients.include?(@consumable.batch)).to be_truthy
+          expect(batch.ingredients.include?(consumable.batch)).to be_truthy
 
         end
       end
@@ -388,8 +404,8 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "Number of Aliquots", with: 3
-        fill_in "Aliquot volume", with: 100
+        fill_in "batch_form_sub_batches__quantity", with: 3
+        fill_in "batch_form_sub_batches__volume", with: 100
       }
       let("submit") {
         click_button('Create Batch')
@@ -398,29 +414,30 @@ RSpec.describe "Batches", type: feature, js: true do
       context 'is given' do
         it 'will create volume and units' do
           fill_in_required
-          fill_in "Aliquot volume", with: 2
+          fill_in "batch_form_sub_batches__volume", with: 2
           submit
 
-          expect(Batch.last.consumables.first.volume).to eql(2)
+          expect(Batch.last.consumables.first.volume).to eql(2.0)
           expect(Batch.last.consumables.first.unit).to eql(Consumable.units.keys.first)
         end
       end
     end
 
-    describe 'when generate single barcode checkbox' do
+    describe 'when generate single barcode dropdown' do
       let(:fill_in_required) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "Number of Aliquots", with: 3
-        fill_in "Aliquot volume", with: 100
+        fill_in "batch_form_sub_batches__quantity", with: 3
+        fill_in "batch_form_sub_batches__volume", with: 100
       }
       let("submit") {
         click_button('Create Batch')
       }
 
-      context 'is unchecked' do
+      context 'is set to "per aliquot"' do
         it 'will make three different barcodes' do
           fill_in_required
+          select "per aliquot", from: "batch_form_sub_batches__barcode_type"
           submit
 
           expect(Batch.last.consumables.count).to eq(3)
@@ -430,10 +447,10 @@ RSpec.describe "Batches", type: feature, js: true do
         end
       end
 
-      context 'is checked' do
+      context 'is set to "single"' do
         it 'will make a single barcode' do
           fill_in_required
-          check 'All aliquots share one barcode'
+          select "single", from: "batch_form_sub_batches__barcode_type"
           submit
 
           expect(Batch.last.consumables.count).to eq(3)
@@ -447,42 +464,12 @@ RSpec.describe "Batches", type: feature, js: true do
     it 'should calculate the batch volume' do
       visit new_batch_path
 
-      fill_in "Number of Aliquots", with: 3
-      fill_in "Aliquot volume", with: 5
-      select "mL", from: "Aliquot unit"
+      fill_in "batch_form_sub_batches__quantity", with: 3
+      fill_in "batch_form_sub_batches__volume", with: 5
+      select "mL", from: "batch_form_sub_batches__unit"
 
+      #TODO: following line causing fail due to broken volume calculator
       expect(page.find('#calculated_batch_volume').value).to eq('0.015')
-    end
-
-    context 'when the selected consumable type has been made before' do
-
-      before :each do
-        @consumable_type = create(:consumable_type)
-        @lot             = create(:lot, consumable_type: @consumable_type)
-        @previous_batch  = create(:batch_with_consumables, consumable_type: @consumable_type)
-      end
-
-      let(:fill_out_form) {
-        visit new_batch_path
-        select @consumable_type.name, from: 'Consumable Type'
-      }
-
-      it 'should populate the previous aliquot values' do
-        fill_out_form
-        click_button "Create Batch"
-        expect(page).to have_content("Reagent batch successfully created")
-
-        batch = Batch.last
-        expect(batch.consumables.count).to eq(@previous_batch.consumables.count)
-        expect(batch.consumables.first.volume).to eq(@previous_batch.consumables.first.volume)
-        expect(batch.consumables.first.unit).to eq(@previous_batch.consumables.first.unit)
-      end
-
-      it 'should update the batch volume' do
-        fill_out_form
-
-        expect(page.find('#calculated_batch_volume').value.to_f).to_not eq(0)
-      end
     end
 
     it 'shouldn\'t cause errors when setting consumable type to blank' do
@@ -532,9 +519,8 @@ RSpec.describe "Batches", type: feature, js: true do
       @consumable_type1 = create(:consumable_type)
       @consumable_type2 = create(:consumable_type)
 
-      @batch = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
+      @batch = create(:batch_with_consumables, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
         ingredients: [create(:ingredient)])
-      @batch.consumables.create!(Array.new(1, {volume: 4, unit: 'mL'}))
 
       @batch2 = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type2.id)
     end
@@ -545,13 +531,14 @@ RSpec.describe "Batches", type: feature, js: true do
         @batch_orig = { consumable_type: @batch.consumable_type.name,
           expiry_date: @batch.expiry_date.to_s,
           consumables_count: @batch.consumables.count.to_s,
-          aliquot_volume: @batch.consumables.first.display_volume.to_s,
+          aliquot_volume: @batch.consumables.first.volume.to_s,
+          aliquot_unit: @batch.consumables.first.unit,
           ingredients: @batch.ingredients }
 
         select "", from: "batch_form_consumable_type_id"
         fill_in "batch_form_expiry_date", with: ""
-        fill_in "batch_form_aliquots", with: ""
-        fill_in "batch_form_aliquot_volume", with: ""
+        fill_in "batch_form_sub_batches__quantity", with: ""
+        fill_in "batch_form_sub_batches__volume", with: ""
 
         click_button "Save Changes"
         sleep 1
@@ -559,19 +546,23 @@ RSpec.describe "Batches", type: feature, js: true do
 
       it "shows the applicable error(s)" do
         within("div.alert-danger") do
-          expect(page).to have_css("li", count: 5)
+          expect(page).to have_css("li", count: 4)
         end
       end
 
       it "doesn't update the record with invalid information" do
         visit batch_path(@batch)
         expect(page).to have_text("Consumable type: " + @batch_orig[:consumable_type])
-        expect(page).to have_text("Expiry date: " + @batch_orig[:expiry_date])
-        expect(page).to have_text("Consumables: " + @batch_orig[:consumables_count])
-        expect(page).to have_text("Aliquot Volume: " + @batch_orig[:aliquot_volume])
+        expect(page).to have_text("Expiry Date: " + @batch_orig[:expiry_date])
+        expect(page).to have_text(@batch_orig[:consumables_count])
+
+        within("table#sub-batch-table tbody") do
+          expect(page).to have_text(@batch_orig[:aliquot_volume])
+          expect(page).to have_text(@batch_orig[:aliquot_unit])
+        end
 
         # ensure the ingredients list shows the same number as pre-edit
-        within("tbody") do
+        within("table#ingredients-table tbody") do
           expect(page).to have_selector("tr", count: @batch_orig[:ingredients].count)
         end
       end
@@ -583,10 +574,10 @@ RSpec.describe "Batches", type: feature, js: true do
         expect(page).to have_select("batch_form_consumable_type_id", selected: @batch.consumable_type.name)
         expect(page).to have_select("batch_form_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
         expect(page).to have_field("batch_form_expiry_date", with: @batch.expiry_date.to_s)
-        expect(page).to have_field("batch_form_aliquots", with: @batch.consumables.count)
-        expect(page).to have_field("batch_form_aliquot_volume", with: @batch.consumables.first.volume)
-        expect(page).to have_select("batch_form_aliquot_unit", selected: @batch.consumables.first.unit)
-        expect(page).to have_unchecked_field("batch_form_single_barcode")
+        expect(page).to have_field("batch_form_sub_batches__quantity", with: @batch.consumables.count)
+        expect(page).to have_field("batch_form_sub_batches__volume", with: @batch.consumables.first.volume)
+        expect(page).to have_select("batch_form_sub_batches__unit", selected: @batch.consumables.first.unit)
+        expect(page).to have_select("batch_form_sub_batches__barcode_type", selected: "per aliquot")
 
       end
 
@@ -623,23 +614,24 @@ RSpec.describe "Batches", type: feature, js: true do
 
         # rest of form
         fill_in "batch_form_expiry_date", with: "11/11/2021"
-        fill_in "batch_form_aliquots", with: "74"
-        fill_in "batch_form_aliquot_volume", with: "9"
-        check("batch_form_single_barcode")
+        fill_in "batch_form_sub_batches__quantity", with: 74
+        fill_in "batch_form_sub_batches__volume", with: 9
+        select "single", from: "batch_form_sub_batches__barcode_type"
         click_button "Save Changes"
 
         visit batch_path(@batch)
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
-        expect(page).to have_text("Expiry date: 11/11/2021")
-        expect(page).to have_text("Consumables: 74")
-        expect(page).to have_text("Aliquot Volume: 9mL")
-        expect(page).to have_text("Barcode Type: One per batch")
+        expect(page).to have_text("Expiry Date: 11/11/2021")
+        expect(page).to have_text("74")
+        expect(page).to have_text("0.666L")
+        expect(page).to have_text("single")
         expect(page).to have_text(@external_team.name)
       end
 
       it "shows a message upon successful update" do
         visit edit_batch_path(@batch)
         click_button("Save Changes")
+
         expect(page).to have_text("Reagent batch successfully updated!")
       end
     end
@@ -648,7 +640,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it "shows an error if you try to access the URL" do
         @batch.update(editable: false)
         visit edit_batch_path(@batch)
-        current_path.should == "/batches"
+        expect(current_path).to eq "/batches"
         expect(page).to have_text("This batch has already been printed, so can't be modified.")
       end
 
@@ -670,17 +662,19 @@ RSpec.describe "Batches", type: feature, js: true do
         end
       end
 
-
     end
   end
 
   describe "consumables" do
     context "updating a consumable" do
       it "updates the updated_at column in the parent batch" do
-        @batch = create(:batch)
-        orig_time = @batch.updated_at
-        @batch.consumables.create!(Array.new(12, {volume: 42, unit: 'mL'}))
-        expect(@batch.updated_at).to be > orig_time
+
+        batch = create(:batch_with_consumables)
+        batch.sub_batches.first.consumables.destroy_all
+
+        expect {
+          batch.sub_batches.first.consumables = create_list(:consumable, 12, sub_batch: batch.sub_batches.first)
+        }.to change { batch.reload.updated_at }
 
       end
     end

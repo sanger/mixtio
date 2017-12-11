@@ -1,0 +1,30 @@
+<div class="title row">
+  <div class="col-md-12">
+    <h2>
+      Projects <%= link_to new_project_path, { class: 'btn btn-primary pull-right', role: 'button' } do %>
+        <%= fa_icon "plus" %> New Project
+      <% end %>
+    </h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Project</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render projects %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="text-center">
+      <%= paginate projects %>
+    </div>
+  </div>
+</div>
