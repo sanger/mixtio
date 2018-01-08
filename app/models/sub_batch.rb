@@ -6,6 +6,8 @@ class SubBatch < ActiveRecord::Base
   belongs_to :batch, foreign_key: "ingredient_id", touch: true
   belongs_to :project
 
+  has_one :consumable_type, through: :batch
+
   validates :volume, presence: true
   validates :project, presence: true
   validates :unit, presence: true
