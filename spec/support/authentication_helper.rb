@@ -14,6 +14,6 @@ module AuthenticationHelper
 
   def sign_in_request
     allow(Authentication::Ldap).to receive(:authenticate).and_return(true)
-    post '/sessions', :username => test_user.username, :password => 'password'
+    post '/sessions', params: { username: test_user.username, password: 'password' }
   end
 end
