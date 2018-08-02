@@ -42,7 +42,7 @@ class BatchForm
         errors["Sub-Batch"] << "volume can't be empty" if sub_batch[:volume].empty?
         errors["Sub-Batch"] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
 
-        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?       
+        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?
       end
     end
 
@@ -56,7 +56,7 @@ class BatchForm
 
   def find_ingredients
     selected_ingredients.map do |ingredient|
-      Ingredient.exists?(ingredient) ? Ingredient.where(ingredient).first : Lot.create(ingredient)
+      Ingredient.where(ingredient).exists? ? Ingredient.where(ingredient).first : Lot.create(ingredient)
     end
   end
 
