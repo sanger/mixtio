@@ -35,7 +35,7 @@ class SuppliersController < ApplicationController
 private
 
   def suppliers
-    @suppliers ||= Supplier.page(params[:page])
+    @suppliers ||= Supplier.order_by_name.page(params[:page])
   end
 
   def current_resource

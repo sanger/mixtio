@@ -46,7 +46,7 @@ class ProjectsController < ApplicationController
   private
 
     def projects
-      @projects ||= Project.page(params[:page])
+      @projects ||= Project.order_by_name.page(params[:page])
     end
 
     def current_resource
