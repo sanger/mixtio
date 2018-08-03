@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   root 'batches#index'
 
+
   resources :consumable_types
   resources :consumables
   resources :batches
@@ -9,7 +10,11 @@ Rails.application.routes.draw do
   resources :kitchens
   resources :teams
   resources :suppliers
+  get 'projects/archive', to: 'projects#archive_index', as: 'projects_archive'
   resources :projects
+
+  put 'projects/:id/deactivate', to: 'projects#deactivate', as: 'deactivate_project'
+  put 'projects/:id/activate', to: 'projects#activate', as: 'activate_project'
 
   post 'batches/:id/print', to: 'batches#print', as: 'print'
 

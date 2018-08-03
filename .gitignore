@@ -37,6 +37,7 @@ bower.json
 .powenv
 
 .DS_Store
+.byebug_history
 
 #ignore docs
 /doc/app

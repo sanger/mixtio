@@ -6,6 +6,12 @@ class ProjectsController < ApplicationController
   helper_method :projects
 
   def index
+    @archive = false
+  end
+
+  def archive_index
+    @archive = true
+    render :index
   end
 
   # GET /projects/1
@@ -23,6 +29,20 @@ class ProjectsController < ApplicationController
     @project = current_resource
   end
 
+  # PUT /projects/1/deactivate
+  def deactivate
+    @project = current_resource
+    @project.update_attributes(active: false)
+    redirect_back(fallback_location: projects_path)
+  end
+
+  # PUT /projects/1/activate
+  def activate
+    @project = current_resource
+    @project.update_attributes(active: true)
+    redirect_back(fallback_location: projects_archive_path)
+  end
+
   # POST /projects
   def create
     @project = Project.new(project_params)
@@ -37,7 +57,7 @@ class ProjectsController < ApplicationController
   def update
     @project = current_resource
     if @project.update_attributes(project_params)
-      redirect_to projects_path, notice: "Project successfully updated"
+      redirect_to (@project.active? ? projects_path : projects_archive_path), notice: "Project successfully updated"
     else
       render :edit
     end
@@ -46,7 +66,7 @@ class ProjectsController < ApplicationController
   private
 
     def projects
-      @projects ||= Project.page(params[:page])
+      @projects ||= (@archive ? Project.inactive : Project.active).page(params[:page])
     end
 
     def current_resource
