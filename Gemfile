@@ -81,6 +81,7 @@ group :development, :test do
   gem 'phantomjs'
   gem 'poltergeist'
   gem 'teaspoon-jasmine'
+  gem 'listen'
 end
 
 group :deployment do
