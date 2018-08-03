@@ -7,7 +7,7 @@ describe Api::V2::SuppliersController, type: :request do
     it "should return a serialized supplier" do
       supplier = create(:supplier)
       get api_v2_supplier_path(supplier)
-      expect(response).to be_success
+      expect(response).to be_successful
       supplier_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(supplier_response[:data][:id]).to eql(supplier.id.to_s)

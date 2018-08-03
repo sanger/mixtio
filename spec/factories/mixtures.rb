@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :mixture do
     ingredient { create(:lot) }
     batch { create(:batch) }

@@ -7,7 +7,7 @@ describe Api::V2::LotsController, type: :request do
     it "should return a serialized lot" do
       lot = create(:lot)
       get api_v2_lot_path(lot)
-      expect(response).to be_success
+      expect(response).to be_successful
       lot_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(lot_response[:data][:id]).to eql(lot.id.to_s)

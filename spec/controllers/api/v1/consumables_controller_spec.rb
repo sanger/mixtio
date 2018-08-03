@@ -8,7 +8,7 @@ describe Api::V1::ConsumablesController, type: :request do
       batch = create(:batch_with_consumables)
       consumable = batch.consumables.first
       get api_v1_consumable_path(consumable.id)
-      expect(response).to be_success
+      expect(response).to be_successful
       consumable_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(consumable_response[:id]).to eql(consumable.id)
@@ -44,7 +44,7 @@ describe Api::V1::ConsumablesController, type: :request do
       end
 
       it "should be successful" do
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "should return a serialized consumable" do

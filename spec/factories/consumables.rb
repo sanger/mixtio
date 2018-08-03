@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :consumable do
     sub_batch
   end

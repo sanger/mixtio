@@ -20,6 +20,8 @@ module Mixtio
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    config.load_defaults 5.1
+
     config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
 
     config.filter_parameters += [:password]
@@ -44,6 +46,7 @@ module Mixtio
 
     config.barcode_prefix = 'RGNT_'
 
+    config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end
 
