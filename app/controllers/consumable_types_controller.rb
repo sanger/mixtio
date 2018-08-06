@@ -4,6 +4,12 @@ class ConsumableTypesController < ApplicationController
   before_action :authenticate!, except: [:index]
 
   def index
+    @archive = false
+  end
+
+  def archive_index
+    @archive = true
+    render :index
   end
 
   def create
@@ -34,11 +40,27 @@ class ConsumableTypesController < ApplicationController
     end
   end
 
-protected
+  # PUT /consumable_types/1/deactivate
+  def deactivate
+    @consumable_type = current_resource
+    @consumable_type.deactivate!
+    @consumable_type.create_audit(user: current_user, action: 'deactivate')
+    redirect_back(fallback_location: consumable_types_path)
+  end
+
+  # PUT /consumable_types/1/activate
+  def activate
+    @consumable_type = current_resource
+    @consumable_type.activate!
+    @consumable_type.create_audit(user: current_user, action: 'activate')
+    redirect_back(fallback_location: consumable_types_archive_path)
+  end
 
   def consumable_types
-    @consumable_types ||= ConsumableType.order_by_name.page(params[:page])
+    @consumable_types ||= (@archive ? ConsumableType.inactive : ConsumableType.active).order_by_name.page(params[:page])
   end
+
+protected
 
   def consumable_type_params
     params.require(:consumable_type).permit(:name, :days_to_keep, :storage_condition)

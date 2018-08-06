@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join 'spec/models/concerns/activatable_spec.rb'
 
 RSpec.describe ConsumableType, type: :model do
 
@@ -45,4 +46,5 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type)).to respond_to(:audits)
   end
 
+  it_behaves_like "activatable"
 end

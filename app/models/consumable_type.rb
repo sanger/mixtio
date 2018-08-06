@@ -1,5 +1,6 @@
 class ConsumableType < ActiveRecord::Base
 
+  include Activatable
   include Auditable
   include HasOrderByName
 
