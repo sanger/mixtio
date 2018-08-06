@@ -32,14 +32,14 @@ class ProjectsController < ApplicationController
   # PUT /projects/1/deactivate
   def deactivate
     @project = current_resource
-    @project.update_attributes(active: false)
+    @project.deactivate!
     redirect_back(fallback_location: projects_path)
   end
 
   # PUT /projects/1/activate
   def activate
     @project = current_resource
-    @project.update_attributes(active: true)
+    @project.activate!
     redirect_back(fallback_location: projects_archive_path)
   end
 
