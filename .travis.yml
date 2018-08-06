@@ -4,8 +4,6 @@ before_script:
   - cp config/ldap.yml.sample config/ldap.yml
   - cp config/print_service.yml.sample config/print_service.yml
   - cp config/mailer.yml.sample config/mailer.yml
-  - bundle exec rake db:migrate
-  - bundle exec rake db:reset
   - bundle exec rake db:setup
 script: bundle exec rspec
 

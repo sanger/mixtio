@@ -7,7 +7,7 @@ describe Api::V2::BatchesController, type: :request do
     it "should return a serialized batch" do
       batch = create(:batch_with_consumables)
       get api_v2_batch_path(batch)
-      expect(response).to be_success
+      expect(response).to be_successful
 
       batch_response = JSON.parse(response.body, symbolize_names: true)
       expect(batch_response[:data][:id]).to eql(batch.id.to_s)
@@ -34,7 +34,7 @@ describe Api::V2::BatchesController, type: :request do
     it 'should return the batch\'s ingredients' do
       batch = create(:batch_with_ingredients)
       get api_v2_batch_path(batch)
-      expect(response).to be_success
+      expect(response).to be_successful
       batch_response = JSON.parse(response.body, symbolize_names: true)
 
       ingredients = batch_response[:data][:relationships][:ingredients][:data]
