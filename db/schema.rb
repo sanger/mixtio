@@ -88,7 +88,7 @@ ActiveRecord::Schema.define(version: 2018_08_07_095327) do
     t.integer "ingredient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quantity"
+    t.float "quantity"
     t.integer "unit_id"
     t.index ["batch_id"], name: "index_mixtures_on_batch_id"
     t.index ["ingredient_id"], name: "index_mixtures_on_ingredient_id"

@@ -6,6 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-['µL', 'mL', 'L', 'µg', 'mg', 'g', 'U', 'Reactions', 'each'].each do |name|
+['µL', 'mL', 'L', 'µg', 'mg', 'g', 'U', 'Reactions'].each do |name|
   Unit.where(name: name).first_or_create
 end
