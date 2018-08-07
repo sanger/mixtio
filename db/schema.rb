@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_10_12_143440) do
+ActiveRecord::Schema.define(version: 2018_08_03_084830) do
 
   create_table "audits", force: :cascade do |t|
-    t.integer "auditable_id"
     t.string "auditable_type"
+    t.integer "auditable_id"
     t.integer "user_id"
     t.string "action"
     t.string "record_data"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2017_10_12_143440) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_label_id"
+    t.boolean "active", default: true
   end
 
   create_table "consumables", force: :cascade do |t|
@@ -72,6 +73,7 @@ ActiveRecord::Schema.define(version: 2017_10_12_143440) do
   create_table "kitchens", force: :cascade do |t|
     t.string "name"
     t.string "type"
+    t.boolean "active", default: true
   end
 
   create_table "label_types", force: :cascade do |t|
@@ -100,6 +102,7 @@ ActiveRecord::Schema.define(version: 2017_10_12_143440) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true
   end
 
   create_table "sub_batches", force: :cascade do |t|

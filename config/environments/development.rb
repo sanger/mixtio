@@ -59,7 +59,7 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  # config.stub_ldap = true
+  config.stub_ldap = true
 
   # Print My Barcode api base
   config.x.pmb_api_base = 'http://pmb.dev/api/v1'

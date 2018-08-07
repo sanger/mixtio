@@ -1,4 +1,4 @@
-class CreateConsumableTypes < ActiveRecord::Migration
+class CreateConsumableTypes < ActiveRecord::Migration[4.2]
   def change
     create_table :consumable_types do |t|
       t.string :name

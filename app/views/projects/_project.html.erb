@@ -2,7 +2,18 @@
   <td><%= project.name %></td>
   <td class="text-center">
     <%= link_to edit_project_path(project) do %>
-      <%= fa_icon "pencil" %>
+      <%= fa_icon "pencil", title: "Edit" %>
+    <% end %>
+  </td>
+  <td>
+    <% if project.active? %>
+      <%= link_to deactivate_project_path(project), data: {method: :put, confirm: "Do you want to archive this project?"} do %>
+        <%= fa_icon "minus-circle", title: "Archive" %>
+      <% end %>
+    <% else %>
+      <%= link_to activate_project_path(project), data: {method: :put, confirm: "Do you want to reactivate this project?"} do %>
+        <%= fa_icon "plus-circle", title: "Activate" %>
+      <% end %>
     <% end %>
   </td>
 </tr>
