@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :unit do
-    name 'pint'
+    sequence(:name) { |n| "Unit-#{n}" }
   end
 end
