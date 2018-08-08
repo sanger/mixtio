@@ -26,7 +26,22 @@ class ConsumableType < ActiveRecord::Base
   end
 
   def latest_ingredients
-    batches.last ? batches.last.ingredients : []
+    latest_batch&.ingredients || []
+  end
+
+  def ingredients_prefill
+    latest_batch&.mixtures&.map do |mixture|
+      ing = mixture.ingredient
+      type = ing.consumable_type
+      latest_lot = type.latest_lot
+      {
+        consumable_type_id: type.id,
+        number: latest_lot&.number,
+        kitchen_id: latest_lot&.kitchen_id,
+        quantity: mixture.quantity,
+        unit_id: mixture.unit_id,
+      }
+    end || []
   end
 
   def latest_lot

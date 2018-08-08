@@ -69,13 +69,7 @@ $(document).on("turbolinks:load", () ->
       expiryDateView.update(model)
       consumablesView.update(model)
 
-      ingredients = model?.get('latest_batch')?.ingredients?.map (ingredient) ->
-        type = Mixtio.Bootstrap.ConsumableTypes.filter((type) -> type.id == ingredient.consumable_type_id)[0]
-        {
-          consumable_type_id: type.id
-          number: type.latest_lot?.number
-          kitchen_id: type.latest_lot?.kitchen_id
-        }
+      ingredients = model?.get('ingredients_prefill')
 
       ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
     )
