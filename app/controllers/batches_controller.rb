@@ -72,7 +72,17 @@ protected
   end
 
   def edit_batch_params
-    {ingredients: @batch.ingredients}
+    {
+      ingredients: @batch.mixtures.map do |mx|
+        {
+          consumable_type_id: mx.ingredient.consumable_type_id,
+          number: mx.ingredient.number,
+          kitchen_id: mx.ingredient.kitchen_id,
+          quantity: mx.quantity,
+          unit_id: mx.unit_id
+        }
+      end
+    }
   end
 
   def batches
