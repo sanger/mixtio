@@ -6,7 +6,8 @@ $(document).on("turbolinks:load", () ->
     consumableTypesCollection = new Mixtio.Collections.ConsumableTypes(Mixtio.Bootstrap.ConsumableTypes)
     kitchensCollection        = new Mixtio.Collections.Kitchens(Mixtio.Bootstrap.Kitchens)
     ingredientsCollection     = new Mixtio.Collections.Ingredients(Mixtio.Bootstrap.Ingredients)
-    projectsCollection     = new Mixtio.Collections.Projects(Mixtio.Bootstrap.Projects)
+    projectsCollection        = new Mixtio.Collections.Projects(Mixtio.Bootstrap.Projects)
+    unitsCollection           = new Mixtio.Collections.Units(Mixtio.Bootstrap.InputUnits)
 
     # Collection of sub-batch details (volume and unit, soon also projects)
     subBatchesCollection      = new Mixtio.Collections.SubBatches(Mixtio.Bootstrap.SubBatches)
@@ -25,6 +26,7 @@ $(document).on("turbolinks:load", () ->
       collection: ingredientsCollection
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
+      units: unitsCollection
     )
 
     scanConsumableView = new Mixtio.Views.ScanConsumable(

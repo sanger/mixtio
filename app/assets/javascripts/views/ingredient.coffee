@@ -9,6 +9,7 @@ class Mixtio.Views.Ingredient extends Backbone.View
   initialize: (options) ->
     @consumableTypes = options.consumableTypes
     @kitchens        = options.kitchens
+    @units           = options.units
 
     @on("render", () => @setSubviews())
 
@@ -22,6 +23,7 @@ class Mixtio.Views.Ingredient extends Backbone.View
       ingredient: @model
       consumableTypes: @consumableTypes
       kitchens: @kitchens
+      units: @units
     ))
 
     @trigger("render")

@@ -25,6 +25,10 @@ class BatchForm
     selected_ingredients.each do |ingredient|
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
+      quantity = ingredient[:quantity]
+      unit_id = ingredient[:unit_id]
+      errors[:ingredient] << "unit not found" if unit_id.present? && !Unit.exists?(unit_id)
+      errors[:ingredient] << "invalid quantity" if quantity.present? && quantity.to_f <= 0
 
       if Team.exists?(ingredient[:kitchen_id]) and !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
         errors[:ingredient] << "with number #{ingredient[:number]} could not be found"
@@ -54,9 +58,11 @@ class BatchForm
     @consumable ||= Consumable.new
   end
 
-  def find_ingredients
+  def mixtures
     selected_ingredients.map do |ingredient|
-      Ingredient.where(ingredient).exists? ? Ingredient.where(ingredient).first : Lot.create(ingredient)
+      ing_params = ingredient.slice(:consumable_type_id, :number, :kitchen_id)
+      ing = Ingredient.where(ing_params).first || Lot.create(ing)
+      Mixture.new(ingredient: ing, quantity: ingredient[:quantity], unit_id: ingredient[:unit_id])
     end
   end
 
@@ -66,7 +72,7 @@ class BatchForm
 
   def batch
     @batch ||= Batch.new(consumable_type_id: consumable_type_id, expiry_date: expiry_date,
-                         ingredients: find_ingredients, kitchen: current_user.team,
+                         mixtures: mixtures, kitchen: current_user.team,
                          user: current_user.user)
   end
 
@@ -88,7 +94,9 @@ class BatchForm
 
         batch.create_audit(user: current_user, action: 'create')
       end
-    rescue
+    rescue => e
+      errors[:exception] << e.to_s
+      Rails.logger.error ([e.message] + e.backtrace).join("\n    ")
       return false
     end
   end
@@ -120,7 +128,9 @@ class BatchForm
 
         batch.create_audit(user: current_user, action: 'update')
       end
-    rescue
+    rescue => e
+      errors[:exception] << e.to_s
+      Rails.logger.error ([e.message] + e.backtrace).join("\n    ")
       return false
     end
   end
