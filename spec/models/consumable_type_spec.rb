@@ -47,51 +47,40 @@ RSpec.describe ConsumableType, type: :model do
   end
 
   describe '#ingredients_prefill' do
+    let(:ct) { create(:consumable_type) }
+    let(:cx) { create(:consumable_type) }
+    let!(:batch_1) { create(:batch_with_ingredient_quantities, consumable_type: ct) }
+    let!(:batch_2) { create(:batch_with_ingredient_quantities, consumable_type: ct) }
+    let!(:batch_x) { create(:batch_with_ingredient_quantities, consumable_type: cx) }
+
+    let(:batch_2_data) do
+      batch_2.mixtures.map do |mx|
+        {
+          consumable_type_id: mx.ingredient.consumable_type_id,
+          number: mx.ingredient.number,
+          kitchen_id: mx.ingredient.kitchen_id,
+          quantity: mx.quantity,
+          unit_id: mx.unit_id,
+        }
+      end
+    end
+
     context 'when there is no previous batch' do
       it { expect(create(:consumable_type).ingredients_prefill).to be_empty }
     end
 
     context 'when there is a previous batch and it contains the latest lots' do
       it 'should return the ingredient data from the latest batch' do
-        ct = create(:consumable_type)
-        cx = create(:consumable_type)
-        batch_1 = create(:batch_with_ingredient_quantities, consumable_type: ct)
-        batch_2 = create(:batch_with_ingredient_quantities, consumable_type: ct)
-        batch_x = create(:batch_with_ingredient_quantities, consumable_type: cx)
-        expected = batch_2.mixtures.map do |mx|
-          {
-            consumable_type_id: mx.ingredient.consumable_type_id,
-            number: mx.ingredient.number,
-            kitchen_id: mx.ingredient.kitchen_id,
-            quantity: mx.quantity,
-            unit_id: mx.unit_id,
-          }
-        end
-        expect(ct.ingredients_prefill).to eq expected
+        expect(ct.ingredients_prefill).to eq batch_2_data
       end
     end
 
     context 'when there are newer lots of the ingredients used in other recipes' do
+      let!(:other_lot) { create(:lot, consumable_type: batch_2.ingredients.first.consumable_type, number: 999) }
+      let(:modified_data) { [batch_2_data[0].merge({number: other_lot.number, kitchen_id: other_lot.kitchen_id})] + batch_2_data[1..-1] }
+
       it 'should return the latest lots of the ingredients' do
-        ct = create(:consumable_type)
-        cx = create(:consumable_type)
-        batch_1 = create(:batch_with_ingredient_quantities, consumable_type: ct)
-        batch_2 = create(:batch_with_ingredient_quantities, consumable_type: ct)
-        batch_x = create(:batch_with_ingredient_quantities, consumable_type: cx)
-        ing_type = batch_2.ingredients.first.consumable_type
-        other_lot = create(:lot, consumable_type: ing_type, number: 999)
-        expected = batch_2.mixtures.map do |mx|
-          {
-            consumable_type_id: mx.ingredient.consumable_type_id,
-            number: mx.ingredient.number,
-            kitchen_id: mx.ingredient.kitchen_id,
-            quantity: mx.quantity,
-            unit_id: mx.unit_id,
-          }
-        end
-        expected[0][:number] = other_lot.number
-        expected[0][:kitchen_id] = other_lot.kitchen_id
-        expect(ct.ingredients_prefill).to eq expected
+        expect(ct.ingredients_prefill).to eq modified_data
       end
     end
   end
