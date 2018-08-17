@@ -81,7 +81,7 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content("Your labels could not be printed")
     end
 
-    it 'tells the user the error if known' do
+    xit 'tells the user the error if known' do
       pending 'Need PMB to be fixed first'
       exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
       allow(RestClient).to receive(:post).and_raise(exception)
@@ -271,11 +271,14 @@ RSpec.describe "Batches", type: feature, js: true do
 
     context 'when a selected consumable type has ingredients' do
 
+      let!(:unit) { create(:unit) }
+
       before do
         @consumable_type = create(:consumable_type)
         @lot             = create(:lot, consumable_type: @consumable_type)
         @previous_batch  = create(:batch_with_ingredients, consumable_type: @consumable_type)
         @batch           = create(:batch_with_consumables)
+        @previous_batch.mixtures.first.update_attributes!(quantity: 600, unit_id: unit.id)
       end
 
       let(:fill_out_form) {
@@ -289,6 +292,10 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "batch_form_sub_batches__volume", with: 1.1
       }
 
+      def quantity_and_unit(mixture)
+        { quantity: mixture.quantity, unit_id: mixture.unit_id }
+      end
+
       it 'saves the batch with the consumable type\'s latest ingredients' do
         fill_out_form
         click_button "Create Batch"
@@ -297,6 +304,8 @@ RSpec.describe "Batches", type: feature, js: true do
         batch = Batch.last
         expect(batch.ingredients.size).to eq(3)
         expect(batch.ingredients).to eq(@previous_batch.ingredients)
+        expect(quantity_and_unit(batch.mixtures.first)).to eq({quantity: 600, unit_id: unit.id})
+        expect(batch.mixtures.map(&method(:quantity_and_unit))).to eq(@previous_batch.mixtures.map(&method(:quantity_and_unit)))
       end
 
       describe 'editing ingredients' do
@@ -329,9 +338,33 @@ RSpec.describe "Batches", type: feature, js: true do
 
           expect(batch.ingredients.size).to eq(4)
 
-          all_ingredients = @consumable_type.latest_ingredients << @lot
-
+          all_ingredients = @consumable_type.latest_ingredients
           expect(batch.ingredients).to eq(all_ingredients)
+        end
+
+        it 'can add an ingredient with a quantity and unit' do
+          fill_out_form
+          click_button("Add Ingredient")
+
+          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
+          all(:xpath, '//input[@name="batch_form[ingredients][][quantity]"]').last.set(500)
+          all(:xpath, '//select[@name="batch_form[ingredients][][unit_id]"]').last.select(unit.name)
+
+          click_button "Create Batch"
+
+          expect(page).to have_content("Reagent batch successfully created")
+
+          batch = Batch.last
+
+          expect(batch.ingredients.size).to eq(4)
+
+          last_mixture = batch.mixtures.last
+          expect(last_mixture.ingredient).to eq(@lot)
+          expect(last_mixture.quantity).to eq(500)
+          expect(last_mixture.unit).to eq(unit)
+          expect(batch.ingredients).to eq(@consumable_type.latest_ingredients)
 
         end
 
@@ -357,7 +390,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
           expect(batch.ingredients.size).to eq(4)
 
-          all_ingredients = @consumable_type.latest_ingredients << @lot
+          all_ingredients = @consumable_type.latest_ingredients
 
           expect(batch.ingredients).to eq(all_ingredients)
         end
@@ -569,10 +602,16 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     context "viewing the edit form" do
+      let!(:unit) { create(:unit) }
+
       it "populates the form with the info from the current batch" do
+        @batch.mixtures.first.update_attributes!(quantity: 500, unit: unit)
         visit edit_batch_path(@batch)
         expect(page).to have_select("batch_form_consumable_type_id", selected: @batch.consumable_type.name)
         expect(page).to have_select("batch_form_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
+        expect(page).to have_field("batch_form_ingredients__quantity", with: "500")
+        expect(page).to have_select("batch_form_ingredients__unit_id", selected: unit.name)
+
         expect(page).to have_field("batch_form_expiry_date", with: @batch.expiry_date.to_s)
         expect(page).to have_field("batch_form_sub_batches__quantity", with: @batch.consumables.count)
         expect(page).to have_field("batch_form_sub_batches__volume", with: @batch.consumables.first.volume)
@@ -600,6 +639,8 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     context "submitting the form" do
+      let!(:unit) { create(:unit) }
+
       it "updates the appropriate records" do
         @external_team = create(:supplier)
 
@@ -625,6 +666,38 @@ RSpec.describe "Batches", type: feature, js: true do
         expect(page).to have_text("74")
         expect(page).to have_text("0.666L")
         expect(page).to have_text("single")
+        expect(page).to have_text(@external_team.name)
+      end
+
+      it "updates the quantity and unit" do
+        @external_team = create(:supplier)
+
+        visit edit_batch_path(@batch)
+        # consumable type dropdown
+        select @consumable_type2.name, from: "batch_form_consumable_type_id"
+
+        # ingredients form
+        click_button("Add Ingredient")
+        select @consumable_type2.name, from: "batch_form_ingredients__consumable_type_id"
+        select @external_team.name, from: "batch_form_ingredients__kitchen_id"
+        select unit.name, from: "batch_form_ingredients__unit_id"
+        fill_in "batch_form_ingredients__quantity", with: "800"
+
+        # rest of form
+        fill_in "batch_form_expiry_date", with: "11/11/2021"
+        fill_in "batch_form_sub_batches__quantity", with: 74
+        fill_in "batch_form_sub_batches__volume", with: 9
+        select "single", from: "batch_form_sub_batches__barcode_type"
+        click_button "Save Changes"
+
+        visit batch_path(@batch)
+        expect(page).to have_text("Consumable type: " + @consumable_type2.name)
+        expect(page).to have_text("Expiry Date: 11/11/2021")
+        expect(page).to have_text("74")
+        expect(page).to have_text("0.666L")
+        expect(page).to have_text("single")
+        expect(page).to have_text("800")
+        expect(page).to have_text(unit.name)
         expect(page).to have_text(@external_team.name)
       end
 

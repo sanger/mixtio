@@ -73,16 +73,18 @@
         <table class="table table-striped" id="ingredients-table">
           <thead>
             <tr>
-              <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th>
+              <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th><th>Quantity</th>
             </tr>
           </thead>
 
           <tbody>
-            <% @batch.ingredients.each do |ingredient| %>
+            <% @batch.mixtures.each do |mixture| %>
+            <% ingredient = mixture.ingredient %>
             <tr>
               <td><%= ingredient.consumable_type.name %></td>
               <td><%= ingredient.number %></td>
               <td><%= ingredient.kitchen.name %></td>
+              <td><%= "#{mixture.quantity} #{mixture.unit&.name}" %></td>
             </tr>
             <% end %>
           </tbody>

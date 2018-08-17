@@ -22,4 +22,18 @@
     <% }) %>
   </select>
 </td>
+<td>
+  <input class="form-control" type="number" step="0.01" value="<%= ingredient.get('quantity') %>"
+         name="batch_form[ingredients][][quantity]" id="batch_form_ingredients__quantity" />
+</td>
+<td>
+  <select class="form-control" name="batch_form[ingredients][][unit_id]" id="batch_form_ingredients__unit_id">
+    <option value=""></option>
+    <% units.each(function(unit) { %>
+      <option
+        <%= ((ingredient.get("unit") ? ingredient.get("unit").id : ingredient.get("unit_id")) == unit.id) ? "selected" : "" %>
+          value="<%= unit.id %>"><%= unit.get("name") %></option>
+    <% }) %>
+  </select>
+</td>
 <td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>

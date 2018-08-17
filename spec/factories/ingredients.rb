@@ -21,6 +21,10 @@ FactoryBot.define do
       mixtures { build_list :mixture, 3 }
     end
 
+    factory :batch_with_ingredient_quantities, parent: :batch do
+      mixtures { build_list :mixture_with_quantity, 2 }
+    end
+
     factory :lot, class: 'Lot' do
     end
   end

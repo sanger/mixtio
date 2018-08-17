@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_03_084830) do
+ActiveRecord::Schema.define(version: 2018_08_07_095327) do
 
   create_table "audits", force: :cascade do |t|
     t.string "auditable_type"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2018_08_03_084830) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_label_id"
-    t.boolean "active", default: true
+    t.boolean "active", default: true, null: false
   end
 
   create_table "consumables", force: :cascade do |t|
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2018_08_03_084830) do
   create_table "kitchens", force: :cascade do |t|
     t.string "name"
     t.string "type"
-    t.boolean "active", default: true
+    t.boolean "active", default: true, null: false
   end
 
   create_table "label_types", force: :cascade do |t|
@@ -88,8 +88,11 @@ ActiveRecord::Schema.define(version: 2018_08_03_084830) do
     t.integer "ingredient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "quantity"
+    t.integer "unit_id"
     t.index ["batch_id"], name: "index_mixtures_on_batch_id"
     t.index ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
+    t.index ["unit_id"], name: "index_mixtures_on_unit_id"
   end
 
   create_table "printers", force: :cascade do |t|
@@ -102,7 +105,7 @@ ActiveRecord::Schema.define(version: 2018_08_03_084830) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "active", default: true
+    t.boolean "active", default: true, null: false
   end
 
   create_table "sub_batches", force: :cascade do |t|
@@ -114,6 +117,13 @@ ActiveRecord::Schema.define(version: 2018_08_03_084830) do
     t.datetime "updated_at", null: false
     t.index ["ingredient_id"], name: "index_sub_batches_on_ingredient_id"
     t.index ["project_id"], name: "index_sub_batches_on_project_id"
+  end
+
+  create_table "units", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_units_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|
