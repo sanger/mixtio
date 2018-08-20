@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -20,12 +20,11 @@ module Mixtio
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    config.load_defaults 5.1
+
     config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
 
     config.filter_parameters += [:password]
-
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     config.generators do |g|
         g.test_framework :rspec,
@@ -47,6 +46,7 @@ module Mixtio
 
     config.barcode_prefix = 'RGNT_'
 
+    config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end
 

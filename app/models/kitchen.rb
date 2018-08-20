@@ -1,6 +1,8 @@
 class Kitchen < ActiveRecord::Base
 
   include HasOrderByName
+  include Activatable
+  include Auditable
 
   has_many :ingredients
 

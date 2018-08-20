@@ -8,7 +8,7 @@ describe Api::V2::ConsumablesController, type: :request do
       batch = create(:batch_with_consumables)
       consumable = batch.consumables.first
       get api_v2_consumable_path(consumable.id)
-      expect(response).to be_success
+      expect(response).to be_successful
       consumable_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(consumable_response[:data][:id]).to eql(consumable.id.to_s)

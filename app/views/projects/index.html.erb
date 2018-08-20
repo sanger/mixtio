@@ -1,8 +1,16 @@
 <div class="title row">
   <div class="col-md-12">
     <h2>
-      Projects <%= link_to new_project_path, { class: 'btn btn-primary pull-right', role: 'button' } do %>
-        <%= fa_icon "plus" %> New Project
+      <% if @archive %>
+        Archived Projects <%= link_to "Go to active projects", projects_path, { class: 'btn btn-primary pull-right', role: 'button' } %>
+      <% else %>
+        Projects
+        <span class='pull-right'>
+          <%= link_to new_project_path, { class: 'btn btn-primary', role: 'button' } do %>
+            <%= fa_icon "plus" %> New project
+          <% end %>
+          <%= link_to "Go to archive", projects_archive_path, { class: 'btn btn-primary', role: 'button' } %>
+        </span>
       <% end %>
     </h2>
   </div>
@@ -12,7 +20,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Project</th><th></th>
+          <th>Project</th><th></th><th></th>
         </tr>
       </thead>
       <tbody>

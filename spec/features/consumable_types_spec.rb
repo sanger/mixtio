@@ -13,7 +13,7 @@ RSpec.describe "ConsumableTypes", type: :feature do
   describe '#new' do
     let(:create_a_consumable_type) do
       visit consumable_types_path
-      click_link "New Consumable Type"
+      click_link "New consumable type"
 
       fill_in "Name*", with: consumable_type.name
       fill_in "Days to Keep", with: consumable_type.days_to_keep

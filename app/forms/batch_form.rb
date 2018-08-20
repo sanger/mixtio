@@ -25,6 +25,11 @@ class BatchForm
     selected_ingredients.each do |ingredient|
       errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
       errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
+      quantity = ingredient[:quantity]
+      unit_id = ingredient[:unit_id]
+      errors[:ingredient] << "invalid unit" if unit_id.present? && !Unit.exists?(unit_id)
+      errors[:ingredient] << "invalid quantity #{quantity}" if quantity.present? && quantity.to_f <= 0
+      errors[:ingredient] << "cannot specify unit without quantity" if unit_id.present? && !quantity.present?
 
       if Team.exists?(ingredient[:kitchen_id]) and !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
         errors[:ingredient] << "with number #{ingredient[:number]} could not be found"
@@ -42,7 +47,7 @@ class BatchForm
         errors["Sub-Batch"] << "volume can't be empty" if sub_batch[:volume].empty?
         errors["Sub-Batch"] << "volume must be positive" if sub_batch[:volume].to_f <= 0 && sub_batch[:volume].present?
 
-        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?       
+        errors["Sub-Batch"] << "project can't be empty" if sub_batch[:project_id].nil?
       end
     end
 
@@ -54,9 +59,11 @@ class BatchForm
     @consumable ||= Consumable.new
   end
 
-  def find_ingredients
+  def mixtures
     selected_ingredients.map do |ingredient|
-      Ingredient.exists?(ingredient) ? Ingredient.where(ingredient).first : Lot.create(ingredient)
+      ing_params = ingredient.slice(:consumable_type_id, :number, :kitchen_id)
+      ing = Ingredient.where(ing_params).first || Lot.create(ing_params)
+      Mixture.new(ingredient: ing, quantity: ingredient[:quantity], unit_id: ingredient[:unit_id])
     end
   end
 
@@ -66,7 +73,7 @@ class BatchForm
 
   def batch
     @batch ||= Batch.new(consumable_type_id: consumable_type_id, expiry_date: expiry_date,
-                         ingredients: find_ingredients, kitchen: current_user.team,
+                         mixtures: mixtures, kitchen: current_user.team,
                          user: current_user.user)
   end
 
@@ -88,7 +95,9 @@ class BatchForm
 
         batch.create_audit(user: current_user, action: 'create')
       end
-    rescue
+    rescue => e
+      errors[:exception] << e.to_s
+      Rails.logger.error ([e.message] + e.backtrace).join("\n    ")
       return false
     end
   end
@@ -106,8 +115,8 @@ class BatchForm
 
         # Update attributes for the batch record
         batch.update_attributes!(consumable_type_id: consumable_type_id,
-        expiry_date: expiry_date, ingredients: find_ingredients,
-        kitchen: current_user.team, user: current_user.user)
+            expiry_date: expiry_date, mixtures: mixtures,
+            kitchen: current_user.team, user: current_user.user)
 
         # Create the consumables for each sub-batch
         sub_batches.each do |sub_batch|
@@ -120,7 +129,9 @@ class BatchForm
 
         batch.create_audit(user: current_user, action: 'update')
       end
-    rescue
+    rescue => e
+      errors[:exception] << e.to_s
+      Rails.logger.error ([e.message] + e.backtrace).join("\n    ")
       return false
     end
   end

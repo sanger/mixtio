@@ -22,7 +22,7 @@ RSpec.describe PrintJob, type: :model do
   end
 
   # Keeping this test in because it needs to be re-enabled once PMB has been fixed
-  it 'should populate errors when a 422 is thrown' do
+  xit 'should populate errors when a 422 is thrown' do
     pending 'Need PMB to be fixed'
     exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
     allow(RestClient).to receive(:post).and_raise(exception)

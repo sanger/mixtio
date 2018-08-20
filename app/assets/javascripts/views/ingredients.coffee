@@ -3,6 +3,7 @@ class Mixtio.Views.Ingredients extends Backbone.View
   initialize: (options) ->
     @consumableTypes = options.consumableTypes
     @kitchens        = options.kitchens
+    @units           = options.units
 
     @collection.on('reset', () => @render())
     @collection.on('add', () => @add())
@@ -17,6 +18,7 @@ class Mixtio.Views.Ingredients extends Backbone.View
         model: ingredient
         consumableTypes: @consumableTypes
         kitchens: @kitchens
+        units: @units
       )
 
       @$el.append(ingredientView.render().el)
@@ -29,6 +31,7 @@ class Mixtio.Views.Ingredients extends Backbone.View
       model: @collection.models[@collection.length - 1]
       consumableTypes: @consumableTypes
       kitchens: @kitchens
+      units: @units
     )
 
     @$el.append(ingredientView.render().el)

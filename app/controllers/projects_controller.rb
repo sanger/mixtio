@@ -6,6 +6,12 @@ class ProjectsController < ApplicationController
   helper_method :projects
 
   def index
+    @archive = false
+  end
+
+  def archive_index
+    @archive = true
+    render :index
   end
 
   # GET /projects/1
@@ -23,6 +29,22 @@ class ProjectsController < ApplicationController
     @project = current_resource
   end
 
+  # PUT /projects/1/deactivate
+  def deactivate
+    @project = current_resource
+    @project.deactivate!
+    @project.create_audit(user: current_user, action: 'deactivate')
+    redirect_back(fallback_location: projects_path)
+  end
+
+  # PUT /projects/1/activate
+  def activate
+    @project = current_resource
+    @project.activate!
+    @project.create_audit(user: current_user, action: 'activate')
+    redirect_back(fallback_location: projects_archive_path)
+  end
+
   # POST /projects
   def create
     @project = Project.new(project_params)
@@ -37,24 +59,22 @@ class ProjectsController < ApplicationController
   def update
     @project = current_resource
     if @project.update_attributes(project_params)
-      redirect_to projects_path, notice: "Project successfully updated"
+      redirect_to (@project.active? ? projects_path : projects_archive_path), notice: "Project successfully updated"
     else
       render :edit
     end
   end
 
-  private
+  def projects
+    @projects ||= (@archive ? Project.inactive : Project.active).order_by_name.page(params[:page])
+  end
 
-    def projects
-      @projects ||= Project.page(params[:page])
-    end
+  def current_resource
+    Project.find(params[:id])
+  end
 
-    def current_resource
-      Project.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def project_params
-      params.require(:project).permit(:name)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def project_params
+    params.require(:project).permit(:name)
+  end
 end

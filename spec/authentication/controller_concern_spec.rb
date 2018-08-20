@@ -40,7 +40,7 @@ RSpec.describe Authentication::ControllerConcern, type: :controller do
     @controller = AnonymousController.new
     allow(@controller.current_user).to receive(:signed_in?).and_return(true)
     get :index
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 
 end
