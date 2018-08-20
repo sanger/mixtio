@@ -66,10 +66,8 @@ class ProjectsController < ApplicationController
   end
 
   def projects
-    @projects ||= (@archive ? Project.inactive : Project.active).page(params[:page])
+    @projects ||= (@archive ? Project.inactive : Project.active).order_by_name.page(params[:page])
   end
-
-private
 
   def current_resource
     Project.find(params[:id])

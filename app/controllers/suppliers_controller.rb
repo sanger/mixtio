@@ -56,7 +56,7 @@ class SuppliersController < ApplicationController
   end
 
   def suppliers
-    @suppliers ||= (@archive ? Supplier.inactive : Supplier.active).page(params[:page])
+    @suppliers ||= (@archive ? Supplier.inactive : Supplier.active).order_by_name.page(params[:page])
   end
 
 private

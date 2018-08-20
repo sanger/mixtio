@@ -1,4 +1,5 @@
 class Project < ActiveRecord::Base
+  include HasOrderByName
   include Activatable
   include Auditable
 
