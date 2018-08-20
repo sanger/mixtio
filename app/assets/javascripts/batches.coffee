@@ -6,7 +6,8 @@ $(document).on("turbolinks:load", () ->
     consumableTypesCollection = new Mixtio.Collections.ConsumableTypes(Mixtio.Bootstrap.ConsumableTypes)
     kitchensCollection        = new Mixtio.Collections.Kitchens(Mixtio.Bootstrap.Kitchens)
     ingredientsCollection     = new Mixtio.Collections.Ingredients(Mixtio.Bootstrap.Ingredients)
-    projectsCollection     = new Mixtio.Collections.Projects(Mixtio.Bootstrap.Projects)
+    projectsCollection        = new Mixtio.Collections.Projects(Mixtio.Bootstrap.Projects)
+    unitsCollection           = new Mixtio.Collections.Units(Mixtio.Bootstrap.InputUnits)
 
     # Collection of sub-batch details (volume and unit, soon also projects)
     subBatchesCollection      = new Mixtio.Collections.SubBatches(Mixtio.Bootstrap.SubBatches)
@@ -25,6 +26,7 @@ $(document).on("turbolinks:load", () ->
       collection: ingredientsCollection
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
+      units: unitsCollection
     )
 
     scanConsumableView = new Mixtio.Views.ScanConsumable(
@@ -67,13 +69,7 @@ $(document).on("turbolinks:load", () ->
       expiryDateView.update(model)
       consumablesView.update(model)
 
-      ingredients = model?.get('latest_batch')?.ingredients?.map (ingredient) ->
-        type = Mixtio.Bootstrap.ConsumableTypes.filter((type) -> type.id == ingredient.consumable_type_id)[0]
-        {
-          consumable_type_id: type.id
-          number: type.latest_lot?.number
-          kitchen_id: type.latest_lot?.kitchen_id
-        }
+      ingredients = model?.get('ingredients_prefill')
 
       ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
     )

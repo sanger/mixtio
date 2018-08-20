@@ -1,7 +1,17 @@
 <div class="title row">
   <div class="col-md-12">
-    <h2>Consumable Types <%= link_to new_consumable_type_path, { class: 'btn btn-primary pull-right', role: 'button' } do %>
-      <%= fa_icon "plus" %> New Consumable Type
+    <h2>
+      <% if @archive %>
+        Archived Consumable Types
+        <%= link_to "Go to active consumable types", consumable_types_path, { class: 'btn btn-primary pull-right', role: 'button' } %>
+      <% else %>
+        Consumable Types
+        <span class='pull-right'>
+          <%= link_to new_consumable_type_path, { class: 'btn btn-primary', role: 'button' } do %>
+            <%= fa_icon "plus" %> New consumable type
+          <% end %>
+          <%= link_to "Go to archive", consumable_types_archive_path, { class: 'btn btn-primary', role: 'button' } %>
+        </span>
     <% end %>
     </h2>
   </div>
@@ -11,7 +21,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Name</th><th>Days To Keep</th><th>Storage condition</th><th></th>
+          <th>Name</th><th>Days To Keep</th><th>Storage condition</th><th></th><th></th>
         </tr>
       </thead>
       <tbody>

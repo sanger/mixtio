@@ -1,4 +1,4 @@
-class CreateSubBatchesAndProjects < ActiveRecord::Migration
+class CreateSubBatchesAndProjects < ActiveRecord::Migration[4.2]
   def change
     create_table :sub_batches do |t|
       t.float :volume

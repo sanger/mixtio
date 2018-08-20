@@ -1,4 +1,4 @@
-class CreateConsumables < ActiveRecord::Migration
+class CreateConsumables < ActiveRecord::Migration[4.2]
   def change
     create_table :consumables do |t|
       t.belongs_to :batch, index: true, foreign_key: true

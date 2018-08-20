@@ -1,8 +1,16 @@
 <div class="title row"> 
   <div class="col-md-12">
     <h2>
-      Suppliers <%= link_to new_supplier_path, { class: 'btn btn-primary pull-right', role: 'button' } do %>
-        <%= fa_icon "plus" %> New Supplier
+      <% if @archive %>
+        Archived Suppliers <%= link_to "Go to active suppliers", suppliers_path, { class: 'btn btn-primary pull-right', role: 'button' } %>
+      <% else %>
+        Suppliers
+        <span class='pull-right'>
+          <%= link_to new_supplier_path, { class: 'btn btn-primary', role: 'button' } do %>
+            <%= fa_icon "plus" %> New supplier
+          <% end %>
+          <%= link_to "Go to archive", suppliers_archive_path, { class: 'btn btn-primary', role: 'button' } %>
+        </span>
       <% end %>
     </h2>
   </div>
@@ -12,7 +20,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Supplier</th><th></th>
+          <th>Supplier</th><th></th><th></th>
         </tr>  
       </thead>
       <tbody>

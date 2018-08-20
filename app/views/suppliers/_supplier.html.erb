@@ -2,7 +2,18 @@
   <td><%= supplier.name %></td>
   <td class="text-center">
     <%= link_to edit_supplier_path(supplier) do %>
-      <%= fa_icon "pencil" %>
+      <%= fa_icon "pencil", title: "Edit" %>
+    <% end %>
+  </td>
+  <td>
+    <% if supplier.active? %>
+      <%= link_to deactivate_supplier_path(supplier), data: { method: :put, confirm: "Do you want to archive this supplier?" } do %>
+        <%= fa_icon "minus-circle", title: "Archive" %>
+      <% end %>
+    <% else %>
+      <%= link_to activate_supplier_path(supplier), data: { method: :put, confirm: "Do you want to reactivate this supplier?" } do %>
+        <%= fa_icon "plus-circle", title: "Activate" %>
+      <% end %>
     <% end %>
   </td>
 </tr>

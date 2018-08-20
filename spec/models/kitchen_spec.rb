@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join 'spec/models/concerns/activatable_spec.rb'
 
 RSpec.describe Kitchen, type: :model do
   it "should not be valid without a name" do
@@ -15,4 +16,6 @@ RSpec.describe Kitchen, type: :model do
     expect(build(:kitchen, name: kitchen.name.upcase)).to_not be_valid
     expect(build(:kitchen, name: kitchen.name.downcase)).to_not be_valid
   end
+
+  it_behaves_like "activatable"
 end
