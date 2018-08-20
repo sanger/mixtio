@@ -86,5 +86,5 @@ end
 
 group :deployment do
   gem 'therubyracer'
-  gem 'mysql2', '0.3.20'
+  gem 'mysql2'
 end
