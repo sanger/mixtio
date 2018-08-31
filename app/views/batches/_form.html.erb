@@ -8,7 +8,7 @@
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>
       Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
       Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch_form.sub_batches.to_json(methods: [:quantity, :single_barcode?]).html_safe) %>
-      Mixtio.Bootstrap.Projects        = <%= json_escape(Project.active.to_json.html_safe) %>
+      Mixtio.Bootstrap.Projects        = <%= json_escape(Project.active.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.InputUnits      = <%= json_escape(Unit.all.to_json.html_safe) %>
     </script>
 
