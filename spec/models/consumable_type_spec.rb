@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'spec/models/concerns/activatable_spec.rb'
+require Rails.root.join 'spec/models/concerns/activatable.rb'
 
 RSpec.describe ConsumableType, type: :model do
 
@@ -46,11 +46,18 @@ RSpec.describe ConsumableType, type: :model do
     expect(build(:consumable_type)).to respond_to(:audits)
   end
 
-  describe '#ingredients_prefill' do
+  describe '#prefill_data' do
     let(:ct) { create(:consumable_type) }
     let(:cx) { create(:consumable_type) }
+    let(:project) { create(:project) }
     let!(:batch_1) { create(:batch_with_ingredient_quantities, consumable_type: ct) }
-    let!(:batch_2) { create(:batch_with_ingredient_quantities, consumable_type: ct) }
+
+    let!(:batch_2) do
+      batch = create(:batch_with_ingredient_quantities, consumable_type: ct)
+      batch.sub_batches.create!(volume: 100, unit: 'L', project: project)
+      batch
+    end
+
     let!(:batch_x) { create(:batch_with_ingredient_quantities, consumable_type: cx) }
 
     let(:batch_2_data) do
@@ -66,12 +73,12 @@ RSpec.describe ConsumableType, type: :model do
     end
 
     context 'when there is no previous batch' do
-      it { expect(create(:consumable_type).ingredients_prefill).to be_empty }
+      it { expect(create(:consumable_type).prefill_data).to eq({ ingredients: [], sub_batch_unit: nil }) }
     end
 
     context 'when there is a previous batch and it contains the latest lots' do
       it 'should return the ingredient data from the latest batch' do
-        expect(ct.ingredients_prefill).to eq batch_2_data
+        expect(ct.prefill_data).to eq({ingredients: batch_2_data, sub_batch_unit: 'L'})
       end
     end
 
@@ -80,7 +87,7 @@ RSpec.describe ConsumableType, type: :model do
       let(:modified_data) { [batch_2_data[0].merge({number: other_lot.number, kitchen_id: other_lot.kitchen_id})] + batch_2_data[1..-1] }
 
       it 'should return the latest lots of the ingredients' do
-        expect(ct.ingredients_prefill).to eq modified_data
+        expect(ct.prefill_data).to eq({ingredients: modified_data, sub_batch_unit: 'L'})
       end
     end
   end

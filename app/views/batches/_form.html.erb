@@ -2,7 +2,7 @@
 
     <script type="text/javascript">
       Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.active.find_user_favourites(current_user).to_json.html_safe) %>
-      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:ingredients_prefill]).html_safe) %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
       Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch_form.consumable_type_id.to_json.html_safe) %>
       Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.active.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.ingredients.to_json.html_safe) %>

@@ -1,5 +1,5 @@
 require 'rails_helper'
-require Rails.root.join 'spec/models/concerns/activatable_spec.rb'
+require Rails.root.join 'spec/models/concerns/activatable.rb'
 
 RSpec.describe Kitchen, type: :model do
   it "should not be valid without a name" do

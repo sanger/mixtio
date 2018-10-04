@@ -29,3 +29,9 @@ class Mixtio.Views.SubBatches extends Backbone.View
     @collection.reset()
     sub_batches.each (sub_batch) =>
       @collection.add(sub_batch)
+
+  setUnit: (unit) ->
+    # Don't alter units if the subbatches have numbers in already
+    if (unit? and @collection.every (item) => not item.attributes.quantity and not item.attributes.volume)
+      @collection.each (item) => item.attributes.unit = unit
+      this.render()

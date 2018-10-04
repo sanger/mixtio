@@ -39,7 +39,23 @@ class Batch < Ingredient
     consumables.count
   end
 
-  private
+  # Returns the information about the _latest lot_ of each ingredient in this batch
+  def ingredients_prefill
+    mixtures&.map do |mixture|
+      ing = mixture.ingredient
+      type = ing.consumable_type
+      latest_lot = type.latest_lot
+      {
+        consumable_type_id: type.id,
+        number: latest_lot&.number,
+        kitchen_id: latest_lot&.kitchen_id,
+        quantity: mixture.quantity,
+        unit_id: mixture.unit_id,
+      }
+    end || []
+  end
+
+private
 
   def generate_batch_number
     update_column(:number, "#{self.kitchen.name.upcase.gsub(/\s/, '')}-#{self.id}")
