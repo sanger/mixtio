@@ -69,9 +69,15 @@ $(document).on("turbolinks:load", () ->
       expiryDateView.update(model)
       consumablesView.update(model)
 
-      ingredients = model?.get('ingredients_prefill')
+      prefill_data = model?.get('prefill_data')
 
+      ingredients = prefill_data?.ingredients
+      subBatchUnit = prefill_data?.sub_batch_unit
+
+      
+      subBatchesView.setUnit(subBatchUnit)
       ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
+      addSubBatchView.defaultUnit = subBatchUnit
     )
 
     ## When the user favourites/unfavourites a Consumable Type, add/remove it to/from the collection

@@ -657,10 +657,12 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "batch_form_expiry_date", with: "11/11/2021"
         fill_in "batch_form_sub_batches__quantity", with: 74
         fill_in "batch_form_sub_batches__volume", with: 9
+        select "mL", from: "batch_form_sub_batches__unit"
         select "single", from: "batch_form_sub_batches__barcode_type"
         click_button "Save Changes"
 
         visit batch_path(@batch)
+
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
         expect(page).to have_text("Expiry Date: 11/11/2021")
         expect(page).to have_text("74")
@@ -687,6 +689,8 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "batch_form_expiry_date", with: "11/11/2021"
         fill_in "batch_form_sub_batches__quantity", with: 74
         fill_in "batch_form_sub_batches__volume", with: 9
+
+        select "mL", from: "batch_form_sub_batches__unit"
         select "single", from: "batch_form_sub_batches__barcode_type"
         click_button "Save Changes"
 

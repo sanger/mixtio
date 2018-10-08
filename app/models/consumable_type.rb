@@ -29,20 +29,12 @@ class ConsumableType < ActiveRecord::Base
     latest_batch&.ingredients || []
   end
 
-  # Returns the information about the _latest lot_ of each ingredient in the _latest batch_ of this stuff.
-  def ingredients_prefill
-    latest_batch&.mixtures&.map do |mixture|
-      ing = mixture.ingredient
-      type = ing.consumable_type
-      latest_lot = type.latest_lot
-      {
-        consumable_type_id: type.id,
-        number: latest_lot&.number,
-        kitchen_id: latest_lot&.kitchen_id,
-        quantity: mixture.quantity,
-        unit_id: mixture.unit_id,
-      }
-    end || []
+  def prefill_data
+    batch = latest_batch
+    {
+      ingredients: batch&.ingredients_prefill || [],
+      sub_batch_unit: batch&.sub_batches&.first&.unit,
+    }
   end
 
   def latest_lot
