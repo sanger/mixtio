@@ -1,13 +1,11 @@
 FactoryBot.define do
   factory :mixture do
     ingredient { create(:lot) }
-    batch { create(:batch) }
+    mixable { create(:batch) }
 
     factory :mixture_with_quantity do
-      ingredient { create(:lot) }
-      batch { create(:batch) }
       quantity 3.14
-      unit { create(:unit) }
+      unit
     end
 
   end

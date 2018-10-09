@@ -1,0 +1,36 @@
+<%= f.fields_for :mixture_criteria do |ingredient| %>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table id="mixable-ingredients-table" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Ingredient*</th><th>Lot/Batch Number</th><th>Supplier (Product Code)*</th><th>Quantity</th><th>Unit</th><th></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <% if barcode_scanner %>
+    <div id="consumable-barcode" class="col-md-3">
+      <div class="input-group">
+        <span class="input-group-addon" id="barcode-scanner">
+          <%= fa_icon "barcode" %>
+        </span>
+        <input type="text" class="form-control" aria-describedby="barcode-scanner" placeholder="Scan Barcode">
+      </div>
+      <span class="help-block"></span>
+    </div>
+    <% end %>
+
+    <div class="col-md-offset-<%= barcode_scanner ? 6 : 9 %> col-md-3 text-right">
+      <button id="add_ingredient_button" class="btn btn-primary btn-block">
+        <%= fa_icon "plus" %> Add Ingredient
+      </button>
+    </div>
+
+  </div>
+<% end %>

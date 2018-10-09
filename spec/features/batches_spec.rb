@@ -144,8 +144,8 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "batch_form_sub_batches__quantity", with: 3
-        fill_in "batch_form_sub_batches__volume", with: 2.2
+        fill_in "mixable_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__volume", with: 2.2
         click_button('Create Batch')
       }
 
@@ -243,11 +243,11 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
         click_button("Add Ingredient")
-        all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@consumable_type.name)
-        all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set('12345')
-        all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@team.name)
+        all(:xpath, '//select[@name="mixable[mixture_criteria][][consumable_type_id]"]').last.select(@consumable_type.name)
+        all(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').last.set('12345')
+        all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@team.name)
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "batch_form_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__quantity", with: 3
         click_button "Create Batch"
       }
 
@@ -259,12 +259,12 @@ RSpec.describe "Batches", type: feature, js: true do
       it 'maintains the selected options' do
         fill_out_form
         expect(page).to have_select('Consumable Type', selected: @consumable_type.name)
-        expect(page).to have_select('batch_form[ingredients][][consumable_type_id]', selected: @consumable_type.name)
-        expect(find(:xpath, '//input[@name="batch_form[ingredients][][number]"]').value).to eq('12345')
-        expect(page).to have_select('batch_form[ingredients][][kitchen_id]', selected: @team.name)
+        expect(page).to have_select('mixable[mixture_criteria][][consumable_type_id]', selected: @consumable_type.name)
+        expect(find(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').value).to eq('12345')
+        expect(page).to have_select('mixable[mixture_criteria][][kitchen_id]', selected: @team.name)
         expect(find_field("Expiry Date").value).to eq(@batch.expiry_date.to_s)
         # Leaving the following line in case persistence is still required with sub-batch info
-        #expect(find_field("batch_form_sub_batches__quantity").value).to eq("3")
+        #expect(find_field("mixable_sub_batches__quantity").value).to eq("3")
       end
 
     end
@@ -274,11 +274,9 @@ RSpec.describe "Batches", type: feature, js: true do
       let!(:unit) { create(:unit) }
 
       before do
-        @consumable_type = create(:consumable_type)
+        @consumable_type = create(:consumable_type_with_recipe)
         @lot             = create(:lot, consumable_type: @consumable_type)
-        @previous_batch  = create(:batch_with_ingredients, consumable_type: @consumable_type)
         @batch           = create(:batch_with_consumables)
-        @previous_batch.mixtures.first.update_attributes!(quantity: 600, unit_id: unit.id)
       end
 
       let(:fill_out_form) {
@@ -286,26 +284,27 @@ RSpec.describe "Batches", type: feature, js: true do
         select @consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: (@batch.expiry_date.to_s + "\t")
         sleep(0.5)
-        find_field("batch_form[expiry_date]").native.send_key(:Tab)
+        find_field("mixable[expiry_date]").native.send_key(:Tab)
         sleep(0.5)
-        fill_in "batch_form_sub_batches__quantity", with: 3
-        fill_in "batch_form_sub_batches__volume", with: 1.1
+        fill_in "mixable_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__volume", with: 1.1
       }
 
       def quantity_and_unit(mixture)
         { quantity: mixture.quantity, unit_id: mixture.unit_id }
       end
 
-      it 'saves the batch with the consumable type\'s latest ingredients' do
+      it 'saves the batch with the consumable type\'s recipe' do
         fill_out_form
         click_button "Create Batch"
         expect(page).to have_content("Reagent batch successfully created")
 
         batch = Batch.last
-        expect(batch.ingredients.size).to eq(3)
-        expect(batch.ingredients).to eq(@previous_batch.ingredients)
-        expect(quantity_and_unit(batch.mixtures.first)).to eq({quantity: 600, unit_id: unit.id})
-        expect(batch.mixtures.map(&method(:quantity_and_unit))).to eq(@previous_batch.mixtures.map(&method(:quantity_and_unit)))
+        expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size)
+        expect(batch.mixture_criteria).to eq(@consumable_type.mixture_criteria)
+        expect(batch.ingredients.map(&:consumable_type_id)).to eq(@consumable_type.mixtures.map { |mixture| mixture.ingredient.consumable_type_id})
+        expect(batch.ingredients.map(&:kitchen_id)).to eq(@consumable_type.mixtures.map { |mixture| mixture.ingredient.kitchen_id })
+        expect(batch.mixtures.map(&method(:quantity_and_unit))).to eq(@consumable_type.mixtures.map(&method(:quantity_and_unit)))
       end
 
       describe 'editing ingredients' do
@@ -318,17 +317,17 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
-          expect(batch.ingredients.size).to eq(2)
-          expect(batch.ingredients).to eq(@consumable_type.latest_ingredients.take(2))
+          expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size - 1)
+          expect(batch.mixture_criteria).to eq(@consumable_type.mixture_criteria.drop(1))
         end
 
         it 'can add an ingredient' do
           fill_out_form
           click_button("Add Ingredient")
 
-          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
-          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
-          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@lot.kitchen.name)
 
           click_button "Create Batch"
 
@@ -336,21 +335,27 @@ RSpec.describe "Batches", type: feature, js: true do
 
           batch = Batch.last
 
-          expect(batch.ingredients.size).to eq(4)
-
-          all_ingredients = @consumable_type.latest_ingredients
-          expect(batch.ingredients).to eq(all_ingredients)
+          expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size + 1)
+          new_mixture_criterium = {
+            consumable_type_id: @lot.consumable_type_id,
+            number: @lot.number,
+            kitchen_id: @lot.kitchen_id,
+            quantity: nil,
+            unit_id: nil
+          }
+          all_ingredients = @consumable_type.mixture_criteria.push(new_mixture_criterium)
+          expect(batch.mixture_criteria).to eq(all_ingredients)
         end
 
         it 'can add an ingredient with a quantity and unit' do
           fill_out_form
           click_button("Add Ingredient")
 
-          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
-          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
-          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
-          all(:xpath, '//input[@name="batch_form[ingredients][][quantity]"]').last.set(500)
-          all(:xpath, '//select[@name="batch_form[ingredients][][unit_id]"]').last.select(unit.name)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@lot.kitchen.name)
+          all(:xpath, '//input[@name="mixable[mixture_criteria][][quantity]"]').last.set(500)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][unit_id]"]').last.select(unit.name)
 
           click_button "Create Batch"
 
@@ -358,26 +363,34 @@ RSpec.describe "Batches", type: feature, js: true do
 
           batch = Batch.last
 
-          expect(batch.ingredients.size).to eq(4)
+          expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size + 1)
 
           last_mixture = batch.mixtures.last
           expect(last_mixture.ingredient).to eq(@lot)
           expect(last_mixture.quantity).to eq(500)
           expect(last_mixture.unit).to eq(unit)
-          expect(batch.ingredients).to eq(@consumable_type.latest_ingredients)
 
+          new_mixture_criterium = new_mixture_criterium = {
+            consumable_type_id: @lot.consumable_type_id,
+            number: @lot.number,
+            kitchen_id: @lot.kitchen_id,
+            quantity: 500,
+            unit_id: unit.id
+          }
+          all_ingredients = @consumable_type.mixture_criteria.push(new_mixture_criterium)
+          expect(batch.mixture_criteria).to eq(all_ingredients)
         end
 
         it 'adding new ingredient doesnt reset other ingredients' do
           fill_out_form
           click_button("Add Ingredient")
 
-          all(:xpath, '//select[@name="batch_form[ingredients][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
-          all(:xpath, '//input[@name="batch_form[ingredients][][number]"]').last.set(@lot.number)
-          all(:xpath, '//select[@name="batch_form[ingredients][][kitchen_id]"]').last.select(@lot.kitchen.name)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][consumable_type_id]"]').last.select(@lot.consumable_type.name)
+          all(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').last.set(@lot.number)
+          all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@lot.kitchen.name)
 
           click_button("Add Ingredient")
-          within("table#batch-ingredients-table") do
+          within("table#mixable-ingredients-table") do
             all(:data_behavior, "remove_row").last.click
           end
           sleep 1
@@ -388,11 +401,18 @@ RSpec.describe "Batches", type: feature, js: true do
 
           batch = Batch.last
 
-          expect(batch.ingredients.size).to eq(4)
+          expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size + 1)
 
-          all_ingredients = @consumable_type.latest_ingredients
+          new_mixture_criterium = new_mixture_criterium = {
+            consumable_type_id: @lot.consumable_type_id,
+            number: @lot.number,
+            kitchen_id: @lot.kitchen_id,
+            quantity: nil,
+            unit_id: nil
+          }
+          all_ingredients = @consumable_type.mixture_criteria.push(new_mixture_criterium)
 
-          expect(batch.ingredients).to eq(all_ingredients)
+          expect(batch.mixture_criteria).to eq(all_ingredients)
         end
 
         it 'can scan in an ingredient' do
@@ -411,7 +431,7 @@ RSpec.describe "Batches", type: feature, js: true do
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
-          expect(batch.ingredients.size).to eq(4)
+          expect(batch.ingredients.size).to eq(@consumable_type.mixtures.size + 1)
           expect(batch.ingredients.include?(consumable.batch)).to be_truthy
 
         end
@@ -437,8 +457,8 @@ RSpec.describe "Batches", type: feature, js: true do
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in "Expiry Date", with: @batch.expiry_date
-        fill_in "batch_form_sub_batches__quantity", with: 3
-        fill_in "batch_form_sub_batches__volume", with: 100
+        fill_in "mixable_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__volume", with: 100
       }
       let("submit") {
         click_button('Create Batch')
@@ -447,7 +467,7 @@ RSpec.describe "Batches", type: feature, js: true do
       context 'is given' do
         it 'will create volume and units' do
           fill_in_required
-          fill_in "batch_form_sub_batches__volume", with: 2
+          fill_in "mixable_sub_batches__volume", with: 2
           submit
 
           expect(Batch.last.consumables.first.volume).to eql(2.0)
@@ -460,8 +480,8 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:fill_in_required) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "batch_form_sub_batches__quantity", with: 3
-        fill_in "batch_form_sub_batches__volume", with: 100
+        fill_in "mixable_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__volume", with: 100
       }
       let("submit") {
         click_button('Create Batch')
@@ -470,7 +490,7 @@ RSpec.describe "Batches", type: feature, js: true do
       context 'is set to "per aliquot"' do
         it 'will make three different barcodes' do
           fill_in_required
-          select "per aliquot", from: "batch_form_sub_batches__barcode_type"
+          select "per aliquot", from: "mixable_sub_batches__barcode_type"
           submit
 
           expect(Batch.last.consumables.count).to eq(3)
@@ -483,7 +503,7 @@ RSpec.describe "Batches", type: feature, js: true do
       context 'is set to "single"' do
         it 'will make a single barcode' do
           fill_in_required
-          select "single", from: "batch_form_sub_batches__barcode_type"
+          select "single", from: "mixable_sub_batches__barcode_type"
           submit
 
           expect(Batch.last.consumables.count).to eq(3)
@@ -497,9 +517,9 @@ RSpec.describe "Batches", type: feature, js: true do
     it 'should calculate the batch volume' do
       visit new_batch_path
 
-      fill_in "batch_form_sub_batches__quantity", with: 3
-      fill_in "batch_form_sub_batches__volume", with: 5
-      select "mL", from: "batch_form_sub_batches__unit"
+      fill_in "mixable_sub_batches__quantity", with: 3
+      fill_in "mixable_sub_batches__volume", with: 5
+      select "mL", from: "mixable_sub_batches__unit"
 
       #TODO: following line causing fail due to broken volume calculator
       expect(page.find('#calculated_batch_volume').value).to eq('0.015')
@@ -568,10 +588,10 @@ RSpec.describe "Batches", type: feature, js: true do
           aliquot_unit: @batch.consumables.first.unit,
           ingredients: @batch.ingredients }
 
-        select "", from: "batch_form_consumable_type_id"
-        fill_in "batch_form_expiry_date", with: ""
-        fill_in "batch_form_sub_batches__quantity", with: ""
-        fill_in "batch_form_sub_batches__volume", with: ""
+        select "", from: "mixable_consumable_type_id"
+        fill_in "mixable_expiry_date", with: ""
+        fill_in "mixable_sub_batches__quantity", with: ""
+        fill_in "mixable_sub_batches__volume", with: ""
 
         click_button "Save Changes"
         sleep 1
@@ -607,23 +627,23 @@ RSpec.describe "Batches", type: feature, js: true do
       it "populates the form with the info from the current batch" do
         @batch.mixtures.first.update_attributes!(quantity: 500, unit: unit)
         visit edit_batch_path(@batch)
-        expect(page).to have_select("batch_form_consumable_type_id", selected: @batch.consumable_type.name)
-        expect(page).to have_select("batch_form_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
-        expect(page).to have_field("batch_form_ingredients__quantity", with: "500")
-        expect(page).to have_select("batch_form_ingredients__unit_id", selected: unit.name)
+        expect(page).to have_select("mixable_consumable_type_id", selected: @batch.consumable_type.name)
+        expect(page).to have_select("mixable_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
+        expect(page).to have_field("mixable_ingredients__quantity", with: "500")
+        expect(page).to have_select("mixable_ingredients__unit_id", selected: unit.name)
 
-        expect(page).to have_field("batch_form_expiry_date", with: @batch.expiry_date.to_s)
-        expect(page).to have_field("batch_form_sub_batches__quantity", with: @batch.consumables.count)
-        expect(page).to have_field("batch_form_sub_batches__volume", with: @batch.consumables.first.volume)
-        expect(page).to have_select("batch_form_sub_batches__unit", selected: @batch.consumables.first.unit)
-        expect(page).to have_select("batch_form_sub_batches__barcode_type", selected: "per aliquot")
+        expect(page).to have_field("mixable_expiry_date", with: @batch.expiry_date.to_s)
+        expect(page).to have_field("mixable_sub_batches__quantity", with: @batch.consumables.count)
+        expect(page).to have_field("mixable_sub_batches__volume", with: @batch.consumables.first.volume)
+        expect(page).to have_select("mixable_sub_batches__unit", selected: @batch.consumables.first.unit)
+        expect(page).to have_select("mixable_sub_batches__barcode_type", selected: "per aliquot")
 
       end
 
       it "shows the correct favourite status of the consumable type" do
         @fav = create(:favourite, user_id: test_user.id, consumable_type_id: @consumable_type1.id)
         visit edit_batch_path(@batch)
-        expect(page).to have_select("batch_form_consumable_type_id", selected: @consumable_type1.name)
+        expect(page).to have_select("mixable_consumable_type_id", selected: @consumable_type1.name)
         expect(page).to have_selector("i.fa.fa-star.fa-3x.favourite")
       end
 
@@ -646,19 +666,19 @@ RSpec.describe "Batches", type: feature, js: true do
 
         visit edit_batch_path(@batch)
         # consumable type dropdown
-        select @consumable_type2.name, from: "batch_form_consumable_type_id"
+        select @consumable_type2.name, from: "mixable_consumable_type_id"
 
         # ingredients form
         click_button("Add Ingredient")
-        select @consumable_type2.name, from: "batch_form_ingredients__consumable_type_id"
-        select @external_team.name, from: "batch_form_ingredients__kitchen_id"
+        select @consumable_type2.name, from: "mixable_ingredients__consumable_type_id"
+        select @external_team.name, from: "mixable_ingredients__kitchen_id"
 
         # rest of form
-        fill_in "batch_form_expiry_date", with: "11/11/2021"
-        fill_in "batch_form_sub_batches__quantity", with: 74
-        fill_in "batch_form_sub_batches__volume", with: 9
-        select "mL", from: "batch_form_sub_batches__unit"
-        select "single", from: "batch_form_sub_batches__barcode_type"
+        fill_in "mixable_expiry_date", with: "11/11/2021"
+        fill_in "mixable_sub_batches__quantity", with: 74
+        fill_in "mixable_sub_batches__volume", with: 9
+        select "mL", from: "mixable_sub_batches__unit"
+        select "single", from: "mixable_sub_batches__barcode_type"
         click_button "Save Changes"
 
         visit batch_path(@batch)
@@ -676,22 +696,22 @@ RSpec.describe "Batches", type: feature, js: true do
 
         visit edit_batch_path(@batch)
         # consumable type dropdown
-        select @consumable_type2.name, from: "batch_form_consumable_type_id"
+        select @consumable_type2.name, from: "mixable_consumable_type_id"
 
         # ingredients form
         click_button("Add Ingredient")
-        select @consumable_type2.name, from: "batch_form_ingredients__consumable_type_id"
-        select @external_team.name, from: "batch_form_ingredients__kitchen_id"
-        select unit.name, from: "batch_form_ingredients__unit_id"
-        fill_in "batch_form_ingredients__quantity", with: "800"
+        select @consumable_type2.name, from: "mixable_ingredients__consumable_type_id"
+        select @external_team.name, from: "mixable_ingredients__kitchen_id"
+        select unit.name, from: "mixable_ingredients__unit_id"
+        fill_in "mixable_ingredients__quantity", with: "800"
 
         # rest of form
-        fill_in "batch_form_expiry_date", with: "11/11/2021"
-        fill_in "batch_form_sub_batches__quantity", with: 74
-        fill_in "batch_form_sub_batches__volume", with: 9
+        fill_in "mixable_expiry_date", with: "11/11/2021"
+        fill_in "mixable_sub_batches__quantity", with: 74
+        fill_in "mixable_sub_batches__volume", with: 9
 
-        select "mL", from: "batch_form_sub_batches__unit"
-        select "single", from: "batch_form_sub_batches__barcode_type"
+        select "mL", from: "mixable_sub_batches__unit"
+        select "single", from: "mixable_sub_batches__barcode_type"
         click_button "Save Changes"
 
         visit batch_path(@batch)

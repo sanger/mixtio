@@ -1,6 +1,12 @@
 require 'rails_helper'
+require Rails.root.join 'spec/models/concerns/mixable.rb'
 
 RSpec.describe Batch, type: :model do
+
+  it_behaves_like "mixable" do
+    let(:no_mixtures) { create(:batch) }
+    let(:with_mixtures) { create(:batch_with_ingredients) }
+  end
 
   it "should not be valid without an expiry date" do
     expect(build(:batch, expiry_date: nil)).to_not be_valid

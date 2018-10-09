@@ -7,11 +7,11 @@ RSpec.describe Mixture, type: :model do
   let(:batch) { create(:batch) }
 
   it "can have a unit and quantity" do
-    expect(build(:mixture, ingredient: ingredient, batch: batch, quantity: 20, unit: unit)).to be_valid
+    expect(build(:mixture, ingredient: ingredient, mixable: batch, quantity: 20, unit: unit)).to be_valid
   end
 
   it "can have no unit nor quantity" do
-    expect(build(:mixture, ingredient: ingredient, batch: batch)).to be_valid
+    expect(build(:mixture, ingredient: ingredient, mixable: batch)).to be_valid
   end
 
 end

@@ -3,6 +3,7 @@ FactoryBot.define do
     volume 1.5
     unit "mL"
     project
+    batch
   end
 
   factory :sub_batch_diff_bacodes, parent: :sub_batch do

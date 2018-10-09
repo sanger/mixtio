@@ -1,5 +1,5 @@
 $(document).on("turbolinks:load", () ->
-  for item in $("#batch-ingredients-table")
+  for item in $("[data-behavior='batch-form']")
 
     # Create the Collections
     userFavouritesCollection  = new Mixtio.Collections.UserFavourites(Mixtio.Bootstrap.UserFavourites)
@@ -14,7 +14,7 @@ $(document).on("turbolinks:load", () ->
 
     # Create the Views
     consumableTypeView = new Mixtio.Views.ConsumableTypes(
-      el: $('#batch_form_consumable_type_id')
+      el: $('#mixable_consumable_type_id')
       collection: consumableTypesCollection
       favourites: userFavouritesCollection
     )
@@ -22,7 +22,7 @@ $(document).on("turbolinks:load", () ->
     favouritesStarView = new Mixtio.Views.FavouritesStar(el: $('i.fa-star'))
 
     ingredientsView = new Mixtio.Views.Ingredients(
-      el: item
+      el: $('#mixable-ingredients-table')
       collection: ingredientsCollection
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
@@ -49,7 +49,7 @@ $(document).on("turbolinks:load", () ->
       collection: subBatchesCollection
     )
 
-    expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#batch_form_expiry_date'))
+    expiryDateView = new Mixtio.Views.ExpiryDate(el: $('#mixable_expiry_date'))
 
     # Handles live calculation of batch volume
     consumablesView = new Mixtio.Views.Consumables(
@@ -74,7 +74,6 @@ $(document).on("turbolinks:load", () ->
       ingredients = prefill_data?.ingredients
       subBatchUnit = prefill_data?.sub_batch_unit
 
-      
       subBatchesView.setUnit(subBatchUnit)
       ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
       addSubBatchView.defaultUnit = subBatchUnit

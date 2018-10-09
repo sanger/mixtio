@@ -1,6 +1,9 @@
-<%= form_for @consumable_type, html: {"data-behavior": "consumable_type_form"} do |f| %>
+<%= form_for @consumable_type_form, as: :mixable, data: { behavior: 'consumable-type-form' } do |f| %>
     <script type="text/javascript">
-      Mixtio.Bootstrap.ConsumableTypes   = <%= json_escape(ConsumableType.order_by_name.to_json.html_safe) %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
+      Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.active.order_by_name.to_json.html_safe) %>
+      Mixtio.Bootstrap.Ingredients     = <%= json_escape(@consumable_type_form.mixture_criteria.to_json.html_safe) %>
+      Mixtio.Bootstrap.InputUnits      = <%= json_escape(Unit.all.to_json.html_safe) %>
     </script>
 
     <div class="form-group">
@@ -17,6 +20,9 @@
       <%= f.label :storage_condition %>
       <%= f.select :storage_condition, ConsumableType.storage_conditions.keys, { include_blank: true }, { class: 'form-control' } %>
     </div>
+
+    <h3>Ingredients</h3>
+    <%= render 'mixture_criteria', f: f, barcode_scanner: false %>
 
     <div class="form-group">
       <%= f.submit nil, { class: 'btn btn-primary' } %>
