@@ -37,7 +37,7 @@ private
 
         raise ActiveRecord::RecordInvalid unless valid?
 
-        consumable_type.save
+        consumable_type.save!
         consumable_type.create_audit(user: current_user, action: params.fetch(:action))
       end
       true
