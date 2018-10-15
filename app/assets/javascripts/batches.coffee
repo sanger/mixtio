@@ -27,6 +27,7 @@ $(document).on("turbolinks:load", () ->
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
       units: unitsCollection
+      forRecipe: false
     )
 
     scanConsumableView = new Mixtio.Views.ScanConsumable(

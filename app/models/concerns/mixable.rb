@@ -10,12 +10,13 @@ module Mixable
     # Converts the Mixtures on the including Mixable into criteria (for use in a Mixable form)
     def mixture_criteria
       mixtures.map do |mixture|
+        ingredient = mixture.ingredient
         {
-          consumable_type_id: mixture.ingredient.consumable_type_id,
-          number: mixture.ingredient.number,
-          kitchen_id: mixture.ingredient.kitchen_id,
+          consumable_type_id: ingredient.consumable_type_id,
+          number: ingredient.consumable_type.latest_lot&.number,
+          kitchen_id: ingredient.kitchen_id,
           quantity: mixture.quantity,
-          unit_id: mixture.unit_id
+          unit_id: mixture.unit_id,
         }
       end
     end

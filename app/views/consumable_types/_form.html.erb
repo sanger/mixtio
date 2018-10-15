@@ -22,7 +22,7 @@
     </div>
 
     <h3>Ingredients</h3>
-    <%= render 'mixture_criteria', f: f, barcode_scanner: false %>
+    <%= render 'mixture_criteria', f: f, for_recipe: true %>
 
     <div class="form-group">
       <%= f.submit nil, { class: 'btn btn-primary' } %>

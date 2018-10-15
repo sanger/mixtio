@@ -28,7 +28,7 @@ module MixableForm
         errors[:ingredient] << "invalid quantity #{quantity}" if quantity.present? && quantity.to_f <= 0
         errors[:ingredient] << "cannot specify unit without quantity" if unit_id.present? && !quantity.present?
 
-        if Team.exists?(mixture_criteria[:kitchen_id]) and !Batch.exists?(number: mixture_criteria[:number], kitchen_id: mixture_criteria[:kitchen_id])
+        if Team.exists?(mixture_criteria[:kitchen_id]) && !Batch.exists?(number: mixture_criteria[:number], kitchen_id: mixture_criteria[:kitchen_id])
           errors[:ingredient] << "with number #{mixture_criteria[:number]} could not be found"
         end
 

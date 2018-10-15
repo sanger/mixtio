@@ -13,6 +13,7 @@ $(document).on("turbolinks:load", () ->
       consumableTypes: consumableTypesCollection
       kitchens: kitchensCollection
       units: unitsCollection
+      forRecipe: true
     )
 
     addIngredientView = new Mixtio.Views.AddIngredient(

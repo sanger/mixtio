@@ -5,7 +5,14 @@
       <table id="mixable-ingredients-table" class="table table-striped">
         <thead>
           <tr>
-            <th>Ingredient*</th><th>Lot/Batch Number</th><th>Supplier (Product Code)*</th><th>Quantity</th><th>Unit</th><th></th>
+            <th>Ingredient*</th>
+            <% unless for_recipe %>
+            <th>Lot/Batch Number</th>
+            <% end %>
+            <th>Supplier (Product Code)*</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th></th>
           </tr>
         </thead>
       </table>
@@ -14,7 +21,7 @@
 
   <div class="row">
 
-    <% if barcode_scanner %>
+    <% unless for_recipe %>
     <div id="consumable-barcode" class="col-md-3">
       <div class="input-group">
         <span class="input-group-addon" id="barcode-scanner">
@@ -26,7 +33,7 @@
     </div>
     <% end %>
 
-    <div class="col-md-offset-<%= barcode_scanner ? 6 : 9 %> col-md-3 text-right">
+    <div class="col-md-offset-<%= for_recipe ? 9 : 6 %> col-md-3 text-right">
       <button id="add_ingredient_button" class="btn btn-primary btn-block">
         <%= fa_icon "plus" %> Add Ingredient
       </button>

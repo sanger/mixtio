@@ -8,10 +8,14 @@
     <% }) %>
   </select>
 </td>
+
+<% if (!forRecipe) { %>
 <td>
   <input class="form-control" type="text" value="<%= ingredient.get('number') %>"
          name="mixable[mixture_criteria][][number]" id="mixable_ingredients__number" />
 </td>
+<% } %>
+
 <td>
   <select class="form-control" name="mixable[mixture_criteria][][kitchen_id]" id="mixable_ingredients__kitchen_id">
     <option value=""></option>
@@ -22,10 +26,12 @@
     <% }) %>
   </select>
 </td>
+
 <td>
   <input class="form-control" type="number" step="0.01" value="<%= ingredient.get('quantity') %>"
          name="mixable[mixture_criteria][][quantity]" id="mixable_ingredients__quantity" />
 </td>
+
 <td>
   <select class="form-control" name="mixable[mixture_criteria][][unit_id]" id="mixable_ingredients__unit_id">
     <option value=""></option>
@@ -36,4 +42,5 @@
     <% }) %>
   </select>
 </td>
+
 <td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>
