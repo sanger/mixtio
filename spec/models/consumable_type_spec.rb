@@ -78,5 +78,42 @@ RSpec.describe ConsumableType, type: :model do
     end
   end
 
+  describe '#mixture_criteria' do
+
+    context 'when there are newer lots of the ingredients' do
+      it 'returns the mixable criteria with the latest batch numbers' do
+        this_ct = create(:consumable_type_with_recipe)
+        newer_lots = [
+          create(:lot, consumable_type: this_ct.mixtures.first.ingredient.consumable_type, number: 'ABC'),
+          create(:lot, consumable_type: this_ct.mixtures.second.ingredient.consumable_type, number: 'XYZ'),
+        ]
+
+        mixture_criteria = this_ct.mixture_criteria
+        mixtures = this_ct.mixtures
+
+        expect(mixture_criteria.length).to eq(mixtures.length)
+
+        mixture_criteria.zip(mixtures).each do |mc, mx|
+          ingredient = mx.ingredient
+          expected = {
+              consumable_type_id: ingredient.consumable_type_id,
+              number: ingredient.number,
+              kitchen_id: ingredient.kitchen_id,
+              quantity: mx.quantity,
+              unit_id: mx.unit_id,
+          }
+          newer_lots.each do |lot|
+            if ingredient.consumable_type_id==lot.consumable_type_id
+              expected[:number] = lot.number
+            end
+          end
+          expect(mc).to eq(expected)
+        end
+
+      end
+    end
+
+  end
+
   it_behaves_like "activatable"
 end
