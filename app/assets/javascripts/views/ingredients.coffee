@@ -34,6 +34,7 @@ class Mixtio.Views.Ingredients extends Backbone.View
       consumableTypes: @consumableTypes
       kitchens: @kitchens
       units: @units
+      forRecipe: @forRecipe
     )
 
     @$el.append(ingredientView.render().el)

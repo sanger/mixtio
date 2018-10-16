@@ -64,7 +64,7 @@ protected
 
   def consumable_type_params
     params.require(:mixable).permit(:name, :days_to_keep, :storage_condition,
-        mixture_criteria: [:consumable_type_id, :number, :kitchen_id, :quantity, :unit_id]
+        mixture_criteria: [:consumable_type_id, :kitchen_id, :quantity, :unit_id]
     )
   end
 

@@ -54,7 +54,6 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
       let(:fill_in_ingredients) do
         click_button 'Add Ingredient'
         select consumable_types.first.name, from: "mixable[mixture_criteria][][consumable_type_id]"
-        fill_in 'mixable[mixture_criteria][][number]', with: 'Batch Number 999'
         select suppliers.first.name, from: "mixable[mixture_criteria][][kitchen_id]"
         fill_in 'mixable[mixture_criteria][][quantity]', with: '500'
         select units.first.name, from: "mixable[mixture_criteria][][unit_id]"
@@ -73,7 +72,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
 
         mixture = Mixture.last
         expect(mixture.ingredient.consumable_type_id).to eq(consumable_types.first.id)
-        expect(mixture.ingredient.number).to eq('Batch Number 999')
+        expect(mixture.ingredient.number).to be_nil
         expect(mixture.ingredient.kitchen_id).to eq(consumable_types.first.id)
         expect(mixture.quantity).to eq(500)
         expect(mixture.unit_id).to eq(units.first.id)
