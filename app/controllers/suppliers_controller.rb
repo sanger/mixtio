@@ -66,7 +66,7 @@ private
   end
 
   def supplier_params
-    params.require(:supplier).permit(:name)
+    params.require(:supplier).permit(:name, :product_code)
   end
 
   helper_method :suppliers

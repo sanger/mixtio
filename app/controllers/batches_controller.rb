@@ -64,25 +64,15 @@ class BatchesController < ApplicationController
 protected
 
   def batch_params
-    params.require(:batch_form)
+    params.require(:mixable)
           .permit(:consumable_type_id, :consumable_name, :expiry_date, :single_barcode,
-                  ingredients: [:consumable_type_id, :number, :kitchen_id, :quantity, :unit_id],
+                  mixture_criteria: [:consumable_type_id, :number, :kitchen_id, :quantity, :unit_id],
                   sub_batches: [:quantity, :volume, :unit, :barcode_type, :project_id]
           )
   end
 
   def edit_batch_params
-    {
-      ingredients: @batch.mixtures.map do |mx|
-        {
-          consumable_type_id: mx.ingredient.consumable_type_id,
-          number: mx.ingredient.number,
-          kitchen_id: mx.ingredient.kitchen_id,
-          quantity: mx.quantity,
-          unit_id: mx.unit_id
-        }
-      end
-    }
+    { mixture_criteria: @batch.mixture_criteria }
   end
 
   def batches
