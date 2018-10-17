@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_09_112244) do
+ActiveRecord::Schema.define(version: 2018_10_16_142937) do
 
   create_table "audits", force: :cascade do |t|
-    t.integer "auditable_id"
     t.string "auditable_type"
+    t.integer "auditable_id"
     t.integer "user_id"
     t.string "action"
     t.string "record_data"
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2018_10_09_112244) do
     t.string "type"
     t.boolean "active", default: true, null: false
     t.string "product_code"
+    t.index ["product_code"], name: "index_kitchens_on_product_code", unique: true
   end
 
   create_table "label_types", force: :cascade do |t|
