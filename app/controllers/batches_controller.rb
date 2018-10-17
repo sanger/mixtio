@@ -34,7 +34,8 @@ class BatchesController < ApplicationController
     if @batch_form.create
       redirect_to batch_path(@batch_form.batch), notice: "Reagent batch successfully created"
     else
-      render :new
+      flash[:warning] = @batch_form.warnings # TODO - pass this back to the browser for a confirmation dialog
+      render :new # , locals={ confirm: @batch_form.warnings }
     end
   end
 

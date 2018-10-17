@@ -83,4 +83,83 @@ RSpec.describe Batch, type: :model do
     end
   end
 
+  describe '#follows_recipe' do
+    let(:units) { ['bags', 'bins', 'buckets'].map { |unitname| create(:unit, name: unitname) } }
+    let(:kitchens) { ['alpha', 'beta', nil].map { |code| create(:kitchen, product_code: code) } }
+    let(:consumable_types) { (1..3).map { create(:consumable_type) } }
+    let(:quantities) { [10,11,12] }
+    
+    let(:batch_kitchens) { kitchens }
+    let(:batch_ingredient_consumable_types) { consumable_types }
+    let(:batch_quantities) { quantities }
+
+    let(:ct) do
+      # Need a recipe with units and quantities and product codes etc.
+      ct = create(:consumable_type)
+      ingredients = consumable_types.zip(kitchens).map { |cti,kitchen| create(:lot, kitchen: kitchen, consumable_type: cti) }
+      quantities = [10,11,12]
+      ingredients.zip(units, quantities).each do |ingredient, unit, quantity|
+        create(:mixture, mixable: ct, unit: unit, quantity: quantity, ingredient: ingredient)
+      end
+      ct.reload
+    end
+
+    let(:batch) do
+      b = build(:batch, consumable_type: ct)
+      ingredients = batch_ingredient_consumable_types.zip(batch_kitchens).map { |cti,kitchen| create(:lot, kitchen: kitchen, consumable_type:cti) }
+      quantities = [10,11,12]
+      mixtures = ingredients.zip(units, batch_quantities).map do |ingredient, unit, quantity|
+        build(:mixture, mixable: b, unit: unit, quantity: quantity, ingredient: ingredient)
+      end
+      b.mixtures = mixtures.reverse
+      b
+    end
+
+    context 'when consumable type has no recipe' do
+      let(:ct) { consumable_types.first }
+
+      context 'when the batch has no ingredients' do
+        let(:batch) { build(:batch, consumable_type: ct) }
+        it { expect(batch.follows_recipe).to eq(true) }
+      end
+      context 'when the batch has ingredients' do
+        it { expect(batch.follows_recipe).to eq(true) }
+      end
+    end
+
+    context 'when the consumable type has a recipe' do
+      context 'when the batch has no ingredients' do
+        let(:batch) { build(:batch, consumable_type: ct) }
+        it { expect(batch.follows_recipe).to eq(false) }
+      end
+
+      context 'when the batch has matching ingredients' do
+        it { expect(batch.follows_recipe).to eq(true) }
+      end
+
+      context 'when the batch has an ingredient with a different product code' do
+        let(:batch_kitchens) do
+          ks = kitchens.dup
+          ks[1] = create(:kitchen, name: ks[1].name, product_code: 'gamma')
+          ks
+        end
+        it { expect(batch.follows_recipe).to eq(false) }
+      end
+
+      context 'when the batch has an ingredient with a different quantity' do
+        let(:batch_quantities) { [10,20,11] }
+        it { expect(batch.follows_recipe).to eq(false) }
+      end
+
+      context 'when the batch has an ingredient with a different consumable type' do
+        let(:batch_ingredient_consumable_types) do
+          cts = consumable_types.dup
+          cts[1] = create(:consumable_type)
+          cts
+        end
+        it { expect(batch.follows_recipe).to eq(false) }
+      end
+    end
+  end
+
 end

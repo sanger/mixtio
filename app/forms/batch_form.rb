@@ -5,7 +5,7 @@ class BatchForm
   include ActiveModel::Validations
   include MixableForm
 
-  attr_accessor :consumable_type_id, :expiry_date, :current_user, :sub_batches
+  attr_accessor :consumable_type_id, :expiry_date, :current_user, :sub_batches, :confirm_divergence
 
   def initialize(attributes = {})
     attributes.each do |attribute, value|
@@ -15,6 +15,10 @@ class BatchForm
 
   def persisted?
     false
+  end
+
+  def warnings
+    @warnings ||= []
   end
 
   validates :consumable_type_id, :expiry_date, :current_user, presence: true
@@ -35,6 +39,7 @@ class BatchForm
     end
 
     errors[:expiry_date] << "can't be in the past" if expiry_date.present? && expiry_date.to_date < Date.today
+
   end
 
   def batch
@@ -45,6 +50,11 @@ class BatchForm
 
   def create
     return false unless valid?
+
+    if !confirm_divergence && !batch.follows_recipe
+      warnings << "The ingredients you have listed are different from the listed recipe for this type."
+      return false
+    end
 
     begin
       ActiveRecord::Base.transaction do

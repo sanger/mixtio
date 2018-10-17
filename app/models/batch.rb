@@ -39,6 +39,26 @@ class Batch < Ingredient
     consumables.count
   end
 
+  def follows_recipe
+    recipe = consumable_type&.mixtures
+    # If there is no recipe, treat that as accepted
+    return true unless recipe.present?
+
+    recipe_desc, mixtures_desc = [recipe, mixtures].map do |original|
+      original.map do |mx|
+        ingredient = mx.ingredient
+        [
+          ingredient.consumable_type_id,
+          mx.quantity,
+          mx.unit_id,
+          ingredient.kitchen_id,
+        ]
+      end
+    end
+
+    return (recipe_desc.sort==mixtures_desc.sort)
+  end
+
 private
 
   def generate_batch_number
