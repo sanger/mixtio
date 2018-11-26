@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_07_095327) do
+ActiveRecord::Schema.define(version: 2018_10_16_142937) do
 
   create_table "audits", force: :cascade do |t|
     t.integer "auditable_id"
@@ -74,6 +74,8 @@ ActiveRecord::Schema.define(version: 2018_08_07_095327) do
     t.string "name"
     t.string "type"
     t.boolean "active", default: true, null: false
+    t.string "product_code"
+    t.index ["product_code"], name: "index_kitchens_on_product_code", unique: true
   end
 
   create_table "label_types", force: :cascade do |t|
@@ -84,14 +86,15 @@ ActiveRecord::Schema.define(version: 2018_08_07_095327) do
   end
 
   create_table "mixtures", force: :cascade do |t|
-    t.integer "batch_id"
+    t.integer "mixable_id"
     t.integer "ingredient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "quantity"
     t.integer "unit_id"
-    t.index ["batch_id"], name: "index_mixtures_on_batch_id"
+    t.string "mixable_type"
     t.index ["ingredient_id"], name: "index_mixtures_on_ingredient_id"
+    t.index ["mixable_id"], name: "index_mixtures_on_mixable_id"
     t.index ["unit_id"], name: "index_mixtures_on_unit_id"
   end
 

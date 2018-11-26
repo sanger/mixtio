@@ -77,7 +77,7 @@
   z-index: 2 !important;
 }
 
-#new_batch_form {
+form[data-behavior="batch-form"] {
   i.fa-star {
     position: relative;
     top: -4px;

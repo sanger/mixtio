@@ -3,15 +3,13 @@ class BatchForm
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  include MixableForm
 
-  ATTRIBUTES = [:ingredients, :consumable_type_id, :expiry_date, :current_user,
-                :sub_batches]
-
-  attr_accessor *ATTRIBUTES
+  attr_accessor :consumable_type_id, :expiry_date, :current_user, :sub_batches
 
   def initialize(attributes = {})
-    ATTRIBUTES.each do |attribute|
-      send("#{attribute}=", attributes[attribute])
+    attributes.each do |attribute, value|
+      send("#{attribute}=", value) if respond_to?("#{attribute}=")
     end
   end
 
@@ -22,21 +20,6 @@ class BatchForm
   validates :consumable_type_id, :expiry_date, :current_user, presence: true
 
   validate do
-    selected_ingredients.each do |ingredient|
-      errors[:ingredient] << "consumable type can't be empty" if ingredient[:consumable_type_id].empty?
-      errors[:ingredient] << "supplier can't be empty" if ingredient[:kitchen_id].empty?
-      quantity = ingredient[:quantity]
-      unit_id = ingredient[:unit_id]
-      errors[:ingredient] << "invalid unit" if unit_id.present? && !Unit.exists?(unit_id)
-      errors[:ingredient] << "invalid quantity #{quantity}" if quantity.present? && quantity.to_f <= 0
-      errors[:ingredient] << "cannot specify unit without quantity" if unit_id.present? && !quantity.present?
-
-      if Team.exists?(ingredient[:kitchen_id]) and !Batch.exists?(number: ingredient[:number], kitchen_id: ingredient[:kitchen_id])
-        errors[:ingredient] << "with number #{ingredient[:number]} could not be found"
-      end
-
-    end
-
     if sub_batches.nil?
       errors[:batch] << "must contain at least 1 sub-batch"
     else
@@ -52,23 +35,6 @@ class BatchForm
     end
 
     errors[:expiry_date] << "can't be in the past" if expiry_date.present? && expiry_date.to_date < Date.today
-
-  end
-
-  def consumable
-    @consumable ||= Consumable.new
-  end
-
-  def mixtures
-    selected_ingredients.map do |ingredient|
-      ing_params = ingredient.slice(:consumable_type_id, :number, :kitchen_id)
-      ing = Ingredient.where(ing_params).first || Lot.create(ing_params)
-      Mixture.new(ingredient: ing, quantity: ingredient[:quantity], unit_id: ingredient[:unit_id])
-    end
-  end
-
-  def selected_ingredients
-    ingredients.reject { |i| i == "" }
   end
 
   def batch
