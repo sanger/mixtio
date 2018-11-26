@@ -249,6 +249,7 @@ RSpec.describe "Batches", type: feature, js: true do
         fill_in "Expiry Date", with: @batch.expiry_date
         fill_in "mixable_sub_batches__quantity", with: 3
         click_button "Create Batch"
+        click_button "Continue"
       }
 
       it 'displays a validation error' do
@@ -313,6 +314,7 @@ RSpec.describe "Batches", type: feature, js: true do
           all(:data_behavior, "remove_row").first.click
           sleep 1 # Allow the animation to finish...
           click_button "Create Batch"
+          click_button "Continue"
 
           expect(page).to have_content("Reagent batch successfully created")
 
@@ -330,6 +332,7 @@ RSpec.describe "Batches", type: feature, js: true do
           all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@lot.kitchen.name)
 
           click_button "Create Batch"
+          click_button "Continue"
 
           expect(page).to have_content("Reagent batch successfully created")
 
@@ -358,6 +361,7 @@ RSpec.describe "Batches", type: feature, js: true do
           all(:xpath, '//select[@name="mixable[mixture_criteria][][unit_id]"]').last.select(unit.name)
 
           click_button "Create Batch"
+          click_button "Continue"
 
           expect(page).to have_content("Reagent batch successfully created")
 
@@ -396,6 +400,7 @@ RSpec.describe "Batches", type: feature, js: true do
           sleep 1
 
           click_button "Create Batch"
+          click_button "Continue"
 
           expect(page).to have_content("Reagent batch successfully created")
 
@@ -428,6 +433,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
           wait_for_ajax
           click_button "Create Batch"
+          click_button "Continue"
           expect(page).to have_content("Reagent batch successfully created")
 
           batch = Batch.last
@@ -680,6 +686,7 @@ RSpec.describe "Batches", type: feature, js: true do
         select "mL", from: "mixable_sub_batches__unit"
         select "single", from: "mixable_sub_batches__barcode_type"
         click_button "Save Changes"
+        click_button "Continue"
 
         visit batch_path(@batch)
 
@@ -713,6 +720,7 @@ RSpec.describe "Batches", type: feature, js: true do
         select "mL", from: "mixable_sub_batches__unit"
         select "single", from: "mixable_sub_batches__barcode_type"
         click_button "Save Changes"
+        click_button "Continue"
 
         visit batch_path(@batch)
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
@@ -728,6 +736,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it "shows a message upon successful update" do
         visit edit_batch_path(@batch)
         click_button("Save Changes")
+        click_button("Continue")
 
         expect(page).to have_text("Reagent batch successfully updated!")
       end

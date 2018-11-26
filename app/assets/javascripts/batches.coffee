@@ -8,6 +8,7 @@ $(document).on("turbolinks:load", () ->
     ingredientsCollection     = new Mixtio.Collections.Ingredients(Mixtio.Bootstrap.Ingredients)
     projectsCollection        = new Mixtio.Collections.Projects(Mixtio.Bootstrap.Projects)
     unitsCollection           = new Mixtio.Collections.Units(Mixtio.Bootstrap.InputUnits)
+    currentRecipe             = new Mixtio.Collections.Ingredients
 
     # Collection of sub-batch details (volume and unit, soon also projects)
     subBatchesCollection      = new Mixtio.Collections.SubBatches(Mixtio.Bootstrap.SubBatches)
@@ -58,6 +59,12 @@ $(document).on("turbolinks:load", () ->
       collection: subBatchesCollection
     )
 
+    confirmableBatchForm = new Mixtio.Views.ConfirmableBatchForm(
+      el: $(item)
+      currentIngredients: ingredientsCollection
+      currentRecipe: currentRecipe
+    )
+
     # Wire everything together
 
     ## When a favourite is added/removed to/from the User Favourites, update the Consumable Types view
@@ -75,8 +82,10 @@ $(document).on("turbolinks:load", () ->
       ingredients = prefill_data?.ingredients
       subBatchUnit = prefill_data?.sub_batch_unit
 
+      currentRecipe.reset(ingredients)
+      ingredientsCollection.reset(ingredients)
+
       subBatchesView.setUnit(subBatchUnit)
-      ingredientsView.update(new Mixtio.Collections.Ingredients(ingredients))
       addSubBatchView.defaultUnit = subBatchUnit
     )
 
@@ -90,6 +99,7 @@ $(document).on("turbolinks:load", () ->
     selectedConsumableType = consumableTypesCollection.findWhere({id: parseInt(Mixtio.Bootstrap.SelectedConsumableType)})
     if selectedConsumableType?
       favouritesStarView.update(selectedConsumableType, {isFavourite: !!userFavouritesCollection.findWhere({id: selectedConsumableType.id})})
+      currentRecipe.reset(selectedConsumableType.get('prefill_data').ingredients)
     ingredientsView.render()
     subBatchesView.render()
 
