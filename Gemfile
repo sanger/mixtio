@@ -37,6 +37,7 @@ gem 'net-ldap'
 gem 'kaminari'
 gem 'backbone-on-rails'
 gem 'exception_notification'
+gem 'sqlite3'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
