@@ -70,7 +70,7 @@ $(document).on("turbolinks:load", () ->
     ## When a favourite is added/removed to/from the User Favourites, update the Consumable Types view
     consumableTypeView.listenTo(userFavouritesCollection, 'add remove', consumableTypeView.render)
 
-    ## When the Consumable Type is changed, update the Favourites Star, the Expiry Date, and set
+    ## When the Consumable Type is changed, update the Favourites Star, the Use by date, and set
     ## the Ingredients
     consumableTypeView.on("change:selected", (model, options) ->
       favouritesStarView.update(model, options)

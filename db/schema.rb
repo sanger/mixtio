@@ -13,8 +13,8 @@
 ActiveRecord::Schema.define(version: 2018_10_16_142937) do
 
   create_table "audits", force: :cascade do |t|
-    t.integer "auditable_id"
     t.string "auditable_type"
+    t.integer "auditable_id"
     t.integer "user_id"
     t.string "action"
     t.string "record_data"
