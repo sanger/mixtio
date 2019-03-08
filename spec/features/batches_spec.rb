@@ -69,7 +69,7 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content("Your labels have been printed")
     end
 
-    it 'tells the user if there\'s and error' do
+    it 'tells the user if there\'s an error' do
       allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
 
       visit batch_path(@batch)
@@ -226,9 +226,9 @@ RSpec.describe "Batches", type: feature, js: true do
         wait_for_ajax
       }
 
-      it 'sets the use by date to today', js: true do
+      it 'sets the use by date blank', js: true do
         select_a_consumable_type
-        expect(find_field("Use by date").value).to eq(Date.today.to_date.to_s(:default))
+        expect(find_field("Use by date").value).to be_blank
       end
     end
 
