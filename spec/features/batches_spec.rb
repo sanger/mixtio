@@ -69,7 +69,7 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content("Your labels have been printed")
     end
 
-    it 'tells the user if there\'s and error' do
+    it 'tells the user if there\'s an error' do
       allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
 
       visit batch_path(@batch)
@@ -143,7 +143,7 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:create_batch) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Use by date", with: @batch.expiry_date
         fill_in "mixable_sub_batches__quantity", with: 3
         fill_in "mixable_sub_batches__volume", with: 2.2
         click_button('Create Batch')
@@ -209,9 +209,9 @@ RSpec.describe "Batches", type: feature, js: true do
         wait_for_ajax
       }
 
-      it 'sets the expiry date', js: true do
+      it 'sets the use by date', js: true do
         select_a_consumable_type
-        expect(find_field("Expiry Date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_date.to_s(:default))
+        expect(find_field("Use by date").value).to eq(Date.today.advance(days: @consumable_type.days_to_keep).to_date.to_s(:default))
       end
     end
 
@@ -226,9 +226,9 @@ RSpec.describe "Batches", type: feature, js: true do
         wait_for_ajax
       }
 
-      it 'sets the expiry date to today', js: true do
+      it 'sets the use by date blank', js: true do
         select_a_consumable_type
-        expect(find_field("Expiry Date").value).to eq(Date.today.to_date.to_s(:default))
+        expect(find_field("Use by date").value).to be_blank
       end
     end
 
@@ -246,7 +246,7 @@ RSpec.describe "Batches", type: feature, js: true do
         all(:xpath, '//select[@name="mixable[mixture_criteria][][consumable_type_id]"]').last.select(@consumable_type.name)
         all(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').last.set('12345')
         all(:xpath, '//select[@name="mixable[mixture_criteria][][kitchen_id]"]').last.select(@team.name)
-        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Use by date", with: @batch.expiry_date
         fill_in "mixable_sub_batches__quantity", with: 3
         click_button "Create Batch"
         click_button "Continue"
@@ -263,7 +263,7 @@ RSpec.describe "Batches", type: feature, js: true do
         expect(page).to have_select('mixable[mixture_criteria][][consumable_type_id]', selected: @consumable_type.name)
         expect(find(:xpath, '//input[@name="mixable[mixture_criteria][][number]"]').value).to eq('12345')
         expect(page).to have_select('mixable[mixture_criteria][][kitchen_id]', selected: @team.name)
-        expect(find_field("Expiry Date").value).to eq(@batch.expiry_date.to_s)
+        expect(find_field("Use by date").value).to eq(@batch.expiry_date.to_s)
         # Leaving the following line in case persistence is still required with sub-batch info
         #expect(find_field("mixable_sub_batches__quantity").value).to eq("3")
       end
@@ -283,7 +283,7 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:fill_out_form) {
         visit new_batch_path
         select @consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: (@batch.expiry_date.to_s + "\t")
+        fill_in "Use by date", with: (@batch.expiry_date.to_s + "\t")
         sleep(0.5)
         find_field("mixable[expiry_date]").native.send_key(:Tab)
         sleep(0.5)
@@ -462,7 +462,7 @@ RSpec.describe "Batches", type: feature, js: true do
       let(:fill_in_required) {
         visit new_batch_path
         select @batch.consumable_type.name, from: 'Consumable Type'
-        fill_in "Expiry Date", with: @batch.expiry_date
+        fill_in "Use by date", with: @batch.expiry_date
         fill_in "mixable_sub_batches__quantity", with: 3
         fill_in "mixable_sub_batches__volume", with: 100
       }
@@ -612,7 +612,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it "doesn't update the record with invalid information" do
         visit batch_path(@batch)
         expect(page).to have_text("Consumable type: " + @batch_orig[:consumable_type])
-        expect(page).to have_text("Expiry Date: " + @batch_orig[:expiry_date])
+        expect(page).to have_text("Use by date: " + @batch_orig[:expiry_date])
         expect(page).to have_text(@batch_orig[:consumables_count])
 
         within("table#sub-batch-table tbody") do
@@ -691,7 +691,7 @@ RSpec.describe "Batches", type: feature, js: true do
         visit batch_path(@batch)
 
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
-        expect(page).to have_text("Expiry Date: 11/11/2021")
+        expect(page).to have_text("Use by date: 11/11/2021")
         expect(page).to have_text("74")
         expect(page).to have_text("0.666L")
         expect(page).to have_text("single")
@@ -724,7 +724,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
         visit batch_path(@batch)
         expect(page).to have_text("Consumable type: " + @consumable_type2.name)
-        expect(page).to have_text("Expiry Date: 11/11/2021")
+        expect(page).to have_text("Use by date: 11/11/2021")
         expect(page).to have_text("74")
         expect(page).to have_text("0.666L")
         expect(page).to have_text("single")
