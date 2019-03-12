@@ -1,0 +1,32 @@
+<%= form_tag(batches_path, { method: "get", class: 'form-inline' }) do |f| %>
+
+  <div class="form-group">
+    <%= select_tag 'consumable_type_id', options_from_collection_for_select(ConsumableType.all, :id, :name, selected: filters.consumable_type_id), include_blank: 'All Consumable Types', class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <label class="sr-only" for="created_after">Created After</label>
+    <div class="input-group">
+      <%= text_field_tag :created_after, filters.created_after, class: 'form-control', placeholder: 'Created After', data: { behavior: "datepicker" } %>
+      <div class="input-group-addon"><%= fa_icon "calendar" %></div>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label class="sr-only" for="created_before">Created Before</label>
+    <div class="input-group">
+      <%= text_field_tag :created_before, filters.created_before, class: 'form-control', placeholder: 'Created Before', data: { behavior: "datepicker" } %>
+      <div class="input-group-addon"><%= fa_icon "calendar" %></div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= submit_tag "Apply", class: 'btn btn-primary' %>
+  </div>
+
+  <div class="form-group">
+    <%= link_to "Clear", batches_path, { class: 'btn btn-danger', role: 'button' } %>
+  </div>
+
+<% end %>

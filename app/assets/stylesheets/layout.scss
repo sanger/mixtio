@@ -124,3 +124,10 @@ form[data-behavior="batch-form"] {
 .top-border {
   border-top: 2px solid grey;
 }
+
+.float-top-right {
+  position: absolute;
+  top: 0; right: 0;
+  padding-right: 15px;
+  margin-top: 30px;
+}
