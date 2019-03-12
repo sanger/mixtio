@@ -3,8 +3,8 @@
   <td><%= batch.consumable_type.name %></td>
   <td><%= link_to batch.number, batch_path(batch) %></td>
   <td><%= batch.expiry_date.to_s %></td>
-  <td><%= time_ago_in_words(batch.created_at) %> ago</td>
-  <%# The following should link to the edit page for a batch. Don't show if not editable. %>
+  <td title="<%= batch.created_at %>"><%= batch.created_at.to_date %></td>
+  <!-- The following should link to the edit page for a batch. Don't show if not editable. -->
   <td><% if batch.editable? then %>
     <%= link_to (fa_icon "pencil"), edit_batch_path(batch) %>
   <% end %>
