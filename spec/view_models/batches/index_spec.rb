@@ -26,11 +26,11 @@ RSpec.describe Batches::Index do
     end
 
     it 'sets created_after' do
-      expect(batches_index.created_after).to eql(created_after)
+      expect(batches_index.created_after).to eql(created_after.to_date)
     end
 
     it 'sets created_before' do
-      expect(batches_index.created_before).to eql(created_before)
+      expect(batches_index.created_before).to eql(created_before.to_date)
     end
 
   end
