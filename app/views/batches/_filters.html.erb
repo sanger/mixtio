@@ -1,7 +1,7 @@
 <%= form_tag(batches_path, { method: "get", class: 'form-inline' }) do |f| %>
 
   <div class="form-group">
-    <%= select_tag 'consumable_type_id', options_from_collection_for_select(ConsumableType.all, :id, :name, selected: filters.consumable_type_id), include_blank: 'All Consumable Types', class: 'form-control restrict-width' %>
+    <%= select_tag 'consumable_type_id', options_from_collection_for_select(ConsumableType.order_by_name, :id, :name, selected: filters.consumable_type_id), include_blank: 'All Consumable Types', class: 'form-control restrict-width' %>
   </div>
 
   <div class="form-group">
