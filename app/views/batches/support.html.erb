@@ -1,0 +1,56 @@
+<script>
+function sendEmail() {
+  let recipient = 'psd-help@sanger.ac.uk';
+  let subject = "Mixtio batch " + <%= @batch_id %> + ": " + document.getElementById("heading").value;
+  let body = "Current information:\n" + document.getElementById("wrong").value
+      + "\n\nNeeds changing to:\n" + document.getElementById("corrected").value
+      + "\n\nCause:\n" + document.getElementById("cause").value
+      + "\n\nImportance:\n" + document.getElementById("importance").value 
+      + "\n";
+
+  document.location = "mailto:"+encodeURIComponent(recipient)
+     +"?subject="+encodeURIComponent(subject)
+     +"&body="+encodeURIComponent(body);
+}
+</script>
+
+<div class="col-md-12">
+  <h2>Support request for batch <%= @batch_id %></h2>
+  <div class="form-group">
+    <%= label_tag(:heading, "Heading:") %>
+    <br/>
+    <%= text_field_tag(:heading, "", style: "width:100%;") %>
+  </div>
+  <div class="form-group">
+    <%= label_tag(:wrong, "What is the information that needs correcting?") %>
+    <br />
+    <%= text_area_tag(:wrong, "", style: "width:100%;") %>
+  </div>
+  <div class="form-group">
+    <%= label_tag(:corrected, "What should it be corrected to?") %>
+    <br />
+    <%= text_area_tag(:corrected, "", style: "width:100%;") %>
+  </div>
+  <div class="form-group">
+    <%= label_tag(:cause, "Why did this happen?") %>
+    <br />
+    <%= text_area_tag(:cause, "", style: "width:100%;") %>
+  </div>
+  <div class="form-group">
+    <%= label_tag(:importance, "Why is it important to correct this?") %>
+    <br />
+    <%= text_area_tag(:importance, "", style: "width:100%;") %>
+  </div>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-2">
+      <%= button_to "Return to batch", batch_path(@batch_id), class: "btn btn-primary", method: :get %>
+      </div>
+      <div class="col-md-2">
+        <input type="button" class="btn btn-primary" onclick="sendEmail()" value="Email" />
+      </div>
+    </div>
+  </div>
+
+</div>
