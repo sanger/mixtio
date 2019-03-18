@@ -31,8 +31,8 @@
     </div>
 
     <div class="form-group">
-      <%= f.label :expiry_date, "Expiry Date*" %>
-      <%= f.text_field :expiry_date, { class: 'form-control', data: { behavior: "datepicker" } } %>
+      <%= f.label :expiry_date, "Use by date*" %>
+      <%= f.text_field :expiry_date, { class: 'form-control', data: { behavior: "datepicker", params: { minDate: 0 } } } %>
     </div>
 
     <div class="form-group">

@@ -10,6 +10,7 @@ class BatchesController < ApplicationController
   after_action :set_editable_false, only: [:print]
 
   def index
+    @view_model = Batches::Index.new(filter_params)
   end
 
   def edit
@@ -46,6 +47,11 @@ class BatchesController < ApplicationController
   def show
   end
 
+  def support
+    @batch_id = params[:id]
+    @support_email = Rails.configuration.support_email
+  end
+
   def print
     print_job = PrintJob.new(print_params.merge(:batch => current_resource))
 
@@ -75,12 +81,12 @@ protected
     { mixture_criteria: @batch.mixture_criteria }
   end
 
-  def batches
-    @batches ||= Batch.order_by_created_at.page(params[:page])
-  end
-
   def print_params
     params.permit(:label_template_id, :printer)
+  end
+
+  def filter_params
+    params.permit(:consumable_type_id, :created_after, :created_before)
   end
 
   def current_resource
@@ -95,5 +101,4 @@ protected
     @batch.update_column(:editable, false)
   end
 
-  helper_method :batches
 end

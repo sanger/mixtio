@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   put 'projects/:id/activate', to: 'projects#activate', as: 'activate_project'
 
   post 'batches/:id/print', to: 'batches#print', as: 'print'
+  get 'batches/:id/support', to: 'batches#support', as: 'support'
 
   post 'favourites/:consumable_type_id', to: 'favourites#create', as: 'favourite'
   delete 'favourites/:consumable_type_id', to: 'favourites#destroy', as: 'unfavourite'

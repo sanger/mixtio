@@ -22,7 +22,7 @@ module Mixtio
 
     config.load_defaults 5.1
 
-    config.autoload_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
+    config.eager_load_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
 
     config.filter_parameters += [:password]
 
@@ -47,6 +47,8 @@ module Mixtio
     config.barcode_prefix = 'RGNT_'
 
     config.active_record.sqlite3.represent_boolean_as_integer = true
+
+    config.support_email = 'mixtio-help@sanger.ac.uk'
   end
 end
 

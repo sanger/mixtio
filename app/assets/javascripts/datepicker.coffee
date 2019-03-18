@@ -1,6 +1,8 @@
 $(document).on("turbolinks:load", () ->
   for item in $("[data-behavior~=datepicker]")
-    $(item).datepicker
-      dateFormat: 'dd/mm/yy'
-      minDate: 0
+
+    defaults = dateFormat: 'dd/mm/yy'
+    params = $.extend({}, defaults, $(item).data('params') || {})
+
+    $(item).datepicker params
 )
