@@ -1,6 +1,6 @@
 <script>
 function sendEmail() {
-  let recipient = "mixtio-help@sanger.ac.uk";
+  let recipient = "<%== escape_javascript @support_email %>";
   let subject = "Batch " + <%= @batch_id %> + ": " + document.getElementById("heading").value;
   let body = "Current information:\n" + document.getElementById("wrong").value
       + "\n\nNeeds changing to:\n" + document.getElementById("corrected").value
