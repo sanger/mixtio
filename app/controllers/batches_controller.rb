@@ -46,6 +46,11 @@ class BatchesController < ApplicationController
   def show
   end
 
+  def support
+    @batch_id = params[:id]
+    @support_email = Rails.configuration.support_email
+  end
+
   def print
     print_job = PrintJob.new(print_params.merge(:batch => current_resource))
 

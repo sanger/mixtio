@@ -47,6 +47,8 @@ module Mixtio
     config.barcode_prefix = 'RGNT_'
 
     config.active_record.sqlite3.represent_boolean_as_integer = true
+
+    config.support_email = 'mixtio-help@sanger.ac.uk'
   end
 end
 
