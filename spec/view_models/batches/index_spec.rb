@@ -58,15 +58,18 @@ RSpec.describe Batches::Index do
     context 'consumable_type_id' do
       let(:created_after) { nil }
       let(:created_before) { nil }
-      let(:expected_batches) { create_list(:batch, 3, consumable_type: create(:consumable_type)) }
-      let(:other_batches) { create_list(:batch, 3) }
+
+      before do
+        @expected_batches = create_list(:batch, 3, consumable_type: create(:consumable_type))
+        @other_batches = create_list(:batch, 3)
+      end
 
       context 'when set' do
 
-        let(:consumable_type_id) { expected_batches.first.consumable_type_id }
+        let(:consumable_type_id) { @expected_batches.first.consumable_type_id }
 
         it 'returns only batches with that consumable_type_id' do
-          expect(batches_index.batches).to match_array expected_batches
+          expect(batches_index.batches).to match_array @expected_batches
         end
 
       end
@@ -76,7 +79,7 @@ RSpec.describe Batches::Index do
         let(:consumable_type_id) { nil }
 
         it 'returns batches with any consumable_type_id' do
-          expect(batches_index.batches).to match_array [expected_batches, other_batches].flatten
+          expect(batches_index.batches).to match_array [@expected_batches, @other_batches].flatten
         end
       end
     end
@@ -84,12 +87,15 @@ RSpec.describe Batches::Index do
     context 'created_after' do
       let(:created_before) { nil }
       let(:consumable_type_id) { nil }
-      let(:expected_batches) { create_list(:batch, 3, created_at: DateTime.parse('2019-02-01')) }
-      let(:other_batches) { create_list(:batch, 3, created_at: DateTime.parse('2018-12-01')) }
+
+      before do
+        @expected_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-02-01'))
+        @other_batches = create_list(:batch, 3, created_at: DateTime.parse('2018-12-01'))
+      end
 
       context 'when set' do
         it 'returns batches created after the date given' do
-          expect(batches_index.batches).to match_array expected_batches
+          expect(batches_index.batches).to match_array @expected_batches
         end
       end
 
@@ -97,7 +103,7 @@ RSpec.describe Batches::Index do
         let(:created_after) { nil }
 
         it 'returns batches created at any date' do
-          expect(batches_index.batches).to match_array [expected_batches, other_batches].flatten
+          expect(batches_index.batches).to match_array [@expected_batches, @other_batches].flatten
         end
       end
     end
@@ -105,12 +111,15 @@ RSpec.describe Batches::Index do
     context 'created_before' do
       let(:created_after) { nil }
       let(:consumable_type_id) { nil }
-      let(:expected_batches) { create_list(:batch, 3, created_at: DateTime.parse('2019-02-01')) }
-      let(:other_batches) { create_list(:batch, 3, created_at: DateTime.parse('2019-12-01')) }
+
+      before do
+        @expected_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-02-01'))
+        @other_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-12-01'))
+      end
 
       context 'when set' do
         it 'returns batches created before the date given' do
-          expect(batches_index.batches).to match_array expected_batches
+          expect(batches_index.batches).to match_array @expected_batches
         end
       end
 
@@ -118,9 +127,28 @@ RSpec.describe Batches::Index do
         let(:created_before) { nil }
 
         it 'returns batches created at any date' do
-          expect(batches_index.batches).to match_array [expected_batches, other_batches].flatten
+          expect(batches_index.batches).to match_array [@expected_batches, @other_batches].flatten
         end
       end
+    end
+
+    context 'when created_before and created_after are the same' do
+      let(:created_after) { '01/04/2019' }
+      let(:created_before) { '01/04/2019' }
+      let(:consumable_type_id) { nil }
+
+      before do
+        @before_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-02-01'))
+        @after_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-06-01'))
+        @expected_batches = create_list(:batch, 3, created_at: DateTime.parse('2019-04-01 12:00:00'))
+      end
+
+      it 'returns batches created on that date' do
+        expect(batches_index.batches).to match_array @expected_batches
+        expect(batches_index.batches).to_not match_array @before_batches
+        expect(batches_index.batches).to_not match_array @after_batches
+      end
+
     end
 
   end

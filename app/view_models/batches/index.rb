@@ -21,8 +21,14 @@ module Batches
     def batches
       batches = Batch.includes(:consumable_type)
       batches = batches.where(consumable_type_id: consumable_type_id) unless consumable_type_id.blank?
-      batches = batches.where("created_at > ?", created_after) unless created_after.blank?
-      batches = batches.where("created_at < ?", created_before) unless created_before.blank?
+
+      if dates_the_same?
+        batches = batches.where(created_at: created_after.midnight..created_after.end_of_day)
+      else
+        batches = batches.where("created_at > ?", created_after) unless created_after.blank?
+        batches = batches.where("created_at < ?", created_before) unless created_before.blank?
+      end
+
       batches.order_by_created_at.page(page)
     end
 
@@ -35,6 +41,11 @@ module Batches
       date_str.to_date unless date_str.nil?
     rescue ArgumentError
       nil
+    end
+
+    def dates_the_same?
+      return false if created_before.blank? || created_after.blank?
+      created_before == created_after
     end
 
   end
