@@ -8,6 +8,14 @@ RSpec.shared_examples "displays a confirmation modal" do
 
 end
 
+RSpec.shared_examples "does not display a confirmation modal" do
+
+  it 'does not display a confirmation modal' do
+    expect(page).not_to have_text('Confirmation Required')
+  end
+
+end
+
 RSpec.feature "MX70 Show Confirm Dialog When Ingredients Diverged From Recipes", type: :feature, js: true do
 
   let!(:consumable_type) { create(:consumable_type_with_recipe) }
@@ -46,7 +54,7 @@ RSpec.feature "MX70 Show Confirm Dialog When Ingredients Diverged From Recipes",
       page.all('input[name*="number"]')
         .first.set('different number')
     end
-    include_examples "displays a confirmation modal"
+    include_examples "does not display a confirmation modal"
   end
 
   context 'after editing Supplier in ingredients' do

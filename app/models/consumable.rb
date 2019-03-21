@@ -14,7 +14,6 @@ class Consumable < ActiveRecord::Base
   # Every consumable must have a sub-batch
   validates :sub_batch, presence: true
 
-
   private
 
     def generate_barcode
