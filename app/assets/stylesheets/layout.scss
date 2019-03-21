@@ -137,3 +137,31 @@ form[data-behavior="batch-form"] {
     max-width: 200px;
   }
 }
+
+table.ingredients {
+  table-layout: fixed;
+}
+
+table.ingredients .row-ingredient {
+  width: 25%;
+}
+
+table.ingredients .row-number {
+  width: 15%;
+}
+
+table.ingredients .row-supplier {
+  width: 30%;
+}
+
+table.ingredients .row-quantity {
+  width: 12%;
+}
+
+table.ingredients .row-unit {
+  width: 15%;
+}
+
+table.ingredients .row-close {
+  width: 3%;
+}

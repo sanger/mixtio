@@ -83,7 +83,7 @@
             <tr>
               <td><%= ingredient.consumable_type.name %></td>
               <td><%= ingredient.number %></td>
-              <td><%= ingredient.kitchen.name %></td>
+              <td><%= supplier_with_product_code(ingredient) %></td>
               <td><%= "#{mixture.quantity} #{mixture.unit&.name}" %></td>
             </tr>
             <% end %>

@@ -2,17 +2,17 @@
 
   <div class="row">
     <div class="col-md-12">
-      <table id="mixable-ingredients-table" class="table table-striped">
+      <table id="mixable-ingredients-table" class="table table-striped ingredients">
         <thead>
           <tr>
-            <th>Ingredient*</th>
+            <th class="row-ingredient">Ingredient*</th>
             <% unless for_recipe %>
-            <th>Lot/Batch Number</th>
+            <th class="row-number">Lot/Batch Number</th>
             <% end %>
-            <th>Supplier (Product Code)*</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-            <th></th>
+            <th class="row-supplier">Supplier (Product Code)*</th>
+            <th class="row-quantity">Quantity</th>
+            <th class="row-unit">Unit</th>
+            <th class="row-close"></th>
           </tr>
         </thead>
       </table>
