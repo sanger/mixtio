@@ -23,7 +23,7 @@
       <h3>Information</h3>
       <ul class="list-group">
         <li class="list-group-item"><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
-        <li class="list-group-item"><strong>Expiry Date: </strong><%= @batch.expiry_date %></li>
+        <li class="list-group-item"><strong>Use by date: </strong><%= @batch.expiry_date %></li>
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
       </ul>
     </div>
@@ -73,16 +73,18 @@
         <table class="table table-striped" id="ingredients-table">
           <thead>
             <tr>
-              <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th>
+              <th>Ingredient</th><th>Lot/Batch Number</th><th>Supplier (Product Code)</th><th>Quantity</th>
             </tr>
           </thead>
 
           <tbody>
-            <% @batch.ingredients.each do |ingredient| %>
+            <% @batch.mixtures.each do |mixture| %>
+            <% ingredient = mixture.ingredient %>
             <tr>
               <td><%= ingredient.consumable_type.name %></td>
               <td><%= ingredient.number %></td>
-              <td><%= ingredient.kitchen.name %></td>
+              <td><%= supplier_with_product_code(ingredient) %></td>
+              <td><%= "#{mixture.quantity} #{mixture.unit&.name}" %></td>
             </tr>
             <% end %>
           </tbody>
@@ -97,7 +99,11 @@
         <%= button_to "Edit Batch", edit_batch_path(@batch), class: "btn btn-primary", method: :get %>
       <% end %>
     </div>
-    <div class="col-md-offset-8 col-md-2">
+    <div class="col-md-2">
+      <%= button_to "Raise support request", support_path(@batch.id), class: "btn btn-primary", method: :get %>
+    </div>
+
+    <div class="col-md-offset-6 col-md-2">
       <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#printModal">
         Print Labels
       </button>
@@ -133,5 +139,4 @@
       </div>
     </div>
   </div>
-
 </section>

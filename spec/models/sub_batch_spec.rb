@@ -8,10 +8,10 @@ RSpec.describe SubBatch, type: :model do
   describe "creating sub-batches", js: true do
 
     let :fill_in_one_sub_batch do
-      page.fill_in "batch_form_sub_batches__quantity", with: rand(2..20)
-      page.fill_in "batch_form_sub_batches__volume", with: rand(0.01..20.00).round(2)
-      page.select "mL", from: "batch_form_sub_batches__unit"
-      page.select "per aliquot", from: "batch_form_sub_batches__barcode_type"
+      page.fill_in "mixable_sub_batches__quantity", with: rand(2..20)
+      page.fill_in "mixable_sub_batches__volume", with: rand(0.01..20.00).round(2)
+      page.select "mL", from: "mixable_sub_batches__unit"
+      page.select "per aliquot", from: "mixable_sub_batches__barcode_type"
     end
 
     context "with projects" do
@@ -26,11 +26,11 @@ RSpec.describe SubBatch, type: :model do
       let :fill_in_additional_sub_batch do
         click_button "Add Sub-Batch"
         wait_for_ajax
-        all(:xpath, '//input[@name="batch_form[sub_batches][][quantity]"]').last.set(rand(1..20))
-        all(:xpath, '//input[@name="batch_form[sub_batches][][volume]"]').last.set(rand(0.01..20.00).round(2))
-        all(:xpath, '//select[@name="batch_form[sub_batches][][unit]"]').last.select("mL")
-        all(:xpath, '//select[@name="batch_form[sub_batches][][barcode_type]"]').last.select("single")
-        all(:xpath, '//select[@name="batch_form[sub_batches][][project_id]"]').last.select(@project2.name)
+        all(:xpath, '//input[@name="mixable[sub_batches][][quantity]"]').last.set(rand(1..20))
+        all(:xpath, '//input[@name="mixable[sub_batches][][volume]"]').last.set(rand(0.01..20.00).round(2))
+        all(:xpath, '//select[@name="mixable[sub_batches][][unit]"]').last.select("mL")
+        all(:xpath, '//select[@name="mixable[sub_batches][][barcode_type]"]').last.select("single")
+        all(:xpath, '//select[@name="mixable[sub_batches][][project_id]"]').last.select(@project2.name)
       end
 
       let :create_succeed do
@@ -118,23 +118,23 @@ RSpec.describe SubBatch, type: :model do
       wait_for_ajax
       @batch.sub_batches.each do |sub_batch|
         within("table#batch-sub-batch-table tr#sub-batch-#{sub_batch.id}") do
-          expect(page).to have_field("batch_form_sub_batches__quantity", with: sub_batch.quantity)
+          expect(page).to have_field("mixable_sub_batches__quantity", with: sub_batch.quantity)
 
           if sub_batch.volume != sub_batch.volume.to_i # Decimals .01-.99
-            expect(page).to have_field("batch_form_sub_batches__volume", with: sub_batch.volume)
+            expect(page).to have_field("mixable_sub_batches__volume", with: sub_batch.volume)
           else # Volumes ending in .00 have it trimmed in the text field
-            expect(page).to have_field("batch_form_sub_batches__volume", with: sub_batch.volume.to_i)
+            expect(page).to have_field("mixable_sub_batches__volume", with: sub_batch.volume.to_i)
           end
 
-          expect(page).to have_select("batch_form_sub_batches__unit", selected: sub_batch.unit)
+          expect(page).to have_select("mixable_sub_batches__unit", selected: sub_batch.unit)
 
           if sub_batch.single_barcode?
-            expect(page).to have_select("batch_form_sub_batches__barcode_type", selected: "single")
+            expect(page).to have_select("mixable_sub_batches__barcode_type", selected: "single")
           else
             expect(page).to have_select(selected: "per aliquot")
           end
 
-          expect(page).to have_select("batch_form_sub_batches__project_id", selected: sub_batch.project.name)
+          expect(page).to have_select("mixable_sub_batches__project_id", selected: sub_batch.project.name)
         end
       end
     end
@@ -143,11 +143,11 @@ RSpec.describe SubBatch, type: :model do
       wait_for_ajax
       orig_sub_batch = @batch.sub_batches.first
       within("table#batch-sub-batch-table tr#sub-batch-#{orig_sub_batch.id}") do
-        page.fill_in "batch_form_sub_batches__quantity", with: orig_sub_batch.quantity + 7
-        page.fill_in "batch_form_sub_batches__volume", with: orig_sub_batch.volume + 2.12
-        page.select "L", from: "batch_form_sub_batches__unit"
-        page.select "single", from: "batch_form_sub_batches__barcode_type"
-        page.select @new_project.name, from: "batch_form_sub_batches__project_id"
+        page.fill_in "mixable_sub_batches__quantity", with: orig_sub_batch.quantity + 7
+        page.fill_in "mixable_sub_batches__volume", with: orig_sub_batch.volume + 2.12
+        page.select "L", from: "mixable_sub_batches__unit"
+        page.select "single", from: "mixable_sub_batches__barcode_type"
+        page.select @new_project.name, from: "mixable_sub_batches__project_id"
       end
 
       click_button "Save Changes"

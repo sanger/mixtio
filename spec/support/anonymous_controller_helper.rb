@@ -8,8 +8,8 @@ class AnonymousController < ActionController::Base
 
   include Authentication::ControllerConcern
 
-  before_filter :store_location
-  before_filter :authenticate!
+  before_action :store_location
+  before_action :authenticate!
 
   def session
     if request
@@ -20,7 +20,7 @@ class AnonymousController < ActionController::Base
   end
 
   def index
-    render text: "success!"
+    render plain: "success!"
   end
 
 end

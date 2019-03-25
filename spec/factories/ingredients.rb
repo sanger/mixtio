@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ingredient do
     kitchen
     consumable_type
@@ -19,6 +19,10 @@ FactoryGirl.define do
 
     factory :batch_with_ingredients, parent: :batch do
       mixtures { build_list :mixture, 3 }
+    end
+
+    factory :batch_with_ingredient_quantities, parent: :batch do
+      mixtures { build_list :mixture_with_quantity, 2 }
     end
 
     factory :lot, class: 'Lot' do

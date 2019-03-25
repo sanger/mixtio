@@ -7,7 +7,7 @@ module HasOrderByName
   extend ActiveSupport::Concern
 
   included do
-    scope :order_by_name, -> { order('LOWER(name)') }
+    scope :order_by_name, -> { order(Arel.sql('LOWER(name)')) }
   end
 
 end

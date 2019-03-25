@@ -7,7 +7,7 @@ describe Api::V2::ProjectsController, type: :request do
     it "should return a serialized project" do
       project = create(:project)
       get api_v2_project_path(project)
-      expect(response).to be_success
+      expect(response).to be_successful
       project_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(project_response[:data][:id]).to eql(project.id.to_s)

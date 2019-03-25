@@ -1,7 +1,9 @@
 class ConsumableType < ActiveRecord::Base
 
+  include Activatable
   include Auditable
   include HasOrderByName
+  include Mixable
 
   has_many :batches
   has_many :lots
@@ -20,12 +22,11 @@ class ConsumableType < ActiveRecord::Base
       "LN2":   5
   }
 
-  def latest_batch
-    batches.last
-  end
-
-  def latest_ingredients
-    batches.last ? batches.last.ingredients : []
+  def prefill_data
+    {
+      ingredients: mixture_criteria,
+      sub_batch_unit: batches&.last&.sub_batches&.first&.unit,
+    }
   end
 
   def latest_lot

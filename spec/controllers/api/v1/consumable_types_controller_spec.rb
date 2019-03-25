@@ -8,7 +8,7 @@ describe Api::V1::ConsumableTypesController, type: :request do
       consumable_type = create(:consumable_type)
 
       get api_v1_consumable_type_path(consumable_type)
-      expect(response).to be_success
+      expect(response).to be_successful
 
       json = JSON.parse(response.body, symbolize_names: true)
 

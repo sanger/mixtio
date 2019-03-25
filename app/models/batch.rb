@@ -2,11 +2,11 @@ class Batch < Ingredient
 
   include Auditable
   include HasVolume
+  include Mixable
 
   has_many :sub_batches, foreign_key: "ingredient_id"
   has_many :consumables, through: :sub_batches
   has_many :consumable_types, through: :consumables
-  has_many :mixtures
   has_many :ingredients, through: :mixtures
 
   belongs_to :user
@@ -39,7 +39,7 @@ class Batch < Ingredient
     consumables.count
   end
 
-  private
+private
 
   def generate_batch_number
     update_column(:number, "#{self.kitchen.name.upcase.gsub(/\s/, '')}-#{self.id}")

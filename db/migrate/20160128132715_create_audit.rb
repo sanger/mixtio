@@ -1,4 +1,4 @@
-class CreateAudit < ActiveRecord::Migration
+class CreateAudit < ActiveRecord::Migration[4.2]
   def change
     create_table :audits do |t|
       t.references :auditable, polymorphic: true, index: true

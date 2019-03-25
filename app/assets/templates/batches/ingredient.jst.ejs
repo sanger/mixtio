@@ -1,6 +1,6 @@
 <td>
-  <select class="form-control" name="batch_form[ingredients][][consumable_type_id]"
-          id="batch_form_ingredients__consumable_type_id">
+  <select class="form-control" name="mixable[mixture_criteria][][consumable_type_id]"
+          id="mixable_ingredients__consumable_type_id">
     <option value=""></option>
     <% consumableTypes.each(function(consumableType) { %>
       <option <%= ((ingredient.get("consumable_type") ? ingredient.get("consumable_type").id : ingredient.get('consumable_type_id')) == consumableType.id) ? "selected" : "" %>
@@ -8,18 +8,39 @@
     <% }) %>
   </select>
 </td>
+
+<% if (!forRecipe) { %>
 <td>
   <input class="form-control" type="text" value="<%= ingredient.get('number') %>"
-         name="batch_form[ingredients][][number]" id="batch_form_ingredients__number" />
+         name="mixable[mixture_criteria][][number]" id="mixable_ingredients__number" />
 </td>
+<% } %>
+
 <td>
-  <select class="form-control" name="batch_form[ingredients][][kitchen_id]" id="batch_form_ingredients__kitchen_id">
+  <select class="form-control" name="mixable[mixture_criteria][][kitchen_id]" id="mixable_ingredients__kitchen_id">
     <option value=""></option>
     <% kitchens.each(function(kitchen) { %>
       <option
         <%= ((ingredient.get("kitchen") ? ingredient.get("kitchen").id : ingredient.get("kitchen_id")) == kitchen.id) ? "selected" : "" %>
-        value="<%= kitchen.id %>"><%= kitchen.get("name") %></option>
+        value="<%= kitchen.id %>"><%= kitchen.get("name") %><%= kitchen.get("product_code") ? " (" + kitchen.get('product_code') + ")" : "" %></option>
     <% }) %>
   </select>
 </td>
+
+<td>
+  <input class="form-control" type="number" step="0.01" value="<%= ingredient.get('quantity') %>"
+         name="mixable[mixture_criteria][][quantity]" id="mixable_ingredients__quantity" />
+</td>
+
+<td>
+  <select class="form-control" name="mixable[mixture_criteria][][unit_id]" id="mixable_ingredients__unit_id">
+    <option value=""></option>
+    <% units.each(function(unit) { %>
+      <option
+        <%= ((ingredient.get("unit") ? ingredient.get("unit").id : ingredient.get("unit_id")) == unit.id) ? "selected" : "" %>
+          value="<%= unit.id %>"><%= unit.get("name") %></option>
+    <% }) %>
+  </select>
+</td>
+
 <td class="valign"><a data-behavior="remove_row" href="#"><i class="fa fa-times"></i></a></td>

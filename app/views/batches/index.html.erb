@@ -1,30 +1,46 @@
-<div class="title row">
+<h2 class="title">Batches</h2>
+
+<div class="float-top-right">
+  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">
+    <%= fa_icon "filter" %> Filter
+  </button>
+
+  <%= link_to new_batch_path, { class: 'btn btn-primary btn-large', role: 'button' } do %>
+    <%= fa_icon "plus" %> New Batch
+  <% end %>
+</div>
+
+<div class="row">
   <div class="col-md-12">
-    <h2>
-      Batches <%= link_to new_batch_path, { class: 'btn btn-primary btn-large pull-right', role: 'button' } do %>
-        <%= fa_icon "plus" %> New Batch
-      <% end %>
-    </h2>
+
+    <div class="collapse <%= 'in' if @view_model.show_filters? %>" id="filterPanel">
+      <div class="well">
+        <%= render partial: 'batches/filters', locals: { filters: @view_model } %>
+      </div>
+    </div>
+
   </div>
 </div>
+
 <div class="row">
   <div class="col-md-12">
     <table class="table table-striped">
     <thead>
       <tr>
-        <th></th><th>Consumable Type</th><th>Batch Number</th><th>Expiry Date</th><th>Created</th><th>Edit</th>
+        <th></th><th>Consumable Type</th><th>Batch Number</th><th>Use by date</th><th>Created</th><th>Edit</th>
       </tr>
     </thead>
     <tbody>
-      <%= render batches %>
+      <%= render @view_model.batches %>
     </tbody>
     </table>
   </div>
 </div>
+
 <div class="row">
   <div class="col-md-12">
     <div class="text-center">
-      <%= paginate batches %>
+      <%= paginate @view_model.batches %>
     </div>
   </div>
 </div>

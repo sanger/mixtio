@@ -77,7 +77,7 @@
   z-index: 2 !important;
 }
 
-#new_batch_form {
+form[data-behavior="batch-form"] {
   i.fa-star {
     position: relative;
     top: -4px;
@@ -123,4 +123,45 @@
 }
 .top-border {
   border-top: 2px solid grey;
+}
+
+.float-top-right {
+  position: absolute;
+  top: 0; right: 0;
+  padding-right: 15px;
+  margin-top: 30px;
+}
+
+@media (min-width: 768px) {
+  .restrict-width {
+    max-width: 200px;
+  }
+}
+
+table.ingredients {
+  table-layout: fixed;
+}
+
+table.ingredients .row-ingredient {
+  width: 25%;
+}
+
+table.ingredients .row-number {
+  width: 15%;
+}
+
+table.ingredients .row-supplier {
+  width: 30%;
+}
+
+table.ingredients .row-quantity {
+  width: 12%;
+}
+
+table.ingredients .row-unit {
+  width: 15%;
+}
+
+table.ingredients .row-close {
+  width: 3%;
 }

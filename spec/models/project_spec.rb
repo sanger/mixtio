@@ -1,4 +1,5 @@
 require 'rails_helper'
+require Rails.root.join 'spec/models/concerns/activatable.rb'
 
 RSpec.describe Project, type: :model do
   it "should not be valid without a name" do
@@ -15,4 +16,6 @@ RSpec.describe Project, type: :model do
     expect(build(:project, name: project.name.upcase)).to_not be_valid
     expect(build(:project, name: project.name.downcase)).to_not be_valid
   end
+
+  it_behaves_like "activatable"
 end

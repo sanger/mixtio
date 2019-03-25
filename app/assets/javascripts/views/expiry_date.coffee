@@ -5,5 +5,5 @@ class Mixtio.Views.ExpiryDate extends Backbone.View
     @render()
 
   render: () ->
-    @$el.datepicker('setDate', @model?.get('days_to_keep') or 'today')
+    @$el.datepicker('setDate', @model?.get('days_to_keep') or '')
     this
