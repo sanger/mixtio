@@ -21,7 +21,7 @@
       <%= f.select :storage_condition, ConsumableType.storage_conditions.keys, { include_blank: true }, { class: 'form-control' } %>
     </div>
 
-    <h3>Ingredients</h3>
+    <h3>Recipe</h3>
     <%= render 'mixture_criteria', f: f, for_recipe: true %>
 
     <div class="form-group">
