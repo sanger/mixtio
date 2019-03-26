@@ -86,7 +86,7 @@ protected
   end
 
   def filter_params
-    params.permit(:consumable_type_id, :created_after, :created_before)
+    params.permit(:consumable_type_id, :created_after, :created_before, :page)
   end
 
   def current_resource
