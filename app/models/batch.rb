@@ -11,7 +11,8 @@ class Batch < Ingredient
 
   belongs_to :user
 
-  validates :expiry_date, presence: true, expiry_date: true
+  validates :expiry_date, presence: true
+  validates :expiry_date, expiry_date: true, on: :create
   validates :user, presence: true
 
   after_create :generate_batch_number

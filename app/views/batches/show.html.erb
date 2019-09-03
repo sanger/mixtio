@@ -22,7 +22,7 @@
     <div class="col-md-5">
       <h3>Information</h3>
       <ul class="list-group">
-        <li class="list-group-item"><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
+        <li class="list-group-item"><strong>Consumable type: </strong><%= link_to @batch.consumable_type.name, edit_consumable_type_path(@batch.consumable_type) %></li>
         <li class="list-group-item"><strong>Use by date: </strong><%= @batch.expiry_date %></li>
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
       </ul>

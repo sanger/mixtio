@@ -14,7 +14,7 @@ module Batches
 
     # Show the filter box only if any of the params are set
     def show_filters?
-      !params.empty?
+      !params.except(:page).empty?
     end
 
     # Returns the batches based on parameters given
