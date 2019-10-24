@@ -1,12 +1,12 @@
 class ConsumableTypeForm
   include ActiveModel::Model
-  include MixableForm
   # Used by form_for
   delegate :persisted?, :id, to: :consumable_type
 
-  attr_accessor :name, :days_to_keep, :storage_condition, :current_user, :consumable_type
+  attr_accessor :name, :days_to_keep, :storage_condition, :mixture_criteria, :current_user, :consumable_type
 
-  validate :validate_children
+  validates :consumable_type, valid: true
+  validates_with EnumerableValidator, attributes: [:mixture_parameters], validator: ValidValidator
 
   # Implemented so ConsumableTypeForm can be passed into form_for
   def self.model_name
@@ -23,6 +23,10 @@ class ConsumableTypeForm
 
   def consumable_type
     @consumable_type ||= ConsumableType.new
+  end
+
+  def mixture_criteria
+    @mixture_criteria ||= []
   end
 
 private
@@ -46,18 +50,16 @@ private
     end
   end
 
-  def validate_children
-    promote_errors(consumable_type.errors) if consumable_type.invalid?
-  end
-
-  def promote_errors(child_errors)
-    child_errors.each do |attribute, message|
-      errors.add(attribute, message)
-    end
-  end
-
   def consumable_type_attributes
     { name: name, days_to_keep: days_to_keep, storage_condition: storage_condition, mixtures: mixtures }
+  end
+
+  def mixtures
+    @mixtures ||= mixture_parameters.map { |mixture_param| Mixture.from_params(mixture_param) }
+  end
+
+  def mixture_parameters
+    @mixture_parameters ||= mixture_criteria.map { |mixture_criteria| MixtureParameters.new(mixture_criteria) }
   end
 
 end

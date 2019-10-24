@@ -1,13 +1,19 @@
-<h2 class="title">Batches</h2>
 
-<div class="float-top-right">
-  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">
-    <%= fa_icon "filter" %> Filter
-  </button>
+<div class="row">
+  <div class="col-md-8">
+    <h2>Batches</h2>
+  </div>
 
-  <%= link_to new_batch_path, { class: 'btn btn-primary btn-large', role: 'button' } do %>
-    <%= fa_icon "plus" %> New Batch
-  <% end %>
+  <div class="col-md-4 batch-index-buttons">
+    <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#filterPanel" aria-expanded="false" aria-controls="filterPanel">
+      <%= fa_icon "filter" %> Filter
+    </button>
+
+    <%= link_to new_batch_path, { class: 'btn btn-primary btn-large', role: 'button' } do %>
+      <%= fa_icon "plus" %> New Batch
+    <% end %>
+  </div>
+
 </div>
 
 <div class="row">

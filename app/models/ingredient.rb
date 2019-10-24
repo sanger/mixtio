@@ -1,8 +1,5 @@
 class Ingredient < ActiveRecord::Base
-  belongs_to :consumable_type
-  belongs_to :kitchen
-
+  belongs_to :consumable_type, optional: false
+  belongs_to :kitchen, optional: false
   has_many :mixtures
-
-  validates :consumable_type, :kitchen, :presence => true
 end

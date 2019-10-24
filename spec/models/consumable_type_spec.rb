@@ -69,7 +69,7 @@ RSpec.describe ConsumableType, type: :model do
 
       context 'when there are batches' do
         it 'returns the latest SubBatch\'s unit' do
-          batch = create(:batch_with_consumables)
+          batch = create(:batch)
           consumable_type = batch.consumable_type
           expect(consumable_type.prefill_data[:sub_batch_unit]).to eq(batch.sub_batches.first.unit)
         end

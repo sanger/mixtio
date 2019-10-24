@@ -42,3 +42,6 @@ bower.json
 
 #ignore docs
 /doc/app
+
+.generators
+.idea

@@ -5,7 +5,7 @@ describe Api::V2::BatchesController, type: :request do
   describe "GET #show" do
 
     it "should return a serialized batch" do
-      batch = create(:batch_with_consumables)
+      batch = create(:batch)
       get api_v2_batch_path(batch)
       expect(response).to be_successful
 
