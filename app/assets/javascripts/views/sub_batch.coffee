@@ -30,7 +30,7 @@ class Mixtio.Views.SubBatch extends Backbone.View
   render: () ->
     @$el.html(JST['batches/sub_batch'](
       sub_batch: @model
-      quantity: @model.get("quantity")
+      size: @model.get("quantity") ? @model.get("size")
       volume: @model.get("volume")
       selected_unit: @model.get("unit") # string representation eg "mL"
       units: Mixtio.Bootstrap.Units

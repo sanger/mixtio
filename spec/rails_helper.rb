@@ -66,6 +66,8 @@ RSpec.configure do |config|
 
   Capybara.javascript_driver = :poltergeist
 
+  Capybara.server = :puma, { Silent: true }
+
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end

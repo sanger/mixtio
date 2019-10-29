@@ -4,8 +4,7 @@ RSpec.describe Labels, type: :model do
 
   it 'should serialize a batch into labels' do
     batch = create(:batch, consumable_type: create(:consumable_type))
-    batch.sub_batches << create(:sub_batch, volume: 1.1, unit: "mL")
-    batch.sub_batches.first.consumables << create_list(:consumable, 3, sub_batch: batch.sub_batches.first)
+    batch.sub_batches = [create(:sub_batch, volume: 1.1, unit: "mL", quantity: 3)]
     labels = Labels.new(batch).to_h
 
     expect(labels).to be_kind_of(Hash)
@@ -29,7 +28,7 @@ RSpec.describe Labels, type: :model do
 
     it 'should only generate a single label' do
 
-      batch = create(:batch_1SB_same_barcode)
+      batch = create(:batch, single_barcode: true)
       consumable = batch.sub_batches.first.consumables.first
 
       batch.sub_batches.first.consumables.each_with_index do |con, i|

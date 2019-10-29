@@ -5,7 +5,7 @@ describe Api::V2::ConsumablesController, type: :request do
   describe "GET #show" do
 
     it "should return a serialized consumable by barcode" do
-      batch = create(:batch_with_consumables)
+      batch = create(:batch)
       consumable = batch.consumables.first
       get api_v2_consumable_path(consumable.id)
       expect(response).to be_successful

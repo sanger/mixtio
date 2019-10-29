@@ -22,7 +22,7 @@
     <div class="col-md-5">
       <h3>Information</h3>
       <ul class="list-group">
-        <li class="list-group-item"><strong>Consumable type: </strong><%= @batch.consumable_type.name %></li>
+        <li class="list-group-item"><strong>Consumable type: </strong><%= link_to @batch.consumable_type.name, edit_consumable_type_path(@batch.consumable_type) %></li>
         <li class="list-group-item"><strong>Use by date: </strong><%= @batch.expiry_date %></li>
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
       </ul>
@@ -43,7 +43,7 @@
                 <% sub_batch_barcode_type = "per aliquot" %>
               <% end %>
               <tr id="sub-batch-<%= sub_batch.id %>">
-                <td><%= sub_batch.quantity %></td>
+                <td><%= sub_batch.size %></td>
                 <td><%= sub_batch.display_volume %></td>
                 <td><%= sub_batch.total_volume(true) %></td>
                 <td><%= sub_batch_barcode_type %></td>
@@ -100,7 +100,7 @@
       <% end %>
     </div>
     <div class="col-md-2">
-      <%= button_to "Raise support request", support_path(@batch.id), class: "btn btn-primary", method: :get %>
+      <%= button_to "Raise support request", support_batch_path(@batch), class: "btn btn-primary", method: :get %>
     </div>
 
     <div class="col-md-offset-6 col-md-2">
@@ -117,7 +117,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="myModalLabel">Print labels for Batch <%= @batch.number %></h4>
         </div>
-        <%= form_tag(print_path(@batch), method: "post", "data-behavior": "print_form") do %>
+        <%= form_tag(print_batch_path(@batch), method: "post", "data-behavior": "print_form") do %>
         <div class="modal-body">
 
           <div class="form-group">

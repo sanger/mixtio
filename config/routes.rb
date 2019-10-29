@@ -2,11 +2,14 @@ Rails.application.routes.draw do
 
   root 'batches#index'
 
-
   get 'consumable_types/archive', to: 'consumable_types#archive_index', as: 'consumable_types_archive'
   resources :consumable_types
   resources :consumables
-  resources :batches
+  resources :batches do
+    post 'print', on: :member, to: 'batches/print#create'
+    get 'support', on: :member, to: 'batches/support#show'
+  end
+
   resources :users
   resources :kitchens
   resources :teams
@@ -23,9 +26,6 @@ Rails.application.routes.draw do
 
   put 'projects/:id/deactivate', to: 'projects#deactivate', as: 'deactivate_project'
   put 'projects/:id/activate', to: 'projects#activate', as: 'activate_project'
-
-  post 'batches/:id/print', to: 'batches#print', as: 'print'
-  get 'batches/:id/support', to: 'batches#support', as: 'support'
 
   post 'favourites/:consumable_type_id', to: 'favourites#create', as: 'favourite'
   delete 'favourites/:consumable_type_id', to: 'favourites#destroy', as: 'unfavourite'

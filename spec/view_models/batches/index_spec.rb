@@ -45,7 +45,15 @@ RSpec.describe Batches::Index do
       end
     end
 
-    context 'when any of the parameters are set' do
+    context 'when only page is set' do
+      let(:batch_params) { { page: 1 } }
+
+      it 'is false' do
+        expect(batches_index.show_filters?).to be false
+      end
+    end
+
+    context 'when any of the other parameters are set' do
       it 'is true' do
         expect(batches_index.show_filters?).to be true
       end

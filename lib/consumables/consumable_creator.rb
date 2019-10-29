@@ -54,7 +54,7 @@ class ConsumableCreator
   end
 
   def create_batch(consumable_type)
-    batch = consumable_type.batches.create!(
+    batch = consumable_type.batches.build(
         expiry_date: Date.today.advance(days: consumable_type.days_to_keep),
         kitchen:     @test_team,
         user:        @test_user)
@@ -67,8 +67,8 @@ class ConsumableCreator
     end
 
     project = Project.new(name: "A Project")
-    batch.sub_batches.create!(volume: (1..100).step(0.1).to_a.sample, unit: Consumable.units.to_a.sample[0], project: project)
-    batch.sub_batches.first.consumables.create!(Array.new(rand(1..10)))
+    batch.sub_batches.build(quantity: rand(1..10), volume: (1..100).step(0.1).to_a.sample, unit: SubBatch.units.to_a.sample[0], project: project)
+    batch.save!
   end
 
   def create_team(team)

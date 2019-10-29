@@ -4,30 +4,23 @@ class Batch < Ingredient
   include HasVolume
   include Mixable
 
-  has_many :sub_batches, foreign_key: "ingredient_id"
+  has_many :sub_batches, foreign_key: "ingredient_id", dependent: :destroy
+  validates_associated :sub_batches
   has_many :consumables, through: :sub_batches
   has_many :consumable_types, through: :consumables
   has_many :ingredients, through: :mixtures
 
-  belongs_to :user
+  belongs_to :user, optional: false
 
-  validates :expiry_date, presence: true, expiry_date: true
-  validates :user, presence: true
+  validates :expiry_date, :sub_batches, presence: true
+  validates :expiry_date, expiry_date: true, on: :create
 
   after_create :generate_batch_number
 
-  scope :order_by_created_at, -> { order('created_at desc') }
-
-  def self.new_with_sub_batch
-    b = Batch.new
-    b.sub_batches.build
-    b
-  end
-
-  # Returns the volume of all consumabls that belong to the batch
+  # Returns the volume of all consumables that belong to the batch
   # Converts volume to decimals to get exact precision
   def volume
-    consumables.map{ |con| con.volume.to_d * (10 ** Consumable.units[con.unit]) }.reduce(0, :+)
+    sub_batches.map{ |sb| sb.volume.to_d * sb.size * (10 ** SubBatch.units[sb.unit]) }.reduce(0, :+)
   end
 
   def unit

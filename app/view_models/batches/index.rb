@@ -14,7 +14,7 @@ module Batches
 
     # Show the filter box only if any of the params are set
     def show_filters?
-      !params.empty?
+      !params.except(:page).empty?
     end
 
     # Returns the batches based on parameters given
@@ -29,7 +29,7 @@ module Batches
         batches = batches.where("created_at < ?", created_before) unless created_before.blank?
       end
 
-      batches.order_by_created_at.page(page)
+      batches.order(created_at: :desc).page(page)
     end
 
     private

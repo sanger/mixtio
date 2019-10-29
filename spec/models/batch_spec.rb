@@ -18,26 +18,16 @@ RSpec.describe Batch, type: :model do
     expect(batch.errors.messages[:expiry_date]).to include(I18n.t('errors.future_date'))
   end
 
+  it "is not valid when sub-batches are invalid" do
+    batch = build(:batch)
+    batch.sub_batches.build(volume: nil)
+    expect(batch.valid?).to be false
+  end
+
   it "should create a batch number when created" do
     batch = build(:batch, number: nil)
     batch.save!
     expect(batch.number).to eq("#{batch.kitchen.name.upcase.gsub(/\s/, '')}-#{batch.id}")
-  end
-
-  it "should be able to order by created at" do
-    batch1 = create(:batch, created_at: 1.day.from_now)
-    batch2 = create(:batch, created_at: 3.day.from_now)
-    batch3 = create(:batch, created_at: 2.day.from_now)
-
-    expect(Batch.order_by_created_at).to eq([batch2, batch3, batch1])
-  end
-
-  it "should assign ingredients correctly" do
-    batch = create(:batch)
-    ingredients = create_list(:ingredient, 3)
-
-    batch.ingredients = ingredients
-    expect(batch.ingredients).to eq(ingredients)
   end
 
   it "should be auditable" do
@@ -45,26 +35,24 @@ RSpec.describe Batch, type: :model do
   end
 
   it "should say single barcode is false if consumable barcodes differ" do
-    batch = create(:batch_with_consumables)
+    batch = build(:batch)
 
     expect(batch.sub_batches.first.single_barcode?).to eq(false)
   end
 
   it "should say single barcode is true if consumable barcodes are all the same" do
-    batch = create(:batch_1SB_same_barcode)
-
+    batch = create(:batch, single_barcode: true)
     expect(batch.sub_batches.first.single_barcode?).to eq(true)
   end
 
   it 'should total the volumes of the consumables' do
     batch = create(:batch)
-    batch.sub_batches << create(:sub_batch, volume: 1, unit: 'L')
-    batch.sub_batches << create(:sub_batch, volume: 5, unit: 'mL')
-    batch.sub_batches << create(:sub_batch, volume: 3, unit: 'mL')
+    sub_batches = []
+    sub_batches << create(:sub_batch, volume: 1, unit: 'L', quantity: 5)
+    sub_batches << create(:sub_batch, volume: 5, unit: 'mL', quantity: 5)
+    sub_batches << create(:sub_batch, volume: 3, unit: 'mL', quantity: 5)
 
-    batch.sub_batches.each do |sub_batch|
-      sub_batch.consumables = create_list(:consumable, 5, sub_batch: sub_batch)
-    end
+    batch.sub_batches = sub_batches
 
     expect(batch.display_volume).to eq('5.04L')
   end
