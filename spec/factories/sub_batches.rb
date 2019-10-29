@@ -4,13 +4,8 @@ FactoryBot.define do
     unit "mL"
     project
     batch
+    barcode_type { "aliquots" }
+    quantity { 3 }
   end
 
-  factory :sub_batch_diff_bacodes, parent: :sub_batch do
-    consumables { build_list :consumable, 3 }
-  end
-
-  factory :sub_batch_same_bacodes, parent: :sub_batch do
-    consumables { build_list :consumable, 3, barcode: "RGNT-1" }
-  end
 end

@@ -4,17 +4,17 @@ FactoryBot.define do
     consumable_type
     sequence(:number) { |n| "Ingredient #{n}" }
 
-    factory :batch, parent: :ingredient, class: 'Batch' do
+    factory :batch, class: 'Batch' do
       expiry_date { 33.days.from_now }
       user
-    end
 
-    factory :batch_with_consumables, parent: :batch do
-      sub_batches { build_list :sub_batch_diff_bacodes, 1 }
-    end
+      transient do
+        single_barcode { false }
+      end
 
-    factory :batch_1SB_same_barcode, parent: :batch do
-      sub_batches { build_list :sub_batch_same_bacodes, 1 }
+      after(:build) do |batch, evaluator|
+        batch.sub_batches << build(:sub_batch, batch: batch, barcode_type: evaluator.single_barcode ? "single" : "aliquots")
+      end
     end
 
     factory :batch_with_ingredients, parent: :batch do

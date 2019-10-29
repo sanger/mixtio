@@ -1,13 +1,13 @@
-<%= form_for @batch_form, as: :mixable, url: yield(:url), method: yield(:method), data: { behavior: 'batch-form' } do |f| %>
+<%= form_for @batch, as: :mixable, url: yield(:url), method: yield(:method), data: { behavior: 'batch-form' } do |f| %>
 
     <script type="text/javascript">
       Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.active.find_user_favourites(current_user).to_json.html_safe) %>
       Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
-      Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch_form.consumable_type_id.to_json.html_safe) %>
+      Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch.consumable_type_id.to_json.html_safe) %>
       Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.active.order_by_name.to_json.html_safe) %>
-      Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch_form.mixture_criteria.to_json.html_safe) %>
-      Mixtio.Bootstrap.Units           = <%= json_escape(Consumable.units.to_json.html_safe) %>
-      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch_form.sub_batches.to_json(methods: [:quantity, :single_barcode?]).html_safe) %>
+      Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch.mixture_criteria.to_json.html_safe) %>
+      Mixtio.Bootstrap.Units           = <%= json_escape(SubBatch.units.to_json.html_safe) %>
+      Mixtio.Bootstrap.SubBatches      = <%= json_escape(@batch.sub_batches.to_json(methods: [:size, :quantity, :single_barcode?]).html_safe) %>
       Mixtio.Bootstrap.Projects        = <%= json_escape(Project.active.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.InputUnits      = <%= json_escape(Unit.all.to_json.html_safe) %>
     </script>
