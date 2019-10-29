@@ -5,11 +5,13 @@ module Mixable
   extend ActiveSupport::Concern
 
   included do
-    has_many :mixtures, as: :mixable
+    has_many :mixtures, as: :mixable, dependent: :destroy
+
+    attr_accessor :mixture_criteria
 
     # Converts the Mixtures on the including Mixable into criteria (for use in a Mixable form)
     def mixture_criteria
-      mixtures.map do |mixture|
+      @mixture_criteria ||= mixtures.map do |mixture|
         ingredient = mixture.ingredient
         {
           consumable_type_id: ingredient.consumable_type_id,

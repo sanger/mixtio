@@ -4,7 +4,7 @@ require 'ostruct'
 RSpec.describe PrintJob, type: :model do
 
   before :each do
-    @batch = create(:batch_with_consumables)
+    @batch = create(:batch)
     label_type = LabelType.create(name: 'TestType', external_id: 1)
     printer = Printer.create(name: 'ABC123', label_type: label_type)
 

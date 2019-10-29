@@ -9,7 +9,7 @@ RSpec.describe "Batches", type: feature, js: true do
   describe '#show' do
 
     before :each do
-      @batch   = create(:batch_with_consumables)
+      @batch   = create(:batch)
       @printer = create(:printer)
     end
 
@@ -50,7 +50,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'should display barcode type when per batch' do
-      batch = create(:batch_1SB_same_barcode)
+      batch = create(:batch, single_barcode: true)
 
       visit batch_path(batch)
 
@@ -277,7 +277,7 @@ RSpec.describe "Batches", type: feature, js: true do
       before do
         @consumable_type = create(:consumable_type_with_recipe)
         @lot             = create(:lot, consumable_type: @consumable_type)
-        @batch           = create(:batch_with_consumables)
+        @batch           = create(:batch)
       end
 
       let(:fill_out_form) {
@@ -477,7 +477,7 @@ RSpec.describe "Batches", type: feature, js: true do
           submit
 
           expect(Batch.last.consumables.first.volume).to eql(2.0)
-          expect(Batch.last.consumables.first.unit).to eql(Consumable.units.keys.first)
+          expect(Batch.last.consumables.first.unit).to eql(SubBatch.units.keys.first)
         end
       end
     end
@@ -578,7 +578,7 @@ RSpec.describe "Batches", type: feature, js: true do
       @consumable_type1 = create(:consumable_type)
       @consumable_type2 = create(:consumable_type)
 
-      @batch = create(:batch_with_consumables, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
+      @batch = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
         ingredients: [create(:ingredient)])
 
       @batch2 = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type2.id)
@@ -605,7 +605,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
       it "shows the applicable error(s)" do
         within("div.alert-danger") do
-          expect(page).to have_css("li", count: 4)
+          expect(page).to have_css("li", count: 3)
         end
       end
 
@@ -775,7 +775,7 @@ RSpec.describe "Batches", type: feature, js: true do
     context "updating a consumable" do
       it "updates the updated_at column in the parent batch" do
 
-        batch = create(:batch_with_consumables)
+        batch = create(:batch)
         batch.sub_batches.first.consumables.destroy_all
 
         expect {

@@ -29,7 +29,7 @@ module Batches
         batches = batches.where("created_at < ?", created_before) unless created_before.blank?
       end
 
-      batches.order_by_created_at.page(page)
+      batches.order(created_at: :desc).page(page)
     end
 
     private
