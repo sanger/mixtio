@@ -18,9 +18,10 @@
 //= require underscore
 //= require backbone
 //= require mixtio
-//= require_directory ./models
-//= require_directory ./collections
-//= require_directory ./views
-//= require_directory ../templates
-//= require_directory .
+//= require_tree ./models
+//= require_tree ./collections
+//= require_tree ./views
+//= require_tree ../templates
+//= require_tree .
+//= stub snow
 //= require turbolinks

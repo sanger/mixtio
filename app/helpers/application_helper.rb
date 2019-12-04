@@ -10,6 +10,7 @@ module ApplicationHelper
   end
 
   def near_christmas?
+    return false unless Rails.configuration.enable_snow
     Date.today > Date.parse(Rails.configuration.snow_start) && Date.today < Date.parse(Rails.configuration.snow_end)
   end
 

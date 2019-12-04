@@ -53,4 +53,6 @@ Rails.application.configure do
 
   # Print My Barcode api base
   config.x.pmb_api_base = 'http://pmb.test/api/v1'
+
+  config.enable_snow = false
 end
