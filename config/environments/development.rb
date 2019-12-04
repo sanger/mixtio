@@ -63,4 +63,7 @@ Rails.application.configure do
 
   # Print My Barcode api base
   config.x.pmb_api_base = 'http://pmb.dev/api/v1'
+
+  config.snow_start = 'Dec 11'
+  config.snow_end = 'Dec 30'
 end
