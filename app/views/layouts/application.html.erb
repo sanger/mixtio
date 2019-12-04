@@ -4,13 +4,16 @@
     <title>Mixtio</title>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <% if near_christmas? %>
+      <%= javascript_include_tag 'snow/fall' %>
+    <% end %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8"/>
   </head>
   <body>
     <%= render "header" %>
-    <div class="top <%= ENV['RAILS_ENV'] %>"></div>
+    <div id="gradient" class="top <%= ENV['RAILS_ENV'] %>"></div>
     <div class="main container">
       <%= render "flashes" %>
       <%= yield %>
