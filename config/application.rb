@@ -49,6 +49,10 @@ module Mixtio
     config.active_record.sqlite3.represent_boolean_as_integer = true
 
     config.support_email = 'mixtio-help@sanger.ac.uk'
+
+    config.enable_snow = true
+    config.snow_start = 'Dec 11'
+    config.snow_end = 'Dec 30'
   end
 end
 
