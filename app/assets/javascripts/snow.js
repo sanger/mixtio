@@ -1,666 +1,424 @@
-/** @license
- * DHTML Snowstorm! JavaScript-based snow for web pages
- * Making it snow on the internets since 2003. You're welcome.
- * -----------------------------------------------------------
- * Version 1.44.20131208 (Previous rev: 1.44.20131125)
- * Copyright (c) 2007, Scott Schiller. All rights reserved.
- * Code provided under the BSD License
- * http://schillmania.com/projects/snowstorm/license.txt
+/**
+ * Flurry jQuery Plugin
+ *
+ * Flurry is an easy-to-use animated snow plugin for jQuery. It takes advantage
+ * of CSS transforms, CSS transitions and requestAnimationFrame to provide
+ * smooth animation for modern browsers. Props to Jonathan Nicol @f6design
+ * for boilerplate code
+ * (see http://jonathannicol.com/blog/2012/05/06/a-jquery-plugin-boilerplate/)
+ *
+ * @link      https://github.com/joshmcrty/Flurry
+ * @version   1.1.0
+ * @author    Josh McCarty <josh@joshmccarty.com>
+ * @copyright 2016 Josh McCarty
+ * @license   https://github.com/joshmcrty/Flurry/blob/master/LICENSE GPLv2
  */
+;(function($, undefined) {
 
-/*jslint nomen: true, plusplus: true, sloppy: true, vars: true, white: true */
-/*global window, document, navigator, clearInterval, setInterval */
+    /**
+     * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+     * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+     * http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+     *
+     * @link https://gist.github.com/lenville/9e13e63af075c145d662
+     */
+    (function() {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+        }
 
-document.addEventListener("turbolinks:load", function() {
+        if (!window.requestAnimationFrame) {
+            window.requestAnimationFrame = function(callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - Math.abs(currTime - lastTime));
+                var id = window.setTimeout(function() {
+                    callback(currTime + timeToCall);
+                }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+        }
 
-    // --- common properties ---
+        if (!window.cancelAnimationFrame) {
+            window.cancelAnimationFrame = function(id) {
+                clearTimeout(id);
+            };
+        }
+    }());
 
-    this.autoStart = true;          // Whether the snow should start automatically or not.
-    this.excludeMobile = true;      // Snow is likely to be bad news for mobile phones' CPUs (and batteries.) Enable at your own risk.
-    this.flakesMax = 128;           // Limit total amount of snow made (falling + sticking)
-    this.flakesMaxActive = 64;      // Limit amount of snow falling at once (less = lower CPU use)
-    this.animationInterval = 50;    // Theoretical "miliseconds per frame" measurement. 20 = fast + smooth, but high CPU use. 50 = more conservative, but slower
-    this.useGPU = true;             // Enable transform-based hardware acceleration, reduce CPU load.
-    this.className = null;          // CSS class name for further customization on snow elements
-    this.flakeBottom = null;        // Integer for Y axis snow limit, 0 or null for "full-screen" snow effect
-    this.followMouse = false;        // Snow movement can respond to the user's mouse
-    this.snowColor = '#fff';        // Don't eat (or use?) yellow snow.
-    this.snowCharacter = '&bull;';  // &bull; = bullet, &middot; is square on some systems etc.
-    this.snowStick = true;          // Whether or not snow should "stick" at the bottom. When off, will never collect.
-    this.targetElement = 'gradient';      // element which snow will be appended to (null = document.body) - can be an element ID eg. 'myDiv', or a DOM node reference
-    this.useMeltEffect = true;      // When recycling fallen snow (or rarely, when falling), have it "melt" and fade out if browser supports it
-    this.useTwinkleEffect = true;  // Allow snow to randomly "flicker" in and out of view while falling
-    this.usePositionFixed = false;  // true = snow does not shift vertically when scrolling. May increase CPU load, disabled by default - if enabled, used only where supported
-    this.usePixelPosition = false;  // Whether to use pixel values for snow top/left vs. percentages. Auto-enabled if body is position:relative or targetElement is specified.
+    // Change this to your plugin name.
+    var pluginName = 'flurry';
 
-    // --- less-used bits ---
+    /**
+     * Behaves the same as setInterval except uses requestAnimationFrame() where possible for better performance
+     *
+     * http://www.joelambert.co.uk
+     * Copyright 2011, Joe Lambert.
+     * Free to use under the MIT license.
+     *
+     * @link https://gist.github.com/joelambert/1002116
+     * @param {function} fn The callback function
+     * @param {int} delay The delay in milliseconds
+     */
+    function requestInterval(fn, delay) {
 
-    this.freezeOnBlur = true;       // Only snow when the window is in focus (foreground.) Saves CPU.
-    this.flakeLeftOffset = 0;       // Left margin/gutter space on edge of container (eg. browser window.) Bump up these values if seeing horizontal scrollbars.
-    this.flakeRightOffset = 0;      // Right margin/gutter space on edge of container
-    this.flakeWidth = 8;            // Max pixel width reserved for snow element
-    this.flakeHeight = 8;           // Max pixel height reserved for snow element
-    this.vMaxX = 5;                 // Maximum X velocity range for snow
-    this.vMaxY = 8;                 // Maximum Y velocity range for snow
-    this.zIndex = 0;                // CSS stacking order applied to each snowflake
+        /* jshint -W010 */
+        var start = new Date().getTime(),
+            handle = new Object();
 
-    // --- "No user-serviceable parts inside" past this point, yadda yadda ---
+        function loop() {
+            var current = new Date().getTime(),
+                delta = current - start;
 
-    var storm = this,
-        features,
-        // UA sniffing and backCompat rendering mode checks for fixed position, etc.
-        isIE = navigator.userAgent.match(/msie/i),
-        isIE6 = navigator.userAgent.match(/msie 6/i),
-        isMobile = navigator.userAgent.match(/mobile|opera m(ob|in)/i),
-        isBackCompatIE = (isIE && document.compatMode === 'BackCompat'),
-        noFixed = (isBackCompatIE || isIE6),
-        screenX = null, screenX2 = null, screenY = null, scrollY = null, docHeight = null, vRndX = null, vRndY = null,
-        windOffset = 1,
-        windMultiplier = 2,
-        flakeTypes = 6,
-        fixedForEverything = false,
-        targetElementIsRelative = false,
-        opacitySupported = (function () {
-            try {
-                document.createElement('div').style.opacity = '0.5';
-            } catch (e) {
-                return false;
+            if(delta >= delay) {
+                fn.call();
+                start = new Date().getTime();
             }
-            return true;
-        }()),
-        didInit = false,
-        docFrag = document.createDocumentFragment();
 
-    features = (function () {
+            handle.value = window.requestAnimationFrame(loop);
+        }
 
-        var getAnimationFrame;
+        handle.value = window.requestAnimationFrame(loop);
+        return handle;
+    }
+
+    /**
+     * Behaves the same as clearInterval except uses cancelRequestAnimationFrame() where possible for better performance
+     *
+     * http://www.joelambert.co.uk
+     * Copyright 2011, Joe Lambert.
+     * Free to use under the MIT license.
+     *
+     * @link https://gist.github.com/joelambert/1002116
+     * @param {int|object} fn The callback function
+     */
+    function clearRequestInterval(handle) {
+
+        /* jshint -W030 */
+        window.cancelAnimationFrame ? window.cancelAnimationFrame(handle.value) :
+            window.webkitCancelAnimationFrame ? window.webkitCancelAnimationFrame(handle.value) :
+                window.webkitCancelRequestAnimationFrame ? window.webkitCancelRequestAnimationFrame(handle.value) : /* Support for legacy API */
+                    window.mozCancelRequestAnimationFrame ? window.mozCancelRequestAnimationFrame(handle.value) :
+                        window.oCancelRequestAnimationFrame  ? window.oCancelRequestAnimationFrame(handle.value) :
+                            window.msCancelRequestAnimationFrame ? window.msCancelRequestAnimationFrame(handle.value) :
+                                clearInterval(handle);
+    }
+
+    /**
+     * Detects whether the browser supports CSS transitions (adapted from https://gist.github.com/jonraasch/373874)
+     *
+     * @return {boolean} True if CSS transitions are supported
+     */
+    function supportsTransitions() {
+        var thisBody = document.body || document.documentElement,
+            thisStyle = thisBody.style,
+            support = thisStyle.transition !== undefined || thisStyle.WebkitTransition !== undefined || thisStyle.MozTransition !== undefined || thisStyle.MsTransition !== undefined || thisStyle.OTransition !== undefined;
+        return support;
+    }
+
+    /**
+     * Generate a random integer within a range provided
+     *
+     * @param  {number} min The lowest number of the range
+     * @param  {number} max The highest number of the range
+     * @return {number}     The random integer within the range
+     */
+    function randomNumberInRange(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    /**
+     * Creates a snowflake with randomized movement based on the options provided
+     *
+     * @param {object} options    The options set for the plugin
+     * @param {object} $container The jQuery element to append each snowflake to.
+     */
+    function createFlake(options, $container, containerWidth) {
+
+        // Set the character. If multiple characters are provided, randomly select one.
+        var character = options.character.length === 1 ? options.character : options.character.charAt(Math.round(randomNumberInRange(0, options.character.length - 1)));
+
+        // Set the flake's starting position to a random number between the container width, including additional space for the wind setting
+        var startX = randomNumberInRange(-Math.abs(options.wind), containerWidth + Math.abs(options.wind));
+
+        // Set the flake's ending X translation to a random number based on the wind and windVariance options
+        var endX = startX + randomNumberInRange(options.wind - options.windVariance, options.wind + options.windVariance);
+
+        // Set the flake's font size to a random number between the small and large options
+        var fontSize = randomNumberInRange(options.small, options.large);
+
+        // Set the flake's speed to a random number based on the speed setting and the randomized fontSize
+        var speed = options.speed / ((randomNumberInRange(fontSize * 1.2, fontSize * 0.8) - options.small) / (options.large - options.small) + 0.5);
+
+        // Set the flake's ending Y translation based on the height setting and the randomized fontSize
+        var endY = options.height - fontSize;
+
+        // Set the flake's rotation to a random degree based on the rotation and rotationVariance options
+        var endRotation = randomNumberInRange(options.rotation - options.rotationVariance, options.rotation + options.rotationVariance);
+
+        // Set the flake's color based on color options
+        var color = Array.isArray(options.color) ? options.color[Math.floor(Math.random() * options.color.length)] : options.color;
+
+        // Create object to store final CSS properties for the flake
+        var endCSS = {
+            "transform": "translateX(" + endX + "px) translateY(" + endY + "px) rotateZ(" + endRotation + "deg)",
+            "opacity": 0
+        };
+
+        // Create the flake, set the CSS for it, and animate it
+        var $flake = $('<span></span>');
+        $flake.html(character).css({
+            "color": options.blur && fontSize < (options.large + options.small) / 2 ? "transparent" : color,
+            "text-shadow": options.blur && fontSize < (options.large + options.small) / 2 ? "0 0 1px " + color : "none",
+            "display": "inline-block",
+            "line-height": 1,
+            "margin": 0,
+            "padding": "2px",
+            "pointer-events": "none",
+            "font-size": fontSize + "px",
+            "opacity": options.startTransparency,
+            "position": "absolute",
+            "top": "-" + (options.large * 1.2) + "px",
+            "transform": "translateX(" + startX + "px) translateY(0px) rotateZ(" + options.startRotation + "deg)",
+            "transition": "transform " + (speed / 1000) + "s linear, opacity " + (speed / 1000) + "s " + options.opacityEasing,
+            "z-index": options.zIndex,
+        }).appendTo($container);
+
+        if (supportsTransitions) {
+
+            // Remove the flake element when it finishes transitioning
+            $flake.on('transitionend.flurry', function(event) {
+                $(event.target).remove();
+            });
+
+            // Set the endCSS to trigger the transition
+            window.requestAnimationFrame(function(){
+                $flake.css(endCSS);
+            });
+        } else {
+
+            // Use jQuery .animate()
+            $flake.animate(endCSS, speed, 'linear', function() {
+                $(this).remove();
+            });
+        }
+    }
+
+    /**
+     * Plugin object constructor.
+     * Implements the Revealing Module Pattern.
+     */
+    function Plugin(element, options) {
+
+        // References to this plugin instance, DOM and jQuery versions of element.
+        var self = this;
+        var el = element;
+        var $el = $(element);
+
+        // Extend default options with those supplied by user.
+        options = $.extend({
+            height: $el.height() > 200 ? 200 : $el.height(), // default to 200px or the height of the element, whichever is smaller
+            useRelative: $el.is('body') ? false : true, // default to false for the body element and true for all other elements
+        }, $.fn[pluginName].defaults, options);
+
+        // Ensure options that should be numbers are numbers
+        $.each(options, function(key, val) {
+            if (parseInt(val)) {
+                options[key] = parseInt(val);
+            }
+        });
 
         /**
-         * hat tip: paul irish
-         * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-         * https://gist.github.com/838785
+         * Initialize plugin.
          */
+        function init() {
 
-        function timeoutShim(callback) {
-            window.setTimeout(callback, 1000 / (storm.animationInterval || 20));
+            // Add any initialization logic here...
+
+            // Set element position to relative if currently static
+            if (options.useRelative === true && $el.css('position') === 'static') {
+                $el.css({
+                    'position': 'relative'
+                });
+            }
+
+            // Create container element to hold snowflakes
+            var $container = $(document.createElement('div')).addClass('flurry-container').css({
+                'margin': 0,
+                'padding': 0,
+                'position': 'absolute',
+                'top': 0,
+                'right': 0,
+                'left': 0,
+                'height': options.height,
+                'overflow': options.overflow,
+                'pointer-events': 'none'
+            }).prependTo($el);
+
+            // On window resize, recalculate the width used to generate flakes within
+            var containerWidth = $container.width();
+            $(window).resize(function() {
+                containerWidth = $container.width();
+            });
+
+            // Generate flakes at the interval set by the frequency setting
+            self.flakeInterval = requestInterval(function() {
+                createFlake(options, $container, containerWidth);
+            }, options.frequency);
+
+            // Call onInit hook
+            hook('onInit');
         }
 
-        var _animationFrame = (window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            timeoutShim);
-
-        // apply to window, avoid "illegal invocation" errors in Chrome
-        getAnimationFrame = _animationFrame ? function () {
-            return _animationFrame.apply(window, arguments);
-        } : null;
-
-        var testDiv;
-
-        testDiv = document.createElement('div');
-
-        function has(prop) {
-
-            // test for feature support
-            var result = testDiv.style[prop];
-            return (result !== undefined ? prop : null);
-
-        }
-
-        // note local scope.
-        var localFeatures = {
-
-            transform: {
-                ie: has('-ms-transform'),
-                moz: has('MozTransform'),
-                opera: has('OTransform'),
-                webkit: has('webkitTransform'),
-                w3: has('transform'),
-                prop: null // the normalized property value
-            },
-
-            getAnimationFrame: getAnimationFrame
-
-        };
-
-        localFeatures.transform.prop = (
-            localFeatures.transform.w3 ||
-            localFeatures.transform.moz ||
-            localFeatures.transform.webkit ||
-            localFeatures.transform.ie ||
-            localFeatures.transform.opera
-        );
-
-        testDiv = null;
-
-        return localFeatures;
-
-    }());
-
-    this.timer = null;
-    this.flakes = [];
-    this.disabled = false;
-    this.active = false;
-    this.meltFrameCount = 20;
-    this.meltFrames = [];
-
-    this.setXY = function (o, x, y) {
-
-        if (!o) {
-            return false;
-        }
-
-        if (storm.usePixelPosition || targetElementIsRelative) {
-
-            o.style.left = (x - storm.flakeWidth) + 'px';
-            o.style.top = (y - storm.flakeHeight) + 'px';
-
-        } else if (noFixed) {
-
-            o.style.right = (100 - (x / screenX * 100)) + '%';
-            // avoid creating vertical scrollbars
-            o.style.top = (Math.min(y, docHeight - storm.flakeHeight)) + 'px';
-
-        } else {
-
-            if (!storm.flakeBottom) {
-
-                // if not using a fixed bottom coordinate...
-                o.style.right = (100 - (x / screenX * 100)) + '%';
-                o.style.bottom = (100 - (y / screenY * 100)) + '%';
-
+        /**
+         * Get/set a plugin option.
+         * Get usage: $('#el').demoplugin('option', 'key');
+         * Set usage: $('#el').demoplugin('option', 'key', value);
+         */
+        function option (key, val) {
+            if (val) {
+                options[key] = parseInt(val) || val;
             } else {
-
-                // absolute top.
-                o.style.right = (100 - (x / screenX * 100)) + '%';
-                o.style.top = (Math.min(y, docHeight - storm.flakeHeight)) + 'px';
-
-            }
-
-        }
-
-    };
-
-    this.events = (function () {
-
-        var old = (!window.addEventListener && window.attachEvent), slice = Array.prototype.slice,
-            evt = {
-                add: (old ? 'attachEvent' : 'addEventListener'),
-                remove: (old ? 'detachEvent' : 'removeEventListener')
-            };
-
-        function getArgs(oArgs) {
-            var args = slice.call(oArgs), len = args.length;
-            if (old) {
-                args[1] = 'on' + args[1]; // prefix
-                if (len > 3) {
-                    args.pop(); // no capture
-                }
-            } else if (len === 3) {
-                args.push(false);
-            }
-            return args;
-        }
-
-        function apply(args, sType) {
-            var element = args.shift(),
-                method = [evt[sType]];
-            if (old) {
-                element[method](args[0], args[1]);
-            } else {
-                element[method].apply(element, args);
+                return options[key];
             }
         }
 
-        function addEvent() {
-            apply(getArgs(arguments), 'add');
+        /**
+         * Destroy plugin.
+         * Usage: $('#el').demoplugin('destroy');
+         */
+        function destroy() {
+
+            // Iterate over each matching element.
+            $el.each(function() {
+                var el = this;
+                var $el = $(this);
+
+                // Add code to restore the element to its original state...
+
+                // Cancel snowflake generation
+                clearRequestInterval(self.flakeInterval);
+
+                // Remove container
+                $el.find('.flurry-container').remove();
+
+                // Call onDestroy hook
+                hook('onDestroy');
+
+                // Remove Plugin instance from the element.
+                $el.removeData('plugin_' + pluginName);
+            });
         }
 
-        function removeEvent() {
-            apply(getArgs(arguments), 'remove');
+        /**
+         * Callback hooks.
+         * Usage: In the defaults object specify a callback function:
+         * hookName: function() {}
+         * Then somewhere in the plugin trigger the callback:
+         * hook('hookName');
+         */
+        function hook(hookName) {
+            if (options[hookName] !== undefined) {
+
+                // Call the user defined function.
+                // Scope is set to the jQuery element we are operating on.
+                options[hookName].call(el);
+            }
         }
 
+        // Initialize the plugin instance.
+        init();
+
+        // Expose methods of Plugin we wish to be public.
         return {
-            add: addEvent,
-            remove: removeEvent
+            option: option,
+            destroy: destroy
         };
-
-    }());
-
-    function rnd(n, min) {
-        if (isNaN(min)) {
-            min = 0;
-        }
-        return (Math.random() * n) + min;
     }
 
-    function plusMinus(n) {
-        return (parseInt(rnd(2), 10) === 1 ? n * -1 : n);
-    }
+    /**
+     * Plugin definition.
+     */
+    $.fn[pluginName] = function(options) {
 
-    this.randomizeWind = function () {
-        var i;
-        vRndX = plusMinus(rnd(storm.vMaxX, 0.2));
-        vRndY = rnd(storm.vMaxY, 0.2);
-        if (this.flakes) {
-            for (i = 0; i < this.flakes.length; i++) {
-                if (this.flakes[i].active) {
-                    this.flakes[i].setVelocities();
-                }
-            }
-        }
-    };
+        // If the first parameter is a string, treat this as a call to a public method.
+        if (typeof arguments[0] === 'string') {
+            var methodName = arguments[0];
+            var args = Array.prototype.slice.call(arguments, 1);
+            var returnVal;
+            this.each(function() {
 
-    this.scrollHandler = function () {
-        var i;
-        // "attach" snowflakes to bottom of window if no absolute bottom value was given
-        scrollY = (storm.flakeBottom ? 0 : parseInt(window.scrollY || document.documentElement.scrollTop || (noFixed ? document.body.scrollTop : 0), 10));
-        if (isNaN(scrollY)) {
-            scrollY = 0; // Netscape 6 scroll fix
-        }
-        if (!fixedForEverything && !storm.flakeBottom && storm.flakes) {
-            for (i = 0; i < storm.flakes.length; i++) {
-                if (storm.flakes[i].active === 0) {
-                    storm.flakes[i].stick();
-                }
-            }
-        }
-    };
+                // Check that the element has a plugin instance, and that the requested public method exists.
+                if ($.data(this, 'plugin_' + pluginName) && typeof $.data(this, 'plugin_' + pluginName)[methodName] === 'function') {
 
-    this.resizeHandler = function () {
-        if (window.innerWidth || window.innerHeight) {
-            screenX = window.innerWidth - 16 - storm.flakeRightOffset;
-            screenY = (storm.flakeBottom || window.innerHeight);
-        } else {
-            screenX = (document.documentElement.clientWidth || document.body.clientWidth || document.body.scrollWidth) - (!isIE ? 8 : 0) - storm.flakeRightOffset;
-            screenY = storm.flakeBottom || document.documentElement.clientHeight || document.body.clientHeight || document.body.scrollHeight;
-        }
-        docHeight = document.body.offsetHeight;
-        screenX2 = parseInt(screenX / 2, 10);
-    };
-
-    this.resizeHandlerAlt = function () {
-        screenX = storm.targetElement.offsetWidth - storm.flakeRightOffset;
-        screenY = storm.flakeBottom || storm.targetElement.offsetHeight;
-        screenX2 = parseInt(screenX / 2, 10);
-        docHeight = document.body.offsetHeight;
-    };
-
-    this.freeze = function () {
-        // pause animation
-        if (!storm.disabled) {
-            storm.disabled = 1;
-        } else {
-            return false;
-        }
-        storm.timer = null;
-    };
-
-    this.resume = function () {
-        if (storm.disabled) {
-            storm.disabled = 0;
-        } else {
-            return false;
-        }
-        storm.timerInit();
-    };
-
-    this.toggleSnow = function () {
-        if (!storm.flakes.length) {
-            // first run
-            storm.start();
-        } else {
-            storm.active = !storm.active;
-            if (storm.active) {
-                storm.show();
-                storm.resume();
-            } else {
-                storm.stop();
-                storm.freeze();
-            }
-        }
-    };
-
-    this.stop = function () {
-        var i;
-        this.freeze();
-        for (i = 0; i < this.flakes.length; i++) {
-            this.flakes[i].o.style.display = 'none';
-        }
-        storm.events.remove(window, 'scroll', storm.scrollHandler);
-        storm.events.remove(window, 'resize', storm.resizeHandler);
-        if (storm.freezeOnBlur) {
-            if (isIE) {
-                storm.events.remove(document, 'focusout', storm.freeze);
-                storm.events.remove(document, 'focusin', storm.resume);
-            } else {
-                storm.events.remove(window, 'blur', storm.freeze);
-                storm.events.remove(window, 'focus', storm.resume);
-            }
-        }
-    };
-
-    this.show = function () {
-        var i;
-        for (i = 0; i < this.flakes.length; i++) {
-            this.flakes[i].o.style.display = 'block';
-        }
-    };
-
-    this.SnowFlake = function (type, x, y) {
-        var s = this;
-        this.type = type;
-        this.x = x || parseInt(rnd(screenX - 20), 10);
-        this.y = (!isNaN(y) ? y : -rnd(screenY) - 12);
-        this.vX = null;
-        this.vY = null;
-        this.vAmpTypes = [1, 1.2, 1.4, 1.6, 1.8]; // "amplification" for vX/vY (based on flake size/type)
-        this.vAmp = this.vAmpTypes[this.type] || 1;
-        this.melting = false;
-        this.meltFrameCount = storm.meltFrameCount;
-        this.meltFrames = storm.meltFrames;
-        this.meltFrame = 0;
-        this.twinkleFrame = 0;
-        this.active = 1;
-        this.fontSize = (10 + (this.type / 5) * 10);
-        this.o = document.createElement('div');
-        this.o.innerHTML = storm.snowCharacter;
-        if (storm.className) {
-            this.o.setAttribute('class', storm.className);
-        }
-        this.o.style.color = storm.snowColor;
-        this.o.style.position = (fixedForEverything ? 'fixed' : 'absolute');
-        if (storm.useGPU && features.transform.prop) {
-            // GPU-accelerated snow.
-            this.o.style[features.transform.prop] = 'translate3d(0px, 0px, 0px)';
-        }
-        this.o.style.width = storm.flakeWidth + 'px';
-        this.o.style.height = storm.flakeHeight + 'px';
-        this.o.style.fontFamily = 'arial,verdana';
-        this.o.style.cursor = 'default';
-        this.o.style.overflow = 'hidden';
-        this.o.style.fontWeight = 'normal';
-        this.o.style.zIndex = storm.zIndex;
-        docFrag.appendChild(this.o);
-
-        this.refresh = function () {
-            if (isNaN(s.x) || isNaN(s.y)) {
-                // safety check
-                return false;
-            }
-            storm.setXY(s.o, s.x, s.y);
-        };
-
-        this.stick = function () {
-            if (noFixed || (storm.targetElement !== document.documentElement && storm.targetElement !== document.body)) {
-                s.o.style.top = (screenY + scrollY - storm.flakeHeight) + 'px';
-            } else if (storm.flakeBottom) {
-                s.o.style.top = storm.flakeBottom + 'px';
-            } else {
-                s.o.style.display = 'none';
-                s.o.style.bottom = '0%';
-                s.o.style.position = 'fixed';
-                s.o.style.display = 'block';
-            }
-        };
-
-        this.vCheck = function () {
-            if (s.vX >= 0 && s.vX < 0.2) {
-                s.vX = 0.2;
-            } else if (s.vX < 0 && s.vX > -0.2) {
-                s.vX = -0.2;
-            }
-            if (s.vY >= 0 && s.vY < 0.2) {
-                s.vY = 0.2;
-            }
-        };
-
-        this.move = function () {
-            var vX = s.vX * windOffset, yDiff;
-            s.x += vX;
-            s.y += (s.vY * s.vAmp);
-            if (s.x >= screenX || screenX - s.x < storm.flakeWidth) { // X-axis scroll check
-                s.x = 0;
-            } else if (vX < 0 && s.x - storm.flakeLeftOffset < -storm.flakeWidth) {
-                s.x = screenX - storm.flakeWidth - 1; // flakeWidth;
-            }
-            s.refresh();
-            yDiff = screenY + scrollY - s.y + storm.flakeHeight;
-            if (yDiff < storm.flakeHeight) {
-                s.active = 0;
-                if (storm.snowStick) {
-                    s.stick();
+                    // Call the method of the Plugin instance, and Pass it the supplied arguments.
+                    returnVal = $.data(this, 'plugin_' + pluginName)[methodName].apply(this, args);
                 } else {
-                    s.recycle();
+                    throw new Error('Method ' +  methodName + ' does not exist on jQuery.' + pluginName);
                 }
+            });
+            if (returnVal !== undefined){
+
+                // If the method returned a value, return the value.
+                return returnVal;
             } else {
-                if (storm.useMeltEffect && s.active && s.type < 3 && !s.melting && Math.random() > 0.998) {
-                    // ~1/1000 chance of melting mid-air, with each frame
-                    s.melting = true;
-                    s.melt();
-                    // only incrementally melt one frame
-                    // s.melting = false;
+
+                // Otherwise, returning 'this' preserves chainability.
+                return this;
+            }
+
+            // If the first parameter is an object (options), or was omitted, instantiate a new instance of the plugin.
+        } else if (typeof options === "object" || !options) {
+            return this.each(function() {
+
+                // Only allow the plugin to be instantiated once.
+                if (!$.data(this, 'plugin_' + pluginName)) {
+
+                    // Pass options to Plugin constructor, and store Plugin instance in the elements jQuery data object.
+                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
                 }
-                if (storm.useTwinkleEffect) {
-                    if (s.twinkleFrame < 0) {
-                        if (Math.random() > 0.97) {
-                            s.twinkleFrame = parseInt(Math.random() * 8, 10);
-                        }
-                    } else {
-                        s.twinkleFrame--;
-                        if (!opacitySupported) {
-                            s.o.style.visibility = (s.twinkleFrame && s.twinkleFrame % 2 === 0 ? 'hidden' : 'visible');
-                        } else {
-                            s.o.style.opacity = (s.twinkleFrame && s.twinkleFrame % 2 === 0 ? 0 : 1);
-                        }
-                    }
-                }
-            }
-        };
-
-        this.animate = function () {
-            // main animation loop
-            // move, check status, die etc.
-            s.move();
-        };
-
-        this.setVelocities = function () {
-            s.vX = vRndX + rnd(storm.vMaxX * 0.12, 0.1);
-            s.vY = vRndY + rnd(storm.vMaxY * 0.12, 0.1);
-        };
-
-        this.setOpacity = function (o, opacity) {
-            if (!opacitySupported) {
-                return false;
-            }
-            o.style.opacity = opacity;
-        };
-
-        this.melt = function () {
-            if (!storm.useMeltEffect || !s.melting) {
-                s.recycle();
-            } else {
-                if (s.meltFrame < s.meltFrameCount) {
-                    s.setOpacity(s.o, s.meltFrames[s.meltFrame]);
-                    s.o.style.fontSize = s.fontSize - (s.fontSize * (s.meltFrame / s.meltFrameCount)) + 'px';
-                    s.o.style.lineHeight = storm.flakeHeight + 2 + (storm.flakeHeight * 0.75 * (s.meltFrame / s.meltFrameCount)) + 'px';
-                    s.meltFrame++;
-                } else {
-                    s.recycle();
-                }
-            }
-        };
-
-        this.recycle = function () {
-            s.o.style.display = 'none';
-            s.o.style.position = (fixedForEverything ? 'fixed' : 'absolute');
-            s.o.style.bottom = 'auto';
-            s.setVelocities();
-            s.vCheck();
-            s.meltFrame = 0;
-            s.melting = false;
-            s.setOpacity(s.o, 1);
-            s.o.style.padding = '0px';
-            s.o.style.margin = '0px';
-            s.o.style.fontSize = s.fontSize + 'px';
-            s.o.style.lineHeight = (storm.flakeHeight + 2) + 'px';
-            s.o.style.textAlign = 'center';
-            s.o.style.verticalAlign = 'baseline';
-            s.x = parseInt(rnd(screenX - storm.flakeWidth - 20), 10);
-            s.y = parseInt(rnd(screenY) * -1, 10) - storm.flakeHeight;
-            s.refresh();
-            s.o.style.display = 'block';
-            s.active = 1;
-        };
-
-        this.recycle(); // set up x/y coords etc.
-        this.refresh();
-
-    };
-
-    this.snow = function () {
-        var active = 0, flake = null, i, j;
-        for (i = 0, j = storm.flakes.length; i < j; i++) {
-            if (storm.flakes[i].active === 1) {
-                storm.flakes[i].move();
-                active++;
-            }
-            if (storm.flakes[i].melting) {
-                storm.flakes[i].melt();
-            }
-        }
-        if (active < storm.flakesMaxActive) {
-            flake = storm.flakes[parseInt(rnd(storm.flakes.length), 10)];
-            if (flake.active === 0) {
-                flake.melting = true;
-            }
-        }
-        if (storm.timer) {
-            features.getAnimationFrame(storm.snow);
+            });
         }
     };
 
-    this.mouseMove = function (e) {
-        if (!storm.followMouse) {
-            return true;
-        }
-        var x = parseInt(e.clientX, 10);
-        if (x < screenX2) {
-            windOffset = -windMultiplier + (x / screenX2 * windMultiplier);
-        } else {
-            x -= screenX2;
-            windOffset = (x / screenX2) * windMultiplier;
-        }
+    // Default plugin options.
+    // Options can be overwritten when initializing plugin, by
+    // passing an object literal, or after initialization:
+    // $('#el').demoplugin('option', 'key', value);
+    // The `height` and `useRelative` defaults are set in
+    // the `Plugin()` function as they rely on the selected
+    // element(s) to determine a default value
+    $.fn[pluginName].defaults = {
+        onInit: function() {},
+        onDestroy: function() {},
+        /* height: 200, */
+        /* useRelative: false, */
+        character: "❄",
+        color: "white",
+        frequency: 100,
+        speed: 3000,
+        small: 8,
+        large: 28,
+        wind: 40,
+        windVariance: 20,
+        rotation: 90,
+        rotationVariance: 180,
+        startRotation: 0,
+        startOpacity: 1,
+        endOpacity: 0,
+        opacityEasing: "cubic-bezier(1,.3,.6,.74)",
+        blur: true,
+        overflow: "hidden",
+        zIndex: 9999
     };
 
-    this.createSnow = function (limit, allowInactive) {
-        var i;
-        for (i = 0; i < limit; i++) {
-            storm.flakes[storm.flakes.length] = new storm.SnowFlake(parseInt(rnd(flakeTypes), 10));
-            if (allowInactive || i > storm.flakesMaxActive) {
-                storm.flakes[storm.flakes.length - 1].active = -1;
-            }
-        }
-        storm.targetElement.appendChild(docFrag);
-    };
+})(jQuery);
 
-    this.timerInit = function () {
-        storm.timer = true;
-        storm.snow();
-    };
-
-    this.init = function () {
-        var i;
-        for (i = 0; i < storm.meltFrameCount; i++) {
-            storm.meltFrames.push(1 - (i / storm.meltFrameCount));
-        }
-        storm.randomizeWind();
-        storm.createSnow(storm.flakesMax); // create initial batch
-        storm.events.add(window, 'resize', storm.resizeHandler);
-        storm.events.add(window, 'scroll', storm.scrollHandler);
-        if (storm.freezeOnBlur) {
-            if (isIE) {
-                storm.events.add(document, 'focusout', storm.freeze);
-                storm.events.add(document, 'focusin', storm.resume);
-            } else {
-                storm.events.add(window, 'blur', storm.freeze);
-                storm.events.add(window, 'focus', storm.resume);
-            }
-        }
-        storm.resizeHandler();
-        storm.scrollHandler();
-        if (storm.followMouse) {
-            storm.events.add(isIE ? document : window, 'mousemove', storm.mouseMove);
-        }
-        storm.animationInterval = Math.max(20, storm.animationInterval);
-        storm.timerInit();
-    };
-
-    this.start = function (bFromOnLoad) {
-        if (!didInit) {
-            didInit = true;
-        } else if (bFromOnLoad) {
-            // already loaded and running
-            return true;
-        }
-        if (typeof storm.targetElement === 'string') {
-            var targetID = storm.targetElement;
-            storm.targetElement = document.getElementById(targetID);
-            if (!storm.targetElement) {
-                throw new Error('Snowstorm: Unable to get targetElement "' + targetID + '"');
-            }
-        }
-        if (!storm.targetElement) {
-            storm.targetElement = (document.body || document.documentElement);
-        }
-        if (storm.targetElement !== document.documentElement && storm.targetElement !== document.body) {
-            // re-map handler to get element instead of screen dimensions
-            storm.resizeHandler = storm.resizeHandlerAlt;
-            //and force-enable pixel positioning
-            storm.usePixelPosition = true;
-        }
-        storm.resizeHandler(); // get bounding box elements
-        storm.usePositionFixed = (storm.usePositionFixed && !noFixed && !storm.flakeBottom); // whether or not position:fixed is to be used
-        if (window.getComputedStyle) {
-            // attempt to determine if body or user-specified snow parent element is relatlively-positioned.
-            try {
-                targetElementIsRelative = (window.getComputedStyle(storm.targetElement, null).getPropertyValue('position') === 'relative');
-            } catch (e) {
-                // oh well
-                targetElementIsRelative = false;
-            }
-        }
-        fixedForEverything = storm.usePositionFixed;
-        if (screenX && screenY && !storm.disabled) {
-            storm.init();
-            storm.active = true;
-        }
-    };
-
-    function doDelayedStart() {
-        window.setTimeout(function () {
-            storm.start(true);
-        }, 20);
-        // event cleanup
-        storm.events.remove(isIE ? document : window, 'mousemove', doDelayedStart);
-    }
-
-    function doStart() {
-        if (!storm.excludeMobile || !isMobile) {
-            doDelayedStart();
-        }
-        // event cleanup
-        // storm.events.remove(document, 'turbolinks:load', doStart);
-    }
-
-    // hooks for starting the snow
-    // if (storm.autoStart) {
-    //     storm.events.add(document, 'turbolinks:load', doStart, false);
-    // }
-
-    doStart();
-
-    return this;
-})
+$(document).on("turbolinks:load", function() {
+    $("#gradient").flurry({
+        zIndex: 1
+    });
+});
