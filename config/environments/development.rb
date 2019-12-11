@@ -61,9 +61,6 @@ Rails.application.configure do
 
   config.stub_ldap = true
 
-  # Print My Barcode api base
-  config.x.pmb_api_base = 'http://pmb.dev/api/v1'
-
   config.enable_snow = true
   config.snow_start = 'Dec 11'
   config.snow_end = 'Dec 30'

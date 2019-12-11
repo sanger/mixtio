@@ -92,6 +92,4 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Print My Barcode api base
-  config.x.pmb_api_base = 'http://pmb.dev/api/v1'
 end
