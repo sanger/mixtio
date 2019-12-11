@@ -42,6 +42,7 @@ module Mixtio
     config.ldap = OpenStruct.new(Rails.application.config_for(:ldap))
 
     config.print_service = config_for(:print_service)
+
     config.mailer = config_for(:mailer)
 
     config.barcode_prefix = 'RGNT_'
