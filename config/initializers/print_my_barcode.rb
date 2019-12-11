@@ -1,1 +1,1 @@
-PMB::Base.site = Rails.configuration.print_service[:host]
+PMB::Base.site = Rails.configuration.print_service["host"]
