@@ -4,7 +4,7 @@ FactoryBot.define do
     mixable { create(:batch) }
 
     factory :mixture_with_quantity do
-      quantity 3.14
+      quantity { 3.14 }
       unit
     end
 

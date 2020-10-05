@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :sub_batch do
-    volume 1.5
-    unit "mL"
+    volume { 1.5 }
+    unit { "mL" }
     project
     batch
     barcode_type { "aliquots" }

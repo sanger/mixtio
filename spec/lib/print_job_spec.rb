@@ -17,7 +17,7 @@ RSpec.describe PrintJob, type: :model do
   end
 
   it "should return false when a print job fails" do
-    allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
+    allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new(OpenStruct.new(staus: 500)))
     expect(@print_job.execute!).to eq(false)
   end
 
