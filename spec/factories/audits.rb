@@ -7,7 +7,7 @@ FactoryBot.define do
 
     auditable_id { consumable_type.id }
     auditable_type { consumable_type.class }
-    action "create"
+    action { "create" }
     record_data { consumable_type }
     user
 

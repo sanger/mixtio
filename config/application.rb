@@ -20,7 +20,7 @@ module Mixtio
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.load_defaults 5.1
+    config.load_defaults 6.0
 
     config.eager_load_paths += %W(#{config.root}/lib/validators #{config.root}/app/forms #{config.root}/lib)
 
@@ -46,8 +46,6 @@ module Mixtio
     config.mailer = config_for(:mailer)
 
     config.barcode_prefix = 'RGNT_'
-
-    config.active_record.sqlite3.represent_boolean_as_integer = true
 
     config.support_email = 'mixtio-help@sanger.ac.uk'
 

@@ -70,7 +70,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user if there\'s an error' do
-      allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new({}))
+      allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new(OpenStruct.new(status: 500)))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -134,7 +134,8 @@ RSpec.describe "Batches", type: feature, js: true do
   describe '#new' do
 
     before do
-      @batch = build(:batch)
+      @consumable_type = create(:consumable_type)
+      @batch = build(:batch, consumable_type: @consumable_type)
       @project = create(:project)
     end
 
@@ -543,10 +544,11 @@ RSpec.describe "Batches", type: feature, js: true do
 
   describe "#print" do
     it 'should return the id of the last label template that type was printed to' do
-      consumable_type = create(:consumable_type, id: 9, last_label_id: 180)
-      batch = create(:batch, consumable_type_id: 9)
+      label_type = create(:label_type)
+      consumable_type = create(:consumable_type, last_label_id: label_type.id)
+      batch = create(:batch, consumable_type: consumable_type)
 
-      expect(batch.consumable_type.last_label_id).to eq(180)
+      expect(batch.consumable_type.last_label_id).to eq(label_type.id)
     end
 
     it 'should update the id of the last label template upon printing' do
@@ -631,7 +633,7 @@ RSpec.describe "Batches", type: feature, js: true do
       let!(:unit) { create(:unit) }
 
       it "populates the form with the info from the current batch" do
-        @batch.mixtures.first.update_attributes!(quantity: 500, unit: unit)
+        @batch.mixtures.first.update!(quantity: 500, unit: unit)
         visit edit_batch_path(@batch)
         expect(page).to have_select("mixable_consumable_type_id", selected: @batch.consumable_type.name)
         expect(page).to have_select("mixable_ingredients__consumable_type_id", selected: @batch.ingredients.first.consumable_type.name)
