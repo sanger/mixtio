@@ -7,11 +7,11 @@ module Activatable
   end
 
   def deactivate!
-    update_attributes!(active: false)
+    update!(active: false)
   end
 
   def activate!
-    update_attributes!(active: true)
+    update!(active: true)
   end
 
   included do
