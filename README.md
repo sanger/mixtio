@@ -1,5 +1,4 @@
 # mixtio
-[![Build Status](https://travis-ci.org/sanger/mixtio.svg?branch=devel)](https://travis-ci.org/sanger/mixtio)
 
 Reagent creation and barcoding service for DNA Pipeline.
 
