@@ -28,6 +28,8 @@ To initialize data while dev-ing/testing run:
 To run tests, execute: `rake spec`
 
 ## Misc
+* Trouble with `libv8` and `therubyracer`? Check out <https://stackoverflow.com/a/55645176>
+* `brew install phantomjs` to install phantomjs
 
 ### Gems used
 * Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
