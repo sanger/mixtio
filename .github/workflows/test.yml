@@ -16,8 +16,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: mixtio_test
+          MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306
         options: >-
@@ -29,6 +29,7 @@ jobs:
     env:
       RAILS_ENV: test
       DB_PORT: 3306
+      DB_PASSWORD: root
 
     steps:
     - name: Start MySQL

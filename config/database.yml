@@ -14,4 +14,5 @@ test:
   <% if ENV['CI'] %>
   host: 127.0.0.1
   port: <%= ENV['DB_PORT'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   <% end %>
