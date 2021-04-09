@@ -12,10 +12,26 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: mixtio_test
+        ports:
+          - 3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     env:
       RAILS_ENV: test
 
     steps:
+    - name: Start MySQL
+        run: sudo service mysql start
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -24,11 +40,7 @@ jobs:
                             # example if you need more control over bundler.
     - name: Set up environment
       run: |
-        cp config/secrets.yml.sample config/secrets.yml
-        cp config/ldap.yml.sample config/ldap.yml
-        cp config/print_service.yml.sample config/print_service.yml
-        cp config/mailer.yml.sample config/mailer.yml
-        bundle exec rake db:setup
+        bundle exec rails db:setup
 
     - name: Run tests
-      run: bundle exec rake
+      run: bundle exec rspec
