@@ -28,6 +28,7 @@ jobs:
 
     env:
       RAILS_ENV: test
+      DB_PORT: 3306
 
     steps:
     - name: Start MySQL
