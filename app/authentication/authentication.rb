@@ -2,7 +2,6 @@
 # LDAP authentication
 #
 module Authentication
-
   ##
   # include this in to ApplicationController
   # will add the standard methods to allow authentication in filters.
@@ -44,7 +43,7 @@ module Authentication
     # Authenticate username and password against LDAP
     # If successful add the username to the session.
     def authenticate?(username, password)
-      if Authentication::Ldap.authenticate(username, password)
+      if ldap_service.authenticate(username, password)
         session[:username] = username
         true
       else
@@ -70,6 +69,12 @@ module Authentication
     def sign_out!
       session[:username] = nil
       current_user.sign_out!
+    end
+
+  private
+
+    def ldap_service
+      @ldap_service ||= Authentication::LdapServiceFactory.get_service
     end
 
   end
@@ -137,7 +142,7 @@ module Authentication
     end
 
     ##
-    # Authenticat the user by creating a new LDAP object, passing the created user name and password and trying to bind
+    # Authenticate the user by creating a new LDAP object, passing the created user name and password and trying to bind
     def authenticate(password)
       Net::LDAP.new(options(password)).bind
     end
@@ -168,6 +173,12 @@ module Authentication
   class FakeLdap
     def self.authenticate(username, password)
       true
+    end
+  end
+
+  class LdapServiceFactory
+    def self.get_service
+      Rails.configuration.stub_ldap ? Authentication::FakeLdap : Authentication::Ldap
     end
   end
 end
