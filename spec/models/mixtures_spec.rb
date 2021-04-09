@@ -22,7 +22,7 @@ RSpec.describe Mixture, type: :model do
 
       let(:mixture_params) do
         MixtureParameters.new(
-          consumable_type_id: ingredient.id,
+          consumable_type_id: ingredient.consumable_type_id,
           number: ingredient.number,
           kitchen_id: ingredient.kitchen_id,
           quantity: 5.0,

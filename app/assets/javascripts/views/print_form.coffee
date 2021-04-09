@@ -1,10 +1,10 @@
 class Mixtio.Views.PrintForm extends Backbone.View
 
   events:
-    'change select[name*="label_template_id"]': 'update'
+    'change select[name*="label_type_id"]': 'update'
 
   initialize: () ->
-    @label_type_select = $(@el).find('#label_template_id')
+    @label_type_select = $(@el).find('#label_type_id')
     @printer_select = $(@el).find('#printer')
 
     @update()
