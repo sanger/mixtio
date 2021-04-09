@@ -3,7 +3,6 @@ default: &default
   pool: 5
   username: root
   password:
-  socket: /tmp/mysql.sock
 
 development:
   <<: *default
@@ -12,3 +11,7 @@ development:
 test:
   <<: *default
   database: mixtio_test
+  <% if ENV['CI'] %>
+  host: 127.0.0.1
+  port: <%= ENV['DB_PORT'] %>
+  <% end %>
