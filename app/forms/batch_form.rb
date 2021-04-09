@@ -57,8 +57,8 @@ private
   end
 
   def promote_errors(child_errors)
-    child_errors.each do |attribute, message|
-      errors.add(attribute, message)
+    child_errors.each do |child_error|
+      errors.add(child_error.attribute, child_error.message)
     end
   end
 
