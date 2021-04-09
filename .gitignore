@@ -14,10 +14,6 @@ node_modules
 
 # TODO Comment out these rules if you are OK with secrets being uploaded to the repo
 config/initializers/secret_token.rb
-config/secrets.yml
-config/ldap.yml
-config/print_service.yml
-config/mailer.yml
 
 ## Environment normalisation:
 /.bundle
