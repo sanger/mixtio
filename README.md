@@ -69,6 +69,9 @@ Mixtio in production uses the Sanger LDAP server to authenticate users. In devel
 
 To turn this feature off, set `stub_ldap` to `false` in `development.rb`.
 
+## Misc
+* Trouble with `libv8` and `therubyracer`? Check out <https://stackoverflow.com/a/55645176>
+
 ### Gems used
 * Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
 * Pagination: [Kaminari](https://github.com/kaminari/kaminari)
