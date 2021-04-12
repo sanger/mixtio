@@ -1,33 +1,73 @@
-# mixtio
+# Mixtio
 
-Reagent creation and barcoding service for DNA Pipeline.
+> Reagent creation and barcoding service for DNA Pipeline.
 
-## Installation (for testing and development)
-1. Remove ".sample" from the following file names:
-  * config/ldap.yml
-  * config/mailer.yml
-  * config/print_service.yml
-  * config/secrets.yml
-2. In config/application.rb line 25, set:
-~~~
-config.stub_ldap = true
-~~~
-3. In Rails console (`$ rails console`):
-~~~
-> team = Team.create(name: "Team Name")
-> user = User.create(username: "Username", team_id: team.id)
-~~~
-4. Run `rails server` and navigate to http://localhost:3000
-5. Log in with your chosen username and no password.
+![](mixtio_screenshot.png)
 
-### Initialising data
-To initialize data while dev-ing/testing run:
-`rake consumables:load`
+## Prerequisites
+
+- Ruby 2.7.2
+- MySQL 5.7
+- Chrome (for testing)
+
+## Installation
+
+1. The gems in the `gemfile` are separated into groups. In order to ignore the `deployment` group on install, run:
+
+```bash
+bundle config set without 'deployment'
+```
+
+2. `bundle install`
+
 
 ## Testing
-To run tests, execute: `rake spec`
 
-## Misc
+1. Check the details in `database.yml` are correct for your local setup.
+
+2. Initialise the test database:
+
+```bash
+RAILS_ENV=test rails db:create
+RAILS_ENV=test rails db:schema:load
+```
+
+3. Run the tests
+
+```bash
+bundle exec rspec
+```
+
+## Running Locally
+
+1. Initialise the development database:
+
+```bash
+RAILS_ENV=development rails db:create
+RAILS_ENV=development rails db:schema:load
+```
+
+2. Add the seed data
+
+```bash
+RAILS_ENV=development rails db:seed
+```
+
+3. Create a new team and add yourself as a user:
+
+~~~
+rails console
+> team = Team.create(name: "Team Name")
+> user = User.create(username: "YOUR_SANGER_USERNAME", team: team)
+~~~
+
+4. Run `rails server` and navigate to http://localhost:3000
+
+5. Log in with your username and no password.
+
+Mixtio in production uses the Sanger LDAP server to authenticate users. In development, this is stubbed out and any password for a valid user will successfully authenticate them.
+
+To turn this feature off, set `stub_ldap` to `false` in `development.rb`.
 
 ### Gems used
 * Testing: [RSpec Rails](https://github.com/rspec/rspec-rails)
