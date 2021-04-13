@@ -10,7 +10,7 @@ class SubBatch < ActiveRecord::Base
 
   has_many :consumables, dependent: :destroy
 
-  belongs_to :batch, foreign_key: "ingredient_id", touch: true
+  belongs_to :batch, foreign_key: "ingredient_id", touch: true, inverse_of: :sub_batches
   belongs_to :project, optional: false
 
   has_one :consumable_type, through: :batch

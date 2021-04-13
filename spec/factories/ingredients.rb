@@ -13,7 +13,7 @@ FactoryBot.define do
       end
 
       after(:build) do |batch, evaluator|
-        batch.sub_batches << build(:sub_batch, batch: batch, barcode_type: evaluator.single_barcode ? "single" : "aliquots")
+        batch.sub_batches = [build(:sub_batch, batch: batch, barcode_type: evaluator.single_barcode ? "single" : "aliquots")]
       end
     end
 

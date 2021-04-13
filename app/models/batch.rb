@@ -4,8 +4,7 @@ class Batch < Ingredient
   include HasVolume
   include Mixable
 
-  has_many :sub_batches, foreign_key: "ingredient_id", dependent: :destroy
-  validates_associated :sub_batches
+  has_many :sub_batches, foreign_key: "ingredient_id", dependent: :destroy, inverse_of: :batch
   has_many :consumables, through: :sub_batches
   has_many :consumable_types, through: :consumables
   has_many :ingredients, through: :mixtures

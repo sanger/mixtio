@@ -151,7 +151,7 @@ RSpec.describe SubBatch, type: :feature do
 
       within(first("table#sub-batch-table tbody tr")) do
           expect(page).to have_content((orig_sub_batch.quantity + 7).to_s)
-          expect(page).to have_content((orig_sub_batch.volume + 2.12).to_s + "L")
+          expect(page).to have_content("%.2f" % (orig_sub_batch.volume + 2.12) + "L")
           expect(page).to have_content("single")
           expect(page).to have_content(@new_project.name)
       end
