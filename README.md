@@ -12,7 +12,7 @@
 
 ## Installation
 
-1. The gems in the `gemfile` are separated into groups. In order to ignore the `deployment` group on install, run:
+1. The gems in the `gemfile` are separated into groups. When running `bundle install`, you will not need the gems in the `deployment` group for working locally. In order to ignore the `deployment` group on install, run:
 
 ```bash
 bundle config set without 'deployment'
@@ -23,7 +23,7 @@ bundle config set without 'deployment'
 
 ## Testing
 
-1. Check the details in `database.yml` are correct for your local setup.
+1. Check the details in `database.yml` are correct for your local setup. By default the configuration expects a user `root` with no `password` on the default MySQL port (3306).
 
 2. Initialise the test database:
 
