@@ -18,7 +18,6 @@ class BatchesController < ApplicationController
   def update
     @batch_form = BatchForm.new(params: BatchFormParameters.new(update_batch_params))
     @batch = @batch_form.batch
-
     if @batch_form.save
       redirect_to batch_path(@batch), notice: "Reagent batch successfully updated!"
     else
@@ -53,7 +52,7 @@ protected
 
   def batch_params
     @batch_params ||= params.require(:mixable)
-      .permit(:consumable_type_id, :expiry_date,
+      .permit(:consumable_type_id, :expiry_date, :concentration, :concentration_unit,
               mixture_criteria: [:consumable_type_id, :number, :kitchen_id, :quantity, :unit_id],
               sub_batches: [:quantity, :volume, :unit, :barcode_type, :project_id]
       )

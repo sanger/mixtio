@@ -34,6 +34,12 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content(@batch.consumables.first.unit)
     end
 
+    it 'displays concentration' do
+      batch = create(:batch, concentration: 24.5, concentration_unit: 'mM')
+      visit batch_path(batch)
+      expect(page).to have_content("Concentration: 24.5 mM")
+    end
+
     it 'displays correctly without storage conditions' do
       consumable_type = create(:consumable_type, storage_condition: nil)
       batch = create(:batch, consumable_type: consumable_type)
@@ -167,6 +173,31 @@ RSpec.describe "Batches", type: feature, js: true do
         expect { create_batch }.to change { Audit.count }.by(1)
       end
 
+    end
+
+    context 'when concentration is filled in' do
+      let(:create_batch) {
+        visit new_batch_path
+        select @batch.consumable_type.name, from: 'Consumable Type'
+        fill_in "Use by date", with: @batch.expiry_date
+        fill_in "mixable_sub_batches__quantity", with: 3
+        fill_in "mixable_sub_batches__volume", with: 2.2
+        fill_in "concentration_field", with: 6.5
+        select 'mM', from: "concentration_unit_field"
+        click_button('Create Batch')
+      }
+
+      it 'displays a success message' do
+        create_batch
+        expect(page).to have_content("Reagent batch successfully created")
+      end
+
+      it 'creates a new batch with a concentration' do
+        expect { create_batch }.to change { Batch.count }.by(1)
+        b = Batch.last
+        expect(b.concentration).to eq(6.5)
+        expect(b.concentration_unit).to eq('mM')
+      end
     end
 
     context "when a user clicks the submit button" do
@@ -681,6 +712,10 @@ RSpec.describe "Batches", type: feature, js: true do
         select @consumable_type2.name, from: "mixable_ingredients__consumable_type_id"
         select @external_team.name, from: "mixable_ingredients__kitchen_id"
 
+        # concentration
+        fill_in "concentration_field", with: 7.5
+        select 'mM', from: "concentration_unit_field"
+
         # rest of form
         fill_in "mixable_expiry_date", with: "11/11/2021"
         fill_in "mixable_sub_batches__quantity", with: 74
@@ -697,6 +732,7 @@ RSpec.describe "Batches", type: feature, js: true do
         expect(page).to have_text("74")
         expect(page).to have_text("0.666L")
         expect(page).to have_text("single")
+        expect(page).to have_text('7.5 mM')
         expect(page).to have_text(@external_team.name)
       end
 

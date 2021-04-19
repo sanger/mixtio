@@ -2,22 +2,22 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_05_092849) do
+ActiveRecord::Schema.define(version: 2021_04_16_135219) do
 
   create_table "audits", id: :integer, force: :cascade do |t|
     t.string "auditable_type"
     t.integer "auditable_id"
     t.integer "user_id"
     t.string "action"
-    t.string "record_data"
+    t.text "record_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["auditable_type", "auditable_id"], name: "index_audits_on_auditable_type_and_auditable_id"
@@ -61,6 +61,8 @@ ActiveRecord::Schema.define(version: 2020_10_05_092849) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.boolean "editable", default: true
+    t.float "concentration"
+    t.string "concentration_unit"
     t.index ["consumable_type_id"], name: "index_ingredients_on_consumable_type_id"
     t.index ["kitchen_id"], name: "index_ingredients_on_kitchen_id"
     t.index ["user_id"], name: "index_ingredients_on_user_id"
