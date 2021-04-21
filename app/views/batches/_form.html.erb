@@ -46,10 +46,10 @@
       </div>
       <div class="row">
         <div class="col-md-3">
-          <%= f.number_field :concentration, step: :any, min: 0, id: 'concentration_field' %>
+          <%= f.number_field :concentration, class: 'form-control', step: :any, min: 0, id: 'concentration_field' %>
         </div>
         <div class="col-md-2">
-          <%= f.select :concentration_unit, Batch::CONCENTRATION_UNITS, {}, id:'concentration_unit_field' %>
+          <%= f.select :concentration_unit, Batch::CONCENTRATION_UNITS, {}, class: 'form-control', id:'concentration_unit_field' %>
         </div>
       </div>
 
