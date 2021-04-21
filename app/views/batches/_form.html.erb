@@ -36,6 +36,26 @@
     </div>
 
     <div class="form-group">
+      <div class="row">
+        <div class="col-md-3">
+          <%= f.label :concentration, "Concentration" %>
+        </div>
+        <div class="col-md-2">
+          <%= f.label :concentration_unit, "Unit" %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <%= f.number_field :concentration, class: 'form-control', step: :any, min: 0, id: 'concentration_field' %>
+        </div>
+        <div class="col-md-2">
+          <%= f.select :concentration_unit, Batch::CONCENTRATION_UNITS, {}, class: 'form-control', id:'concentration_unit_field' %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group">
       <h3>Sub-Batches</h3>
 
         <div class="row">
