@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :ingredient do
+    transient do
+      consumable_type_team { nil }
+    end
+
     kitchen
-    consumable_type
+    consumable_type { create(:consumable_type, team: consumable_type_team || create(:team)) }
     sequence(:number) { |n| "Ingredient #{n}" }
 
     factory :batch, class: 'Batch' do

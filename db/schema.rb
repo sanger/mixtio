@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_135219) do
+ActiveRecord::Schema.define(version: 2021_04_22_134336) do
 
   create_table "audits", id: :integer, force: :cascade do |t|
     t.string "auditable_type"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(version: 2021_04_16_135219) do
     t.datetime "updated_at", null: false
     t.integer "last_label_id"
     t.boolean "active", default: true, null: false
+    t.integer "team_id", null: false
+    t.index ["last_label_id"], name: "fk_rails_3f271136d7"
+    t.index ["team_id"], name: "index_consumable_types_on_team_id"
   end
 
   create_table "consumables", id: :integer, force: :cascade do |t|
@@ -135,6 +138,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_135219) do
     t.index ["team_id"], name: "index_users_on_team_id"
   end
 
+  add_foreign_key "consumable_types", "kitchens", column: "team_id"
   add_foreign_key "consumable_types", "label_types", column: "last_label_id"
   add_foreign_key "favourites", "consumable_types"
   add_foreign_key "favourites", "users"

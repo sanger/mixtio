@@ -1,6 +1,6 @@
 <%= form_for @consumable_type_form, as: :mixable, data: { behavior: 'consumable-type-form' } do |f| %>
     <script type="text/javascript">
-      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.where(team:current_team).order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
       Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.active.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@consumable_type_form.mixture_criteria.to_json.html_safe) %>
       Mixtio.Bootstrap.InputUnits      = <%= json_escape(Unit.all.to_json.html_safe) %>

@@ -38,9 +38,9 @@ private
         consumable_type.mixtures.destroy_all
 
         consumable_type.assign_attributes(consumable_type_attributes)
+        consumable_type.team = current_user.team
 
         raise ActiveRecord::RecordInvalid unless valid?
-
         consumable_type.save!
         consumable_type.create_audit(user: current_user, action: params.fetch(:action))
       end

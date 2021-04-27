@@ -16,7 +16,7 @@ RSpec.describe SubBatch, type: :feature do
 
     context "with projects" do
       before :each do
-        @consumable_type = create(:consumable_type)
+        @consumable_type = create(:consumable_type, team:test_user.team)
         @project = create(:project)
         @project2 = create(:project)
         visit new_batch_path
@@ -70,7 +70,7 @@ RSpec.describe SubBatch, type: :feature do
 
     context "with no projects" do
       it "doesn't allow saving of a batch if the sub-batch has no project selected" do
-        @consumable_type = create(:consumable_type)
+        @consumable_type = create(:consumable_type, team:test_user.team)
         visit new_batch_path
         fill_in_one_sub_batch
         select @consumable_type.name, from: 'Consumable Type'
@@ -105,7 +105,7 @@ RSpec.describe SubBatch, type: :feature do
 
   describe "editing sub-batches" do
     before :each do
-      @batch = create(:batch)
+      @batch = create(:batch, consumable_type_team:test_user.team)
       @batch.sub_batches = [create(:sub_batch, volume: 12, unit: "mL", quantity: 4)]
       @new_project = create(:project)
       visit edit_batch_path(@batch)

@@ -3,6 +3,7 @@ FactoryBot.define do
     sequence(:name) { |n| "Consumable Type #{n}" }
     days_to_keep { 33 }
     storage_condition { "LN2" }
+    team
 
     factory :consumable_type_with_recipe do
       transient do

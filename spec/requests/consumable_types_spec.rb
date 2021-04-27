@@ -6,7 +6,7 @@ RSpec.describe "ConsumableType", type: :request do
     sign_in_request
   end
 
-  let(:consumable_type) { create(:consumable_type) }
+  let(:consumable_type) { create(:consumable_type, team: test_user.team) }
 
   describe 'PUT deactivate' do
     before do
@@ -21,7 +21,7 @@ RSpec.describe "ConsumableType", type: :request do
   end
 
   describe 'PUT activate' do
-    let(:consumable_type) { create(:consumable_type, active: false) }
+    let(:consumable_type) { create(:consumable_type, team: test_user.team, active: false) }
     before do
       put activate_consumable_type_path(consumable_type)
     end
@@ -34,8 +34,8 @@ RSpec.describe "ConsumableType", type: :request do
   end
 
   describe 'GET index' do
-    let!(:active_consumable_type) { create(:consumable_type, active: true) }
-    let!(:inactive_consumable_type) { create(:consumable_type, active: false) }
+    let!(:active_consumable_type) { create(:consumable_type, team: test_user.team, active: true) }
+    let!(:inactive_consumable_type) { create(:consumable_type, team: test_user.team, active: false) }
 
     it 'loads the active consumable_types' do
       get consumable_types_path
@@ -44,8 +44,8 @@ RSpec.describe "ConsumableType", type: :request do
   end
 
   describe 'GET archive_index' do
-    let!(:active_consumable_type) { create(:consumable_type, active: true) }
-    let!(:inactive_consumable_type) { create(:consumable_type, active: false) }
+    let!(:active_consumable_type) { create(:consumable_type, team: test_user.team, active: true) }
+    let!(:inactive_consumable_type) { create(:consumable_type, team: test_user.team, active: false) }
 
     it 'loads the inactive consumable_types' do
       get consumable_types_archive_path
