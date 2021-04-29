@@ -32,6 +32,7 @@ class ConsumableTypesController < ApplicationController
   end
 
   def update
+    redirect_back(fallback_location: consumable_types_path) and return unless check_user_edit?
     @consumable_type_form = ConsumableTypeForm.new(consumable_type_form_edit_params)
     if @consumable_type_form.update
       redirect_to consumable_types_path, notice: "Consumable Type successfully updated"
@@ -42,6 +43,7 @@ class ConsumableTypesController < ApplicationController
 
   # PUT /consumable_types/1/deactivate
   def deactivate
+    redirect_back(fallback_location: consumable_types_path) and return unless check_user_edit?
     @consumable_type = current_resource
     @consumable_type.deactivate!
     @consumable_type.create_audit(user: current_user, action: 'deactivate')
@@ -50,6 +52,7 @@ class ConsumableTypesController < ApplicationController
 
   # PUT /consumable_types/1/activate
   def activate
+    redirect_back(fallback_location: consumable_types_path) and return unless check_user_edit?
     @consumable_type = current_resource
     @consumable_type.activate!
     @consumable_type.create_audit(user: current_user, action: 'activate')
@@ -57,10 +60,20 @@ class ConsumableTypesController < ApplicationController
   end
 
   def consumable_types
-    @consumable_types ||= (@archive ? ConsumableType.inactive : ConsumableType.active).order_by_name.page(params[:page])
+    @consumable_types ||= (@archive ? ConsumableType.inactive : ConsumableType.active)
+      .where(team: current_team)
+      .order_by_name.page(params[:page])
   end
 
 protected
+
+  def check_user_edit?
+    if current_resource && current_team != current_resource.team
+      flash[:error] = "Only team #{current_resource.team.name} can alter this consumable type."
+      return false
+    end
+    true
+  end
 
   def consumable_type_params
     params.require(:mixable).permit(:name, :days_to_keep, :storage_condition,

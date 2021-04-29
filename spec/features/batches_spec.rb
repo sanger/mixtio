@@ -140,7 +140,7 @@ RSpec.describe "Batches", type: feature, js: true do
   describe '#new' do
 
     before do
-      @consumable_type = create(:consumable_type)
+      @consumable_type = create(:consumable_type, team: test_user.team)
       @batch = build(:batch, consumable_type: @consumable_type)
       @project = create(:project)
     end
@@ -232,7 +232,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
     context 'when a consumable type is selected' do
       before do
-        @consumable_type = create(:consumable_type)
+        @consumable_type = create(:consumable_type, team: test_user.team)
       end
 
       let(:select_a_consumable_type) {
@@ -249,7 +249,7 @@ RSpec.describe "Batches", type: feature, js: true do
 
     context 'when a consumable type is selected that has a days_to_keep of 0' do
       before do
-        @consumable_type = create(:consumable_type, days_to_keep: 0)
+        @consumable_type = create(:consumable_type, days_to_keep: 0, team: test_user.team)
       end
 
       let(:select_a_consumable_type) {
@@ -267,7 +267,7 @@ RSpec.describe "Batches", type: feature, js: true do
     context 'when trying to use a batch that does not exist as an ingredient' do
 
       before do
-        @consumable_type = create(:consumable_type)
+        @consumable_type = create(:consumable_type, team:test_user.team)
         @team            = create(:team)
       end
 
@@ -307,9 +307,9 @@ RSpec.describe "Batches", type: feature, js: true do
       let!(:unit) { create(:unit) }
 
       before do
-        @consumable_type = create(:consumable_type_with_recipe)
+        @consumable_type = create(:consumable_type_with_recipe, team:test_user.team)
         @lot             = create(:lot, consumable_type: @consumable_type)
-        @batch           = create(:batch)
+        @batch           = create(:batch, consumable_type_team:test_user.team)
       end
 
       let(:fill_out_form) {
@@ -330,6 +330,7 @@ RSpec.describe "Batches", type: feature, js: true do
       it 'saves the batch with the consumable type\'s recipe' do
         fill_out_form
         click_button "Create Batch"
+
         expect(page).to have_content("Reagent batch successfully created")
 
         batch = Batch.last
@@ -564,7 +565,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'shouldn\'t cause errors when setting consumable type to blank' do
-      consumable_type = create(:consumable_type)
+      consumable_type = create(:consumable_type, team: test_user.team)
       visit new_batch_path
 
       select consumable_type.name, from: 'Consumable Type'
@@ -607,12 +608,12 @@ RSpec.describe "Batches", type: feature, js: true do
 
   describe "#edit" do
     before :each do
-      test_user = create(:user)
-      @consumable_type1 = create(:consumable_type)
-      @consumable_type2 = create(:consumable_type)
+      @consumable_type1 = create(:consumable_type, team:test_user.team)
+      @consumable_type2 = create(:consumable_type, team:test_user.team)
+      @consumable_type3 = create(:consumable_type, team:test_user.team)
 
       @batch = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type1.id,
-        ingredients: [create(:ingredient)])
+        ingredients: [create(:ingredient, consumable_type: @consumable_type3)])
 
       @batch2 = create(:batch, user_id: test_user.id, consumable_type_id: @consumable_type2.id)
     end

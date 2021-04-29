@@ -5,6 +5,8 @@ class ConsumableType < ActiveRecord::Base
   include HasOrderByName
   include Mixable
 
+  belongs_to :team, optional: false
+
   has_many :batches
   has_many :lots
   has_many :favourites

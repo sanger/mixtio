@@ -1,8 +1,8 @@
 <%= form_for @batch, as: :mixable, url: yield(:url), method: yield(:method), data: { behavior: 'batch-form' } do |f| %>
 
     <script type="text/javascript">
-      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.active.find_user_favourites(current_user).to_json.html_safe) %>
-      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
+      Mixtio.Bootstrap.UserFavourites  = <%= json_escape(ConsumableType.active.where(team:current_team).find_user_favourites(current_user).to_json.html_safe) %>
+      Mixtio.Bootstrap.ConsumableTypes = <%= json_escape(ConsumableType.active.where(team:current_team).order_by_name.to_json(methods: [:prefill_data]).html_safe) %>
       Mixtio.Bootstrap.SelectedConsumableType = <%= json_escape(@batch.consumable_type_id.to_json.html_safe) %>
       Mixtio.Bootstrap.Kitchens        = <%= json_escape(Kitchen.active.order_by_name.to_json.html_safe) %>
       Mixtio.Bootstrap.Ingredients     = <%= json_escape(@batch.mixture_criteria.to_json.html_safe) %>
