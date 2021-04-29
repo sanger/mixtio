@@ -28,11 +28,11 @@ private
   end
 
   def print_params
-    params.permit(:label_template_id, :printer).merge(batch: current_resource)
+    params.permit(:label_type_id, :printer).merge(batch: current_resource)
   end
 
   def save_label_id
-    current_resource.consumable_type.update_column(:last_label_id, params[:label_template_id].to_i)
+    current_resource.consumable_type.update_column(:last_label_id, params[:label_type_id].to_i)
   end
 
   def set_editable_false

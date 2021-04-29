@@ -5,7 +5,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 
 require 'with_model'
-require 'capybara/poltergeist'
+require 'webdrivers/chromedriver'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -64,7 +64,7 @@ RSpec.configure do |config|
 
   config.extend WithModel
 
-  Capybara.javascript_driver = :poltergeist
+  Capybara.javascript_driver = :selenium_chrome_headless
 
   Capybara.server = :puma, { Silent: true }
 

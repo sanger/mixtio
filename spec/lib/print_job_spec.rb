@@ -8,7 +8,7 @@ RSpec.describe PrintJob, type: :model do
     label_type = LabelType.create(name: 'TestType', external_id: 1)
     printer = Printer.create(name: 'ABC123', label_type: label_type)
 
-    @print_job = PrintJob.new(batch: @batch, printer: printer.name, label_template_id: label_type.external_id)
+    @print_job = PrintJob.new(batch: @batch, printer: printer.name, label_type_id: label_type.id)
   end
 
   it "should return true when a print job executes successfully" do
@@ -31,9 +31,9 @@ RSpec.describe PrintJob, type: :model do
   end
 
   it 'should fail if printer\'s type is not selected label type' do
-    label_type = LabelType.create(name: 'Other Type', external_id: 2)
-    printer = Printer.create(name: 'Other Printer', label_type: label_type)
-    print_job = PrintJob.new(batch: @batch, printer: printer.name, label_template_id: @print_job.label_template_id)
+    label_type = LabelType.create!(name: 'Other Type', external_id: 2)
+    printer = Printer.create!(name: 'Other Printer', label_type: label_type)
+    print_job = PrintJob.new(batch: @batch, printer: printer.name, label_type_id: @print_job.label_type_id)
 
     expect(print_job.execute!).to eq(false)
     expect(print_job.errors.to_a).to_not include("Printer does not exist")
@@ -42,7 +42,7 @@ RSpec.describe PrintJob, type: :model do
   end
 
   it 'should fail if printer name is not in database' do
-    print_job = PrintJob.new(batch: @batch, printer: 'Other printer', label_template_id: @print_job.label_template_id)
+    print_job = PrintJob.new(batch: @batch, printer: 'Missing printer', label_type_id: @print_job.label_type_id)
 
     expect(print_job.execute!).to eq(false)
     expect(print_job.errors.to_a).to_not include("Label template does not exist")
@@ -50,11 +50,11 @@ RSpec.describe PrintJob, type: :model do
   end
 
   it 'should fail if label id is not in database' do
-    print_job = PrintJob.new(batch: @batch, printer: @print_job.printer, label_template_id: 11)
+    print_job = PrintJob.new(batch: @batch, printer: @print_job.printer, label_type_id: 11)
 
     expect(print_job.execute!).to eq(false)
     expect(print_job.errors.to_a).to_not include("Printer does not exist")
-    expect(print_job.errors.to_a).to include("Label template does not exist")
+    expect(print_job.errors.to_a).to include("Label type does not exist")
   end
 
 end

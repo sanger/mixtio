@@ -12,7 +12,7 @@ class MixtureParameters
 
   validate do
     if Team.exists?(kitchen_id) && !Batch.exists?(number: number, kitchen_id: kitchen_id)
-      errors[:ingredient] << "with number #{number} could not be found"
+      errors.add(:ingredient, "with number #{number} could not be found")
     end
   end
 

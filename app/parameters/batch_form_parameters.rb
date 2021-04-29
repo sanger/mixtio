@@ -5,7 +5,7 @@ class BatchFormParameters
   include ActiveModel::Model
 
   attr_accessor :consumable_type_id, :expiry_date, :user, :mixture_criteria,
-                :mixture_params, :sub_batches, :batch, :action
+                :mixture_params, :sub_batches, :batch, :action, :concentration, :concentration_unit
 
   attr_reader :kitchen
 

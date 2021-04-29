@@ -4,8 +4,9 @@ class Batch < Ingredient
   include HasVolume
   include Mixable
 
-  has_many :sub_batches, foreign_key: "ingredient_id", dependent: :destroy
-  validates_associated :sub_batches
+  CONCENTRATION_UNITS = %w[mg/mL mg/µL mM µM].freeze
+
+  has_many :sub_batches, foreign_key: "ingredient_id", dependent: :destroy, inverse_of: :batch
   has_many :consumables, through: :sub_batches
   has_many :consumable_types, through: :consumables
   has_many :ingredients, through: :mixtures
@@ -14,6 +15,10 @@ class Batch < Ingredient
 
   validates :expiry_date, :sub_batches, presence: true
   validates :expiry_date, expiry_date: true, on: :create
+
+  validates :concentration, numericality: { greater_than: 0, allow_nil: true }
+  validates :concentration_unit, inclusion: CONCENTRATION_UNITS, allow_nil: true
+  validates :concentration_unit, presence: true, if: Proc.new { |o| o.concentration? }
 
   after_create :generate_batch_number
 
@@ -30,6 +35,14 @@ class Batch < Ingredient
   # Returns integer of number of consumables belonging to the batch
   def size
     consumables.count
+  end
+
+  def display_concentration
+    if concentration?
+      "#{concentration} #{concentration_unit}"
+    else
+      nil
+    end
   end
 
 private

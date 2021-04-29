@@ -1,0 +1,48 @@
+name: Ruby
+
+env:
+  TZ: Europe/London
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: mixtio_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    env:
+      RAILS_ENV: test
+      DB_PORT: 3306
+      DB_PASSWORD: root
+
+    steps:
+    - name: Start MySQL
+      run: sudo service mysql start
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true # Runs bundle install and caches gems. See the ruby_test.yml
+                            # example if you need more control over bundler.
+    - name: Set up environment
+      run: |
+        bundle exec rails db:setup
+
+    - name: Run tests
+      run: bundle exec rspec

@@ -29,6 +29,10 @@ class BatchForm
     rescue => e
       # Put whatever the errors were on the Batch onto the BatchForm
       promote_errors(batch.errors)
+      # Make sure we still give an error message even if batch.errors is empty
+      if batch.errors.empty?
+        errors.add('Exception', e.message)
+      end
       Rails.logger.error(([e.message] + e.backtrace).join("\n    "))
       false
     end
@@ -48,7 +52,9 @@ private
       expiry_date: params.expiry_date,
       user: params.user,
       kitchen: params.kitchen,
-      mixture_criteria: params.mixture_criteria
+      mixture_criteria: params.mixture_criteria,
+      concentration: params.concentration,
+      concentration_unit: params.concentration.present? ? params.concentration_unit : nil,
     }
   end
 
@@ -57,8 +63,8 @@ private
   end
 
   def promote_errors(child_errors)
-    child_errors.each do |attribute, message|
-      errors.add(attribute, message)
+    child_errors.each do |child_error|
+      errors.add(child_error.attribute, child_error.message)
     end
   end
 

@@ -7,13 +7,15 @@ FactoryBot.define do
     factory :batch, class: 'Batch' do
       expiry_date { 33.days.from_now }
       user
+      concentration { nil }
+      concentration_unit { nil }
 
       transient do
         single_barcode { false }
       end
 
       after(:build) do |batch, evaluator|
-        batch.sub_batches << build(:sub_batch, batch: batch, barcode_type: evaluator.single_barcode ? "single" : "aliquots")
+        batch.sub_batches = [build(:sub_batch, batch: batch, barcode_type: evaluator.single_barcode ? "single" : "aliquots")]
       end
     end
 

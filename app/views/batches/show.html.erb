@@ -25,6 +25,7 @@
         <li class="list-group-item"><strong>Consumable type: </strong><%= link_to @batch.consumable_type.name, edit_consumable_type_path(@batch.consumable_type) %></li>
         <li class="list-group-item"><strong>Use by date: </strong><%= @batch.expiry_date %></li>
         <li class="list-group-item"><strong>Storage conditions: </strong><%= @batch.consumable_type.storage_condition or 'None specified' %></li>
+        <li class="list-group-item"><strong>Concentration:</strong> <%= @batch.display_concentration %></li>
       </ul>
     </div>
       <div class="col-md-7">
@@ -121,8 +122,8 @@
         <div class="modal-body">
 
           <div class="form-group">
-            <%= label_tag :label_template_id %>
-            <%= select_tag :label_template_id, options_for_select(LabelType.all.map { |type| [type.name, type.id] }, @batch.consumable_type.last_label_id ), class: 'form-control' %>
+            <%= label_tag :label_type_id %>
+            <%= select_tag :label_type_id, options_for_select(LabelType.all.map { |type| [type.name, type.id] }, @batch.consumable_type.last_label_id ), class: 'form-control' %>
           </div>
 
           <div class="form-group">
