@@ -5,14 +5,17 @@ RSpec.describe PrintJob, type: :model do
 
   before :each do
     @batch = create(:batch)
-    label_type = LabelType.create(name: 'TestType', external_id: 1)
-    printer = Printer.create(name: 'ABC123', label_type: label_type)
+    @label_type = LabelType.create(name: 'TestType', external_id: 1)
+    @printer = Printer.create(name: 'ABC123', label_type: @label_type)
 
-    @print_job = PrintJob.new(batch: @batch, printer: printer.name, label_type_id: label_type.id)
+    @print_job = PrintJob.new(batch: @batch, printer: @printer.name, label_type_id: @label_type.id)
   end
 
   it "should return true when a print job executes successfully" do
-    allow(PMB::PrintJob).to receive(:execute).and_return(true)
+    labels = Labels.new(@batch).to_h
+    expect(PMB::PrintJob).to receive(:execute)
+      .with(printer_name: @printer.name, label_template_id: @label_type.id, labels: labels)
+      .and_return(true)
     expect(@print_job.execute!).to eq(true)
   end
 

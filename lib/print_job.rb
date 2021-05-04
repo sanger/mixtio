@@ -30,7 +30,7 @@ class PrintJob
     pmb_template_id = LabelType.find(label_type_id).external_id
 
     begin
-      PMB::PrintJob.execute(printer_name: printer, label_type_id: pmb_template_id, labels: labels.to_h)
+      PMB::PrintJob.execute(printer_name: printer, label_template_id: pmb_template_id, labels: labels.to_h)
       return true
     ##
     # PMB doesn't format errors in the way PMB::Client expects, so somewhere within the depths
