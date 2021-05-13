@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.describe "ConsumableTypes", type: :feature, js: true do
 
-  let! (:consumable_type) { build(:consumable_type) }
-  let! (:consumable_types) { create_list(:consumable_type, 3) }
-  let! (:saved_consumable_type) { create(:consumable_type) }
+  let! (:consumable_type) { build(:consumable_type, team:test_user.team) }
+  let! (:consumable_types) { create_list(:consumable_type, 3, team:test_user.team) }
+  let! (:saved_consumable_type) { create(:consumable_type, team:test_user.team) }
   let! (:suppliers) { create_list(:supplier, 3) }
   let! (:units) { create_list(:unit, 3) }
 
@@ -40,7 +40,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
 
     it "Reports an error if a user adds a consumable type with invalid attributes" do
 
-      consumable_type = create(:consumable_type)
+      consumable_type = create(:consumable_type, team:test_user.team)
 
       visit new_consumable_type_path
       expect {
@@ -73,7 +73,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
         mixture = Mixture.last
         expect(mixture.ingredient.consumable_type_id).to eq(consumable_types.first.id)
         expect(mixture.ingredient.number).to be_nil
-        expect(mixture.ingredient.kitchen_id).to eq(consumable_types.first.id)
+        expect(mixture.ingredient.kitchen_id).to eq(suppliers.first.id)
         expect(mixture.quantity).to eq(500)
         expect(mixture.unit_id).to eq(units.first.id)
 

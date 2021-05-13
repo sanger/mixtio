@@ -18,8 +18,8 @@ end
 
 RSpec.feature "MX70 Show Confirm Dialog When Ingredients Diverged From Recipes", type: :feature, js: true do
 
-  let!(:consumable_type) { create(:consumable_type_with_recipe) }
-  let!(:another_consumable_type) { create(:consumable_type) }
+  let!(:consumable_type) { create(:consumable_type_with_recipe, team:test_user.team) }
+  let!(:another_consumable_type) { create(:consumable_type, team:test_user.team) }
   let!(:another_supplier) { create(:supplier) }
   let!(:another_unit) { create(:unit) }
 

@@ -11,7 +11,7 @@ module Authentication
     extend ActiveSupport::Concern
 
     included do
-      helper_method :current_user
+      helper_method :current_user, :current_team
     end
 
     ##
@@ -55,6 +55,12 @@ module Authentication
     # Return the current user or create one using the session username
     def current_user
       @current_user ||= Authentication::CurrentUser.new(User.find_by(username: session[:username]))
+    end
+
+    ##
+    # Return the team of the current user
+    def current_team
+      @current_team ||= current_user.user&.team
     end
 
     ##
