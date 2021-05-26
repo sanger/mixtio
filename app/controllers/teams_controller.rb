@@ -24,7 +24,7 @@ class TeamsController < ApplicationController
 
   def update
     @team = current_resource
-    if @team.update_attributes(team_params)
+    if @team.update(team_params)
       redirect_to teams_path, notice: "Team successfully updated"
     else
       render :edit

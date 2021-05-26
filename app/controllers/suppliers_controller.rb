@@ -31,7 +31,7 @@ class SuppliersController < ApplicationController
 
   def update
     @supplier = current_resource
-    if @supplier.update_attributes(supplier_params)
+    if @supplier.update(supplier_params)
       redirect_to suppliers_path, notice: "Supplier successfully updated"
     else
       render :edit

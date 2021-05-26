@@ -58,7 +58,7 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   def update
     @project = current_resource
-    if @project.update_attributes(project_params)
+    if @project.update(project_params)
       redirect_to (@project.active? ? projects_path : projects_archive_path), notice: "Project successfully updated"
     else
       render :edit
