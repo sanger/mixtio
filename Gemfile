@@ -34,7 +34,6 @@ gem 'bootstrap-sass'
 gem 'font-awesome-rails'
 gem 'net-ldap'
 gem 'kaminari'
-gem 'backbone-on-rails'
 gem 'exception_notification'
 
 # Use ActiveModel has_secure_password
