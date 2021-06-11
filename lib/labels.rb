@@ -24,7 +24,7 @@ private
   def body
     consumables.map do |consumable|
       {
-        label_1: {
+        label: {
           barcode_text: consumable.barcode,
           reagent_name: consumable.batch.consumable_type.name,
           batch_no: consumable.batch.number,
@@ -32,6 +32,7 @@ private
           barcode: consumable.barcode,
           volume: consumable.display_volume,
           storage_condition: consumable.batch.consumable_type.storage_condition,
+          concentration: consumable.batch.display_concentration,
         }
       }
     end
