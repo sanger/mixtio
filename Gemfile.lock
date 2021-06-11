@@ -111,6 +111,7 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     diff-lcs (1.4.4)
+    ejs (1.1.1)
     erubi (1.10.0)
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
@@ -317,6 +318,7 @@ DEPENDENCIES
   capybara
   coffee-rails
   database_cleaner
+  ejs (~> 1.1, >= 1.1.1)
   exception_notification
   factory_bot_rails
   font-awesome-rails
