@@ -76,11 +76,6 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     autoprefixer-rails (10.2.4.0)
       execjs
-    backbone-on-rails (1.2.0.0)
-      eco
-      ejs
-      jquery-rails
-      railties
     bindex (0.8.1)
     bootsnap (1.7.3)
       msgpack (~> 1.0)
@@ -116,11 +111,6 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     diff-lcs (1.4.4)
-    eco (1.0.0)
-      coffee-script
-      eco-source
-      execjs
-    eco-source (1.1.0.rc.1)
     ejs (1.1.1)
     erubi (1.10.0)
     exception_notification (4.4.3)
@@ -322,13 +312,13 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  backbone-on-rails
   bootsnap
   bootstrap-sass
   byebug
   capybara
   coffee-rails
   database_cleaner
+  ejs (~> 1.1, >= 1.1.1)
   exception_notification
   factory_bot_rails
   font-awesome-rails
