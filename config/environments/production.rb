@@ -117,4 +117,7 @@ Rails.application.configure do
   # config.active_record.database_selector = { delay: 2.seconds }
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  # TODO: change this when we create the new templates on prod pmb
+  config.pmb_id = { 1 => 2, 2 => 3 }
 end

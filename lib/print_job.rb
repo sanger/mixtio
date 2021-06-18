@@ -23,11 +23,15 @@ class PrintJob
     end
   end
 
+  def label_to_pmb_id(label_type_id)
+    Rails.configuration.try(:pmb_id).to_h[label_type_id] || LabelType.find(label_type_id).external_id
+  end
+
   def execute!
     return false unless valid?
 
     # Find the label type's external ID for use with PMB
-    pmb_template_id = LabelType.find(label_type_id).external_id
+    pmb_template_id = label_to_pmb_id(label_type_id)
 
     begin
       PMB::PrintJob.execute(printer_name: printer, label_template_id: pmb_template_id, labels: labels.to_h)

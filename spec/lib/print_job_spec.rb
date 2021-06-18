@@ -13,8 +13,9 @@ RSpec.describe PrintJob, type: :model do
 
   it "should return true when a print job executes successfully" do
     labels = Labels.new(@batch).to_h
+    template_id = Rails.configuration.pmb_id[@label_type.id] || 1
     expect(PMB::PrintJob).to receive(:execute)
-      .with(printer_name: @printer.name, label_template_id: @label_type.id, labels: labels)
+      .with(printer_name: @printer.name, label_template_id: template_id, labels: labels)
       .and_return(true)
     expect(@print_job.execute!).to eq(true)
   end
