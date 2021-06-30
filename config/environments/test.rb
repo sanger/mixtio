@@ -54,4 +54,6 @@ Rails.application.configure do
     }
 
   config.enable_snow = false
+
+  config.pmb_id = { 1 => 226, 2 => 227 }
 end

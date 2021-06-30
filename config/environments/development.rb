@@ -79,4 +79,6 @@ Rails.application.configure do
   config.enable_snow = true
   config.snow_start = 'Dec 11'
   config.snow_end = 'Dec 30'
+
+  config.pmb_id = { 1 => 226, 2 => 227 }
 end
