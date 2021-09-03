@@ -1,19 +1,19 @@
 class Batches::PrintController < ApplicationController
 
   # Save the label type ID when printing so it can be shown as default choice later
-  before_action :save_label_id, :current_resource, only: [:create]
+  before_action :save_label_id, :current_resource, :printer, only: [:create]
 
   # Disable editing once the batch has been printed
   after_action :set_editable_false, only: [:create]
 
   def create
-    print_job = PrintJob.new(print_params)
+    print_result = print_service.print(printer, current_resource.labels)
 
-    if print_job.execute!
+    if print_result.success?
       flash[:notice] = ["Your labels have been printed"]
     else
       flash[:error] = ["Your labels could not be printed"]
-      print_job.errors.to_a.each do |error|
+      print_result.errors.each do |error|
         flash[:error] << error
       end
     end
@@ -25,6 +25,16 @@ private
 
   def current_resource
     @batch ||= Batch.find(params[:id])
+  end
+
+  def printer
+    @printer ||= Printer.find_by!(name: params[:printer])
+  end
+
+  def print_service
+    @print_service ||= PrintService.new(
+      print_strategy_factory: LabelPrinting::PrintStrategyFactory.new(config: Rails.configuration.print_service)
+    )
   end
 
   def print_params

@@ -64,7 +64,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'prints labels for the batch' do
-      allow(PMB::PrintJob).to receive(:execute).and_return(true)
+      allow_any_instance_of(PrintService).to receive(:print).and_return(OpenStruct.new(success?: true))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -76,7 +76,7 @@ RSpec.describe "Batches", type: feature, js: true do
     end
 
     it 'tells the user if there\'s an error' do
-      allow(PMB::PrintJob).to receive(:execute).and_raise(JsonApiClient::Errors::ServerError.new(OpenStruct.new(status: 500)))
+      allow_any_instance_of(PrintService).to receive(:print).and_return(OpenStruct.new(success?: false, errors: []))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -87,10 +87,8 @@ RSpec.describe "Batches", type: feature, js: true do
       expect(page).to have_content("Your labels could not be printed")
     end
 
-    xit 'tells the user the error if known' do
-      pending 'Need PMB to be fixed first'
-      exception = RestClient::Exception.new(OpenStruct.new(code: 422, to_str: '{"errors":{"printer":["Printer does not exist"]}}'))
-      allow(RestClient).to receive(:post).and_raise(exception)
+    it 'tells the user the error if known' do
+      allow_any_instance_of(PrintService).to receive(:print).and_return(OpenStruct.new(success?: false, errors: ["Invalid request", "Try again"]))
 
       visit batch_path(@batch)
       click_button "Print Labels"
@@ -99,7 +97,8 @@ RSpec.describe "Batches", type: feature, js: true do
       click_button "Print"
 
       expect(page).to have_content("Your labels could not be printed")
-      expect(page).to have_content("Printer does not exist")
+      expect(page).to have_content("Invalid request")
+      expect(page).to have_content("Try again")
     end
 
     it 'should show the relevant printers to the selected label type' do
