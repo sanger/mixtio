@@ -22,27 +22,6 @@ RSpec.describe PrintService do
       expect(print_strategy).to have_received(:print).with(printer, batch.labels)
     end
 
-    # xcontext 'when sub_batch wants only a single barcode' do
-    #   let(:sub_batch) { build(:sub_batch, barcode_type: 'single') }
-    #
-    #   it 'only prints the first consumable' do
-    #     batch = build(:batch, sub_batches: [sub_batch])
-    #     consumable_labels = [LabelPrinting::Consumable.new(consumable: sub_batch.consumables.first)]
-    #
-    #     debugger
-    #
-    #     expect(print_strategy_factory).to receive(:get_print_strategy)
-    #                                         .with(printer)
-    #                                         .and_return(print_strategy)
-    #
-    #     print_service.print(printer, batch)
-    #
-    #     expect(print_strategy).to have_received(:print).with(printer, consumable_labels)
-    #
-    #   end
-    #
-    # end
-
   end
 
 end

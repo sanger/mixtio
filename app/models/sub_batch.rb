@@ -45,10 +45,6 @@ class SubBatch < ActiveRecord::Base
     end
   end
 
-  def printable_consumables
-    single_barcode? ? [consumables.first] : consumables
-  end
-
 private
 
   def build_consumables
