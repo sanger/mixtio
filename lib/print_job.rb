@@ -24,7 +24,7 @@ class PrintJob
   end
 
   def label_to_pmb_id(label_type_id)
-    Rails.configuration.try(:pmb_id).to_h[label_type_id] || LabelType.find(label_type_id).external_id
+    Rails.configuration.try(:pmb_id).to_h[label_type_id.to_i] || LabelType.find(label_type_id).external_id
   end
 
   def execute!
