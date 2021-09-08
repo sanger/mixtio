@@ -38,7 +38,7 @@ private
   end
 
   def print_params
-    params.permit(:label_type_id, :printer).merge(batch: current_resource)
+    params.permit(:printer).merge(batch: current_resource)
   end
 
   def save_label_id
