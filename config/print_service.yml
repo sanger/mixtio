@@ -1,5 +1,15 @@
 default: &default
-  host: http://hostname/path/to/print
+  sprint:
+    host: http://sprint.ninja/graphql
+    template_path: config/sprint_templates
+    templates:
+      1: tiny.json.erb
+      2: fat.json.erb
+  pmb:
+    host: http://pmb/path/to/print
+    templates:
+      1: 226
+      2: 227
 
 development:
   <<: *default

@@ -1,0 +1,59 @@
+{
+  "query": "<%= mutation %>",
+  "variables": {
+    "printer": "<%= printer %>",
+    "printRequest": {
+      "layouts": [
+        <% consumables.each_with_index do |consumable, i| %>
+        {
+          "labelSize": {
+            "width": 30,
+            "height": 12,
+            "displacement": 15
+          },
+          "barcodeFields": [
+            {
+              "x": 0,
+              "y": 5,
+              "cellWidth": 0.35,
+              "barcodeType": "datamatrix",
+              "value": "<%= consumable.barcode %>"
+            }
+          ],
+          "textFields": [
+            {
+              "x": 0,
+              "y": 3,
+              "value": "<%= consumable.barcode %>",
+              "font": "proportional",
+              "fontSize": 2.5
+            },
+            {
+              "x": 6,
+              "y": 6,
+              "value": "<%= consumable.consumable_type_name %>",
+              "font": "proportional",
+              "fontSize": 2
+            },
+            {
+              "x": 6,
+              "y": 9,
+              "value": "<%= consumable.batch_number %>",
+              "font": "proportional",
+              "fontSize": 2
+            },
+            {
+              "x": 17,
+              "y": 9,
+              "value": "<%= consumable.expiry_date %>",
+              "font": "proportional",
+              "fontSize": 2
+            }
+          ]
+        <% # Ugly, but I can't find a better way to not have a trailing comma %>
+        }<%= ',' if i < (consumables.size - 1) %>
+        <% end %>
+      ]
+    }
+  }
+}

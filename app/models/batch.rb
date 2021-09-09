@@ -45,6 +45,15 @@ class Batch < Ingredient
     end
   end
 
+  # @return [Array<LabelPrinting::Consumable>] labels to print for this batch
+  def labels
+    @labels ||= sub_batches.map do |sb|
+      sb.single_barcode? ? [sb.consumables.first] : sb.consumables
+    end
+      .flatten
+      .map { |c| LabelPrinting::Consumable.new(consumable: c) }
+  end
+
 private
 
   def generate_batch_number
