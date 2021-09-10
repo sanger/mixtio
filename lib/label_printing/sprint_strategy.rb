@@ -50,7 +50,7 @@ module LabelPrinting
         http.request(request)
       end
 
-      case response.code
+      case response.code.to_i
         when 200 then
           response_body = JSON.parse(response.body)
           if response_body["errors"]
