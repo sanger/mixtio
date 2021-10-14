@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_22_134336) do
+ActiveRecord::Schema.define(version: 2021_09_02_103432) do
 
-  create_table "audits", id: :integer, force: :cascade do |t|
+  create_table "audits", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "auditable_type"
     t.integer "auditable_id"
     t.integer "user_id"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["user_id"], name: "index_audits_on_user_id"
   end
 
-  create_table "consumable_types", id: :integer, force: :cascade do |t|
+  create_table "consumable_types", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.integer "days_to_keep"
     t.integer "storage_condition", default: 0
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["team_id"], name: "index_consumable_types_on_team_id"
   end
 
-  create_table "consumables", id: :integer, force: :cascade do |t|
+  create_table "consumables", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "barcode"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.integer "sub_batch_id"
   end
 
-  create_table "favourites", id: :integer, force: :cascade do |t|
+  create_table "favourites", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
     t.integer "consumable_type_id"
     t.datetime "created_at", null: false
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["user_id"], name: "index_favourites_on_user_id"
   end
 
-  create_table "ingredients", id: :integer, force: :cascade do |t|
+  create_table "ingredients", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.integer "consumable_type_id"
     t.integer "kitchen_id"
     t.string "number"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["user_id"], name: "index_ingredients_on_user_id"
   end
 
-  create_table "kitchens", id: :integer, force: :cascade do |t|
+  create_table "kitchens", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.string "type"
     t.boolean "active", default: true, null: false
@@ -79,14 +79,14 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["product_code"], name: "index_kitchens_on_product_code", unique: true
   end
 
-  create_table "label_types", id: :integer, force: :cascade do |t|
+  create_table "label_types", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.integer "external_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "mixtures", id: :integer, force: :cascade do |t|
+  create_table "mixtures", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.integer "mixable_id"
     t.integer "ingredient_id"
     t.datetime "created_at", null: false
@@ -99,20 +99,21 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["unit_id"], name: "index_mixtures_on_unit_id"
   end
 
-  create_table "printers", id: :integer, force: :cascade do |t|
+  create_table "printers", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.integer "label_type_id"
+    t.integer "service", default: 0, null: false
     t.index ["label_type_id"], name: "index_printers_on_label_type_id"
   end
 
-  create_table "projects", id: :integer, force: :cascade do |t|
+  create_table "projects", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active", default: true, null: false
   end
 
-  create_table "sub_batches", id: :integer, force: :cascade do |t|
+  create_table "sub_batches", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.float "volume"
     t.integer "unit"
     t.integer "project_id"
@@ -123,14 +124,14 @@ ActiveRecord::Schema.define(version: 2021_04_22_134336) do
     t.index ["project_id"], name: "index_sub_batches_on_project_id"
   end
 
-  create_table "units", id: :integer, force: :cascade do |t|
+  create_table "units", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_units_on_name", unique: true
   end
 
-  create_table "users", id: :integer, force: :cascade do |t|
+  create_table "users", id: :integer, charset: "utf8mb4", force: :cascade do |t|
     t.string "username"
     t.integer "team_id"
     t.datetime "created_at", null: false
