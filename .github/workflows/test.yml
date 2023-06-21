@@ -65,15 +65,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: snyk.sarif
-
-  snyk_monitor:
-    name: Run snyk monitor
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master #Pre-created container
-        with:
-          command: monitor #monitor
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
