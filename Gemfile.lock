@@ -336,7 +336,7 @@ DEPENDENCIES
   raml_ruby
   rspec-rails
   sass-rails
-  selenium-webdriver (~> 4.6)
+  selenium-webdriver (~> 4.1)
   spring
   therubyracer
   turbolinks
