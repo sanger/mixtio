@@ -265,7 +265,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.11.0)
+    selenium-webdriver (4.9.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -336,7 +336,7 @@ DEPENDENCIES
   raml_ruby
   rspec-rails
   sass-rails
-  selenium-webdriver (~> 4.1)
+  selenium-webdriver (< 4.10.0)
   spring
   therubyracer
   turbolinks
