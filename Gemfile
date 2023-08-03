@@ -60,7 +60,7 @@ end
 
 group :test do
   gem 'capybara'
-  gem 'selenium-webdriver', '< 4.10.0', require: false
+  gem 'selenium-webdriver', '<= 4.9.0', require: false
   gem 'database_cleaner'
   gem 'rake'
 end
