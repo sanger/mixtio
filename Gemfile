@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7', '>= 6.1.7.5'
+gem 'rails', '~> 7.1.0'
 gem 'mysql2', '~> 0.5.0'
 gem 'bootsnap'
 gem 'rails-controller-testing'
@@ -55,7 +55,7 @@ gem 'pmb-client', '0.1.0', :github => 'sanger/pmb-client'
 ###
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '>= 4.2.0'
+  gem 'web-console', '>= 4.2.1'
 end
 
 group :test do
