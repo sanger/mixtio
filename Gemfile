@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7', '>= 6.1.7.5'
+gem 'rails', '~> 7.1.0'
 gem 'mysql2', '~> 0.5.0'
 gem 'bootsnap'
 gem 'rails-controller-testing'
