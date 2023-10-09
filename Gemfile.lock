@@ -184,7 +184,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
-    minitest (5.19.0)
+    minitest (5.20.0)
     msgpack (1.4.2)
     multipart-post (2.1.1)
     mysql2 (0.5.3)
@@ -307,7 +307,7 @@ GEM
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     uri_template (0.7.0)
-    web-console (4.2.0)
+    web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
@@ -359,7 +359,7 @@ DEPENDENCIES
   therubyracer
   turbolinks
   uglifier
-  web-console (>= 4.2.0)
+  web-console (>= 4.2.1)
   with_model (>= 2.1.6)
 
 BUNDLED WITH
