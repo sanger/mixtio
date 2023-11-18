@@ -70,7 +70,7 @@ group :development, :test do
   gem 'byebug'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'factory_bot_rails', '>= 6.2.0'
+  gem 'factory_bot_rails', '>= 6.3.0'
   gem 'rspec-rails', '>= 5.0.2'
   gem 'with_model', '>= 2.1.6'
   gem 'raml_ruby'
