@@ -28,7 +28,7 @@ gem 'jquery-turbolinks'
 # gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 # gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'puma'
+gem 'puma', '>= 5.6.8'
 gem 'active_model_serializers', '>= 0.10.14'
 gem 'bootstrap-sass'
 gem 'font-awesome-rails', '>= 4.7.0.8'
