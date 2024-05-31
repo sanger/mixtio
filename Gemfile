@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7', '>= 6.1.7.5'
+gem 'rails', '~> 6.1.7', '>= 6.1.7.7'
 gem 'mysql2', '~> 0.5.0'
 gem 'bootsnap'
 gem 'rails-controller-testing'
@@ -20,7 +20,7 @@ gem 'coffee-rails'
 gem 'launchy'
 # Use jquery as the JavaScript library
 gem 'jquery-rails', '>= 4.5.0'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '>= 7.0.0'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 gem 'jquery-turbolinks'
@@ -59,7 +59,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara'
+  gem 'capybara', '>= 3.36.0'
   gem 'selenium-webdriver', '<= 4.9.0', require: false
   gem 'database_cleaner', '>= 2.0.2'
   gem 'rake'
@@ -70,8 +70,8 @@ group :development, :test do
   gem 'byebug'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'factory_bot_rails', '>= 6.2.0'
-  gem 'rspec-rails', '>= 5.0.2'
+  gem 'factory_bot_rails', '>= 6.3.0'
+  gem 'rspec-rails', '>= 6.0.4'
   gem 'with_model', '>= 2.1.6'
   gem 'raml_ruby'
   gem 'listen'
