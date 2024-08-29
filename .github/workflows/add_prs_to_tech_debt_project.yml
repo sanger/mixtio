@@ -17,3 +17,4 @@ jobs:
     secrets:
       app_id: ${{ secrets.ADD_TO_PROJECT_APP_ID_PSD }}
       app_key: ${{ secrets.ADD_TO_PROJECT_APP_KEY_PSD }}
+
