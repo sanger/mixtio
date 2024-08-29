@@ -71,7 +71,7 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'factory_bot_rails', '>= 6.2.0'
-  gem 'rspec-rails', '>= 5.0.2'
+  gem 'rspec-rails', '>= 6.0.4'
   gem 'with_model', '>= 2.1.6'
   gem 'raml_ruby'
   gem 'listen'
