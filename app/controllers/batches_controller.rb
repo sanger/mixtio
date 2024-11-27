@@ -42,6 +42,7 @@ class BatchesController < ApplicationController
   end
 
   def show
+    @support_url = Rail.configuration.support_url
   end
 
 protected

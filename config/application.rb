@@ -48,6 +48,7 @@ module Mixtio
     config.barcode_prefix = 'RGNT_'
 
     config.support_email = 'mixtio-help@sanger.ac.uk'
+    config.support_url = 'https://sanger.freshservice.com/support/catalog/items/281'
 
     config.enable_snow = true
     config.snow_start = 'Dec 11'
