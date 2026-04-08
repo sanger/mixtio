@@ -7,7 +7,7 @@
 ## Prerequisites
 
 - Ruby 2.7.2
-- MySQL 8.0
+- MySQL 8.4
 - Chrome (for testing)
 
 ## Installation
