@@ -12,9 +12,11 @@ RSpec.describe "Suppliers", type: :feature, js: true do
 
     let(:edit_a_supplier) do
       visit edit_supplier_path(supplier)
+      wait_for_javascript
       fill_in "Name", with: "New supplier name"
       fill_in "Product code", with: "ABC123"
       click_button "Update Supplier"
+      sleep 1
     end
 
     it "allows a user to edit an existing supplier" do

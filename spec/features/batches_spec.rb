@@ -194,6 +194,7 @@ RSpec.describe 'Batches', type: feature, js: true do
     context 'when concentration is filled in' do
       let(:create_batch) do
         visit new_batch_path
+        wait_for_javascript
         select @batch.consumable_type.name, from: 'Consumable Type'
         fill_in_use_by_date
         fill_in 'mixable_sub_batches__quantity', with: 3
@@ -236,6 +237,7 @@ RSpec.describe 'Batches', type: feature, js: true do
     context 'when fields are missing' do
       let(:create_batch) do
         visit new_batch_path
+        wait_for_javascript
         click_button 'Create Batch'
       end
 
@@ -579,12 +581,10 @@ RSpec.describe 'Batches', type: feature, js: true do
 
     it 'should calculate the batch volume' do
       visit new_batch_path
-
+      wait_for_javascript
       fill_in 'mixable_sub_batches__quantity', with: 3
       fill_in 'mixable_sub_batches__volume', with: 5
       select 'mL', from: 'mixable_sub_batches__unit'
-
-      # TODO: following line causing fail due to broken volume calculator
       expect(page.find('#calculated_batch_volume').value).to eq('0.015')
     end
 
@@ -621,10 +621,10 @@ RSpec.describe 'Batches', type: feature, js: true do
       sleep 1
       select label_new.name, from: 'Label type'
       click_button 'Print'
+      sleep 1
 
       consumable_type.reload
-
-      expect(consumable_type[:last_label_id]).to eq(label_new.id)
+      expect(consumable_type.last_label_id).to eq(label_new.id)
     end
   end
 

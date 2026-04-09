@@ -59,6 +59,7 @@ RSpec.configure do |config|
 
   config.include WaitForAjax
   config.include AuthenticationHelper
+  config.include WaitForJavascript
 
   config.extend WithModel
 
