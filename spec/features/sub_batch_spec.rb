@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe SubBatch, type: :feature do
+RSpec.describe SubBatch, type: :feature, js: true  do
   before(:each) do
     sign_in
   end
 
-  describe "creating sub-batches", js: true do
+  describe "creating sub-batches" do
 
     let :fill_in_one_sub_batch do
       page.fill_in "mixable_sub_batches__quantity", with: rand(2..20)
