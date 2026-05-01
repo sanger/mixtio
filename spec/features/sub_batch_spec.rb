@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe SubBatch, type: :feature do
+RSpec.describe SubBatch, type: :feature, js: true  do
   before(:each) do
     sign_in
   end
 
-  describe "creating sub-batches", js: true do
+  describe "creating sub-batches" do
 
     let :fill_in_one_sub_batch do
       page.fill_in "mixable_sub_batches__quantity", with: rand(2..20)
@@ -20,6 +20,7 @@ RSpec.describe SubBatch, type: :feature do
         @project = create(:project)
         @project2 = create(:project)
         visit new_batch_path
+        wait_for_javascript
         select @consumable_type.name, from: 'Consumable Type'
       end
 
@@ -35,11 +36,13 @@ RSpec.describe SubBatch, type: :feature do
 
       let :create_succeed do
         click_button "Create Batch"
+        sleep 1
         expect(page).to have_content("Reagent batch successfully created")
       end
 
       let :create_fail do
         click_button "Create Batch"
+        sleep 1
         expect(page).to have_content("Sub batches is invalid")
       end
 
@@ -85,6 +88,7 @@ RSpec.describe SubBatch, type: :feature do
       batch = create(:batch)
       batch.sub_batches = [create(:sub_batch, volume: 7, unit: "µL", quantity: 5)]
       visit batch_path(batch)
+      wait_for_javascript
 
       batch.sub_batches.each do |sub_batch|
         within("tr#sub-batch-#{sub_batch.id}") do
@@ -109,6 +113,7 @@ RSpec.describe SubBatch, type: :feature do
       @batch.sub_batches = [create(:sub_batch, volume: 12, unit: "mL", quantity: 4)]
       @new_project = create(:project)
       visit edit_batch_path(@batch)
+      wait_for_javascript
     end
 
     it "shows the correct info for each sub-batch", js: true do

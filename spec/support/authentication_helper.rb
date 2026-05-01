@@ -10,6 +10,7 @@ module AuthenticationHelper
     fill_in "Username", with: test_user.username
     fill_in "Password", with: "password"
     click_button "Sign In"
+    sleep 1
   end
 
   def sign_in_request

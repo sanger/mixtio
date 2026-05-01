@@ -1,9 +1,9 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 require 'rspec/rails'
-
+require 'selenium/webdriver'
 require 'with_model'
 
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -28,7 +28,6 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
-
   config.include FactoryBot::Syntax::Methods
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -60,11 +59,27 @@ RSpec.configure do |config|
 
   config.include WaitForAjax
   config.include AuthenticationHelper
+  config.include WaitForJavascript
 
   config.extend WithModel
 
-  Capybara.javascript_driver = :selenium_chrome_headless
+  Capybara.register_driver :chrome do |app|
+    Capybara::Selenium::Driver.new(app, browser: :chrome)
+  end
 
+  Capybara.register_driver :headless_chrome do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.add_argument('--headless')
+    options.add_argument('--disable_gpu')
+    options.add_argument('--window-size=1600,3200')
+    options.add_argument('--no-sandbox')
+    options.add_preference('profile.password_manager_leak_detection', false)
+
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+  end
+
+  Capybara.javascript_driver = ENV.fetch('JS_DRIVER', 'headless_chrome').to_sym
+  Capybara.default_max_wait_time = 3
   Capybara.server = :puma, { Silent: true }
 
   config.before(:suite) do
@@ -96,8 +111,7 @@ RSpec.configure do |config|
     xpath { |id| XPath.css("[data-id='#{id}']") }
   end
 
-   Capybara.add_selector(:data_output) do
+  Capybara.add_selector(:data_output) do
     xpath { |output| XPath.css("[data-output='#{output}']") }
   end
-
 end

@@ -10,6 +10,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
 
   let(:fill_in_form) {
     visit consumable_types_path
+    wait_for_javascript
     click_link "New consumable type"
 
     fill_in "Name*", with: consumable_type.name
@@ -17,7 +18,10 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
     select consumable_type.storage_condition, from: "Storage condition"
   }
 
-  let(:submit_form) { click_button "Create Consumable type" }
+  let(:submit_form) do
+    click_button "Create Consumable type"
+    sleep 1
+  end
 
   before(:each) do
     sign_in
@@ -46,6 +50,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
       expect {
         fill_in "Name", with: consumable_type.name
         click_button "Create Consumable type"
+        sleep 1
       }.to_not change(ConsumableType, :count)
       expect(page).to have_content("error prohibited this record from being saved")
     end
@@ -53,6 +58,7 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
     describe 'with ingredients' do
       let(:fill_in_ingredients) do
         click_button 'Add Ingredient'
+        sleep 1
         select consumable_types.first.name, from: "mixable[mixture_criteria][][consumable_type_id]"
         select suppliers.first.name, from: "mixable[mixture_criteria][][kitchen_id]"
         fill_in 'mixable[mixture_criteria][][quantity]', with: '500'
@@ -107,13 +113,15 @@ RSpec.describe "ConsumableTypes", type: :feature, js: true do
 
     let(:edit_a_consumable_type) do
       visit edit_consumable_type_path(saved_consumable_type)
+      wait_for_javascript
       fill_in "Name*", with: consumable_type.name
       fill_in "Days to Keep", with: 9
       select "RT", from: "Storage condition"
       click_button "Update Consumable type"
+      sleep 1
     end
 
-    it "Allows a user to edit an existing consumable type", js: true do
+    it "Allows a user to edit an existing consumable type" do
       expect { edit_a_consumable_type }.to change{ saved_consumable_type.reload.name }.to(consumable_type.name)
       expect(saved_consumable_type.days_to_keep).to eq(9)
       expect(saved_consumable_type.storage_condition).to eq("RT")

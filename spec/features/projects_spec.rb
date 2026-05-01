@@ -14,6 +14,7 @@ RSpec.describe "Projects", type: :feature, js: true do
       visit edit_project_path(project)
       fill_in "Name", with: "New project name"
       click_button "Update Project"
+      sleep 1
     end
 
     it "allows a user to edit an existing project" do
